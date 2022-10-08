@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:notie/global/debug.dart';
 import 'package:notie/global/dimens.dart';
+import 'package:notie/global/routes.dart';
 import 'package:notie/global/vars.dart';
 import 'package:notie/store/data/note_store.dart';
 import 'package:notie/widget/common/button.dart';
@@ -24,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget _body = const Nothing();
   Widget _drawer = const Nothing();
   Widget _fab = const Nothing();
-  PreferredSizeWidget _toolbar = AppBar();
+  PreferredSizeWidget _tool = AppBar();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   NoteStore? _noteStore;
@@ -83,9 +84,11 @@ class _HomePageState extends State<HomePage> {
             ),
             itemCount: _noteStore!.rootFolder.notes.length,
             itemBuilder: (context, index) {
+              final note = _noteStore!.rootFolder.notes[index];
               return NoteCard(
-                note: _noteStore!.rootFolder.notes[index],
-                onTap: () {},
+                note: note,
+                onTap: () => Navigator.pushNamed(context, Routes.editor,
+                    arguments: note),
                 onLongPress: () {},
               );
             },
@@ -131,7 +134,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _initToolbar() {
-    _toolbar = AppBar(
+    _tool = AppBar(
       title: Txt.header(text: Vars.appName),
       actions: [
         IconBtn(
@@ -152,7 +155,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: _toolbar,
+      appBar: _tool,
       body: SafeArea(child: _body),
       bottomNavigationBar: _app,
       drawer: _drawer,

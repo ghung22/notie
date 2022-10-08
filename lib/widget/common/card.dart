@@ -24,9 +24,13 @@ class _CardItemState extends State<CardItem> {
   Widget build(BuildContext context) {
     return Card(
       color: widget.color,
-      child: Padding(
-        padding: widget.padding,
-        child: widget.child,
+      child: InkWell(
+        onTap: widget.onPressed,
+        borderRadius: Rads.card,
+        child: Padding(
+          padding: widget.padding,
+          child: widget.child,
+        ),
       ),
     );
   }

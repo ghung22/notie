@@ -108,6 +108,7 @@ class Themes {
       appBarTheme: from.appBarTheme.copyWith(
         backgroundColor: from.colorScheme.surface,
         foregroundColor: from.colorScheme.onSurface,
+        elevation: Dimens.appBarElevation,
         centerTitle: true,
         titleTextStyle: TextStyle(
           color: from.colorScheme.onSurface.withOpacity(.75),
@@ -117,6 +118,7 @@ class Themes {
       ),
       bottomAppBarTheme: from.bottomAppBarTheme.copyWith(
         color: from.colorScheme.surface,
+        elevation: Dimens.bottomAppBarElevation,
       ),
       bottomNavigationBarTheme: from.bottomNavigationBarTheme.copyWith(
         backgroundColor: from.colorScheme.surface,
@@ -136,9 +138,7 @@ class Themes {
       cardTheme: CardTheme(
         color: from.colorScheme.surface,
         elevation: Dimens.cardElevation,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(Dimens.cardRadius)),
-        ),
+        shape: Borders.card,
       ),
       chipTheme: ChipThemeData(
         shape:

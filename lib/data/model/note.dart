@@ -84,6 +84,10 @@ class Note {
       DateTime.fromMillisecondsSinceEpoch(deletedTimestamp);
 
 // endregion
+
+  bool get isEmpty => title.isEmpty && content.isEmpty;
+
+  bool get isNotEmpty => !isEmpty;
 }
 
 @JsonSerializable()

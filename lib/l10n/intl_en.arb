@@ -8,14 +8,21 @@
       }
     }
   },
+  "add_content": "Add content",
   "back": "Back",
+  "background_color": "Background color",
   "copyright": "© 2021 Natie Portfolio - Made with Flutter",
   "home": "Home",
   "language": "Language",
   "navigate_to": "Navigate to",
   "navigation": "Navigation",
+  "redo": "Redo",
   "route_unknown": "No route found for {route}",
   "search": "Search",
+  "text_color": "Text color",
+  "text_format": "Text format",
   "theme": "Theme",
+  "title": "Title",
+  "undo": "Undo",
   "z": "Z"
 }

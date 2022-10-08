@@ -16,14 +16,17 @@ class Dimens {
 
   static double get drawerWidth => screenWidth * 0.8;
 
+  static const appBarElevation = 5.0;
+
+  static const bottomAppBarElevation = appBarElevation;
   static const bottomAppBarNotchMargin = 8.0;
-  
+
   static const btnElevation = 5.0;
   static const btnIconPaddingHorz = btnPaddingHorz / 2;
   static const btnPaddingHorz = btnPaddingVert * 3;
   static const btnPaddingVert = 8.0;
   static const btnRadius = 30.0;
-  
+
   static const cardElevation = 8.0;
   static const cardRadius = 12.0;
   static const cardPadding = 8.0;
@@ -74,7 +77,12 @@ class Pads {
 
 class Borders {
   static const btnCircle = CircleBorder();
-  static const btnRounded = RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(Dimens.btnRadius)),
-  );
+  static const btnRounded =
+      RoundedRectangleBorder(borderRadius: Rads.btnRounded);
+  static const card = RoundedRectangleBorder(borderRadius: Rads.card);
+}
+
+class Rads {
+  static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRadius));
+  static const card = BorderRadius.all(Radius.circular(Dimens.cardRadius));
 }

@@ -1,12 +1,19 @@
 {
+  "add_content": "Thêm nội dung",
   "back": "Quay lại",
+  "background_color": "Màu nền",
   "copyright": "© 2021 Natie Portfolio - Lập trình sử dụng Flutter",
   "home": "Trang chủ",
   "language": "Ngôn ngữ",
   "navigate_to": "Đi đến trang",
   "navigation": "Điều hướng",
+  "redo": "Làm lại",
   "route_unknown": "Không tìm thấy đường dẫn {route}",
   "search": "Tìm kiếm",
+  "text_color": "Màu chữ",
+  "text_format": "Định dạng",
   "theme": "Chủ đề",
+  "title": "Tiêu đề",
+  "undo": "Hoàn tác",
   "z": "Z"
 }
