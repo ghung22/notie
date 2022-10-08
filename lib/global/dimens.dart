@@ -34,12 +34,19 @@ class Dimens {
   static const drawerPadding = 8.0;
   static const drawerItemPadding = 4.0;
 
+  static const editorPadding = 8.0;
+  static const editorToolGridPadding = 8.0;
+
   static const gridSpacing = 12.0;
 
   static const noteGridTileHeight = 240.0;
+
+  static const sheetTitleHeight = 64.0;
 }
 
 class Pads {
+  static EdgeInsets none = EdgeInsets.zero;
+
   /// Short for [EdgeInsets.all]
   static EdgeInsets all(double val) => EdgeInsets.all(val);
 
@@ -76,6 +83,8 @@ class Pads {
 }
 
 class Borders {
+  static const bottomSheet =
+      RoundedRectangleBorder(borderRadius: Rads.bottomSheet);
   static const btnCircle = CircleBorder();
   static const btnRounded =
       RoundedRectangleBorder(borderRadius: Rads.btnRounded);
@@ -83,6 +92,8 @@ class Borders {
 }
 
 class Rads {
+  static const bottomSheet =
+      BorderRadius.vertical(top: Radius.circular(Dimens.cardRadius));
   static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRadius));
   static const card = BorderRadius.all(Radius.circular(Dimens.cardRadius));
 }

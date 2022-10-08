@@ -134,6 +134,7 @@ class Themes {
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: from.colorScheme.surface,
+        shape: Borders.bottomSheet,
       ),
       cardTheme: CardTheme(
         color: from.colorScheme.surface,

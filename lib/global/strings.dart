@@ -29,4 +29,6 @@ class Strings {
   static bool get isVi => Strings.language == Language.vi;
 
   static Locale get locale => Locale(language.name);
+
+  static String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }

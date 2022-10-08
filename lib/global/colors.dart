@@ -104,6 +104,21 @@ class FgColors {
 // endregion
 
 class ColorOptions {
+  static const textColors = {
+    'white': FgColors.white,
+    'red': FgColors.red,
+    'orange': FgColors.orange,
+    'yellow': FgColors.yellow,
+    'green': FgColors.green,
+    'tortoise': FgColors.tortoise,
+    'cyan': FgColors.cyan,
+    'blue': FgColors.blue,
+    'violet': FgColors.violet,
+    'purple': FgColors.purple,
+    'magenta': FgColors.magenta,
+    'pink': FgColors.pink,
+  };
+
   static const noteColors = {
     'white': BgColors.white,
     'red': BgColors.red,

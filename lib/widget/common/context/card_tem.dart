@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/data/model/note.dart';
 
 import '../card.dart';
@@ -25,7 +28,18 @@ class NoteCard extends StatelessWidget {
         children: [
           Txt.header(text: note.title),
           const SizedBox(height: 8),
-          Text(note.content),
+          Expanded(
+            child: IgnorePointer(
+              ignoring: true,
+              child: QuillEditor.basic(
+                controller: QuillController(
+                  document: Document.fromJson(jsonDecode(note.content)),
+                  selection: const TextSelection.collapsed(offset: 0),
+                ),
+                readOnly: true, // true for view only mode
+              ),
+            ),
+          ),
         ],
       ),
     );

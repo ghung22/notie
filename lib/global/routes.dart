@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notie/data/model/note.dart';
-import 'package:notie/widget/page/editor_page.dart';
-import 'package:notie/widget/page/home_page.dart';
+import 'package:notie/widget/page/editor/editor_page.dart';
+import 'package:notie/widget/page/home/home_page.dart';
 
 import 'debug.dart';
 import 'vars.dart';
