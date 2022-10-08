@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:notie/data/model/note.dart';
+import 'package:notie/global/mixin.dart';
+import 'package:notie/global/routes.dart';
 import 'package:notie/widget/common/button.dart';
+import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/container.dart';
 
 class EditorPage extends StatefulWidget {
@@ -13,12 +16,12 @@ class EditorPage extends StatefulWidget {
   State<EditorPage> createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> {
+class _EditorPageState extends State<EditorPage> with PostFrameMixin {
   PreferredSizeWidget _app = AppBar();
   Widget _body = const Nothing();
   Widget _tool = const Nothing();
 
-  Note _note = Note();
+  Note _note = const Note();
 
   @override
   void initState() {
@@ -96,13 +99,24 @@ class _EditorPageState extends State<EditorPage> {
     _initBody();
     _initToolbar();
 
-    return Scaffold(
-      appBar: _app,
-      body: SafeArea(child: _body),
-      bottomNavigationBar: Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: _tool,
-      ),
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Hero(
+          tag: '${Routes.editor}?id=${_note.createdTimestamp}',
+          child: const Opacity(opacity: 0, child: CardItem(child: Nothing())),
+        ),
+        Scaffold(
+          appBar: _app,
+          body: SafeArea(child: _body),
+          bottomNavigationBar: Padding(
+            padding: MediaQuery
+                .of(context)
+                .viewInsets,
+            child: _tool,
+          ),
+        ),
+      ],
     );
   }
 }

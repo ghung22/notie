@@ -85,11 +85,14 @@ class _HomePageState extends State<HomePage> {
             itemCount: _noteStore!.rootFolder.notes.length,
             itemBuilder: (context, index) {
               final note = _noteStore!.rootFolder.notes[index];
-              return NoteCard(
-                note: note,
-                onTap: () => Navigator.pushNamed(context, Routes.editor,
-                    arguments: note),
-                onLongPress: () {},
+              return Hero(
+                tag: '${Routes.editor}?id=${note.createdTimestamp}',
+                child: NoteCard(
+                  note: note,
+                  onTap: () => Navigator.pushNamed(context, Routes.editor,
+                      arguments: note),
+                  onLongPress: () {},
+                ),
               );
             },
           ),
@@ -127,8 +130,8 @@ class _HomePageState extends State<HomePage> {
 
   void _initFab() {
     _fab = FloatingActionButton(
-      onPressed: () {},
-      tooltip: 'Add',
+      onPressed: () => Navigator.pushNamed(context, Routes.editor),
+      tooltip: AppLocalizations.of(context)!.add_note,
       child: const Icon(Icons.add),
     );
   }

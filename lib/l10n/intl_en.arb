@@ -9,6 +9,7 @@
     }
   },
   "add_content": "Add content",
+  "add_note": "Add note",
   "back": "Back",
   "background_color": "Background color",
   "copyright": "© 2021 Natie Portfolio - Made with Flutter",

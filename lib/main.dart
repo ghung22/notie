@@ -12,6 +12,7 @@ import 'store/global/language_store.dart';
 import 'store/global/theme_store.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Debug.print(null, 'App started at ${DateTime.now()}');
   runApp(MultiProvider(
     providers: [
