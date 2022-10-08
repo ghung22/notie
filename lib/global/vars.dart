@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notie/global/debug.dart';
 
 class Vars {
+  static const appName = 'Notie';
+
   static const animationBlink = Duration(milliseconds: 25);
   static const animationFlash = Duration(milliseconds: 75);
   static const animationSwift = Duration(milliseconds: 150);

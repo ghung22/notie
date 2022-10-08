@@ -13,16 +13,24 @@ mixin _$NoteStore on _NoteStore, Store {
       Atom(name: '_NoteStore.rootFolder', context: context);
 
   @override
-  Folder get rootFolder {
+  RootFolder get rootFolder {
     _$rootFolderAtom.reportRead();
     return super.rootFolder;
   }
 
   @override
-  set rootFolder(Folder value) {
+  set rootFolder(RootFolder value) {
     _$rootFolderAtom.reportWrite(value, super.rootFolder, () {
       super.rootFolder = value;
     });
+  }
+
+  late final _$getNotesAsyncAction =
+      AsyncAction('_NoteStore.getNotes', context: context);
+
+  @override
+  Future<void> getNotes() {
+    return _$getNotesAsyncAction.run(() => super.getNotes());
   }
 
   late final _$addNoteAsyncAction =

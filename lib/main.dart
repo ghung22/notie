@@ -32,7 +32,7 @@ class Notie extends StatelessWidget {
         builder: (context) {
           return MaterialApp(
             title: 'Notie',
-            debugShowCheckedModeBanner: true,
+            debugShowCheckedModeBanner: false,
             // Theme
             themeMode: context.read<ThemeStore>().activeTheme,
             theme: Themes.light,

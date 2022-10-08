@@ -11,13 +11,12 @@ class NoteStore = _NoteStore with _$NoteStore;
 
 abstract class _NoteStore with Store {
   @observable
-  Folder rootFolder = const Folder();
+  RootFolder rootFolder = const RootFolder();
 
   // TODO: Get notes from SQLite
   @action
   Future<void> getNotes() async {
-    rootFolder = Folder(
-      path: FolderPaths.root,
+    rootFolder = RootFolder(
       colorHex: BwColors.lightHex,
       notes: const Notes([
         Note(
@@ -71,18 +70,26 @@ abstract class _NoteStore with Store {
 
   @action
   Future<void> updateFolder(Folder folder) async {
-    if (folder.path == FolderPaths.root) {
-      rootFolder = folder;
-      // TODO: Write changes to SQLite
+    // When path is root
+    final path = folder.path;
+    if (path == FolderPaths.root) {
+      rootFolder = RootFolder.fromFolder(folder);
+      return;
     }
-    final parentDir = folder.path.substring(0, folder.path.lastIndexOf('/'));
-    final parent = rootFolder.getChild(parentDir);
-    if (parent == null) {
-      Debug.print(null, 'Failed to update folder: cannot find $parentDir',
+
+    // Recursively find & update folder
+    // How: Continuously update from the last of folder list upto the first
+    final branch = rootFolder.getFolderBranch(path);
+    if (branch.isEmpty) {
+      Debug.print(null, 'Failed to update folder: cannot find $path',
           minLevel: DiagnosticLevel.error);
       return;
     }
-    parent.folders.update(folder, false);
-    updateFolder(parent);
+    while(branch.length > 1) {
+      final f = branch.removeLast();
+      branch.last.folders.update(f);
+    }
+    rootFolder = RootFolder.fromFolder(branch.last);
+    // TODO: Write changes to SQLite
   }
 }

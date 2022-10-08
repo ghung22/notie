@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:notie/global/debug.dart';
 import 'package:notie/global/dimens.dart';
+import 'package:notie/global/vars.dart';
 import 'package:notie/store/data/note_store.dart';
 import 'package:notie/widget/common/button.dart';
 import 'package:notie/widget/common/card.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   Widget _body = const Nothing();
   Widget _drawer = const Nothing();
   Widget _fab = const Nothing();
+  PreferredSizeWidget _toolbar = AppBar();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   NoteStore? _noteStore;
@@ -128,15 +130,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _initToolbar() {
+    _toolbar = AppBar(
+      title: Txt.header(text: Vars.appName),
+      actions: [
+        IconBtn(
+          onPressed: () {},
+          child: const Icon(Icons.search),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _initApp();
     _initBody();
     _initDrawer();
     _initFab();
+    _initToolbar();
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: _toolbar,
       body: SafeArea(child: _body),
       bottomNavigationBar: _app,
       drawer: _drawer,

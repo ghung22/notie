@@ -76,23 +76,51 @@ class Folder {
   DateTime get deletedAt =>
       DateTime.fromMillisecondsSinceEpoch(deletedTimestamp);
 
-  // endregion
+// endregion
+}
 
-  Folder? getChild(String path) {
-    // When path is current folder & when path is not a child of current folder
-    if (path == this.path) return this;
-    if (!this.path.contains(path)) return null;
+class RootFolder extends Folder {
+  const RootFolder({
+    int colorHex = BwColors.lightHex,
+    Notes notes = const Notes(),
+    Folders folders = const Folders(),
+    int createdTimestamp = 0,
+    int updatedTimestamp = 0,
+    int deletedTimestamp = 0,
+  }) : super(
+          path: FolderPaths.root,
+          colorHex: colorHex,
+          notes: notes,
+          folders: folders,
+          createdTimestamp: createdTimestamp,
+          updatedTimestamp: updatedTimestamp,
+          deletedTimestamp: deletedTimestamp,
+        );
 
-    // Recursively find child folder
-    final relativePath = path.replaceFirst('${this.path}/', '');
+  static RootFolder fromFolder(Folder folder) {
+    return RootFolder(
+      colorHex: folder.colorHex,
+      notes: folder.notes,
+      folders: folder.folders,
+      createdTimestamp: folder.createdTimestamp,
+      updatedTimestamp: folder.updatedTimestamp,
+      deletedTimestamp: folder.deletedTimestamp,
+    );
+  }
+
+  /// Convert path to list of folders
+  List<Folder> getFolderBranch(String path) {
     final locations = path.split('/');
-    Folder pointer = this;
-    for (String p = ''; p != path; p += '/${locations.removeAt(0)}') {
-      final f = pointer.folders.get('$relativePath/$p');
-      if (f.createdTimestamp == 0) return null;
-      pointer = f;
+    locations.removeAt(0);
+    List<Folder> branch = [this];
+    for (String p = locations.removeAt(0);
+        p != path;
+        p += '/${locations.removeAt(0)}') {
+      final f = branch.last.folders.get('/$p');
+      if (f.createdTimestamp == 0) return [];
+      branch.add(f);
     }
-    return pointer;
+    return branch;
   }
 }
 
@@ -118,7 +146,7 @@ class Folders {
 
   int get length => _v.length;
 
-  Folder operator[] (int index) => value[index];
+  Folder operator [](int index) => value[index];
 
   // endregion
 
