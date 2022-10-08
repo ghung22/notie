@@ -1,0 +1,12 @@
+{
+  "back": "Quay lại",
+  "copyright": "© 2021 Natie Portfolio - Lập trình sử dụng Flutter",
+  "home": "Trang chủ",
+  "language": "Ngôn ngữ",
+  "navigate_to": "Đi đến trang",
+  "navigation": "Điều hướng",
+  "route_unknown": "Không tìm thấy đường dẫn {route}",
+  "search": "Tìm kiếm",
+  "theme": "Chủ đề",
+  "z": "Z"
+}
