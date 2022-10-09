@@ -9,6 +9,7 @@ import 'text.dart';
 class IconBtn extends StatelessWidget {
   final Widget child;
   final Color? color;
+  final bool? enabled;
   final String tooltipText;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPressed;
@@ -19,6 +20,7 @@ class IconBtn extends StatelessWidget {
     Key? key,
     required this.child,
     this.color,
+    this.enabled,
     this.tooltipText = '',
     this.onPressed,
     this.onLongPressed,
@@ -28,6 +30,7 @@ class IconBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = this.enabled ?? onPressed != null;
     return CaseContainer(
       cases: [
         Case(
@@ -39,8 +42,8 @@ class IconBtn extends StatelessWidget {
               shape: Borders.btnRounded,
               textStyle: Styles.iconBtnLabel,
             ),
-            onPressed: onPressed,
-            onLongPress: onLongPressed,
+            onPressed: enabled ? onPressed : null,
+            onLongPress: enabled ? onLongPressed : null,
             icon: child,
             label: Txt(text: tooltipText),
           ),
@@ -61,8 +64,8 @@ class IconBtn extends StatelessWidget {
                       shape: Borders.btnRounded,
                       textStyle: Styles.iconBtnLabel,
                     ),
-                    onPressed: onPressed,
-                    onLongPress: onLongPressed,
+                    onPressed: enabled ? onPressed : null,
+                    onLongPress: enabled ? onLongPressed : null,
                     icon: child,
                     label: Txt(text: tooltipText),
                   ),
@@ -77,8 +80,8 @@ class IconBtn extends StatelessWidget {
                     padding: Pads.none,
                     shape: Borders.btnCircle,
                   ),
-                  onPressed: onPressed,
-                  onLongPress: onLongPressed,
+                  onPressed: enabled ? onPressed : null,
+                  onLongPress: enabled ? onLongPressed : null,
                   child: child,
                 ),
               ),
@@ -94,8 +97,8 @@ class IconBtn extends StatelessWidget {
             padding: Pads.none,
             shape: Borders.btnCircle,
           ),
-          onPressed: onPressed,
-          onLongPress: onLongPressed,
+          onPressed: enabled ? onPressed : null,
+          onLongPress: enabled ? onLongPressed : null,
           child: child,
         ),
       ),

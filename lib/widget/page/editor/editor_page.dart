@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/data/model/note.dart';
 import 'package:notie/global/routes.dart';
+import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/container.dart';
+import 'package:provider/provider.dart';
 
 import 'editor_appbar.dart';
 import 'editor_body.dart';
@@ -21,50 +20,40 @@ class EditorPage extends StatefulWidget {
 }
 
 class _EditorPageState extends State<EditorPage> {
-  Note get _note => widget.note;
-  QuillController _quillCtrl = QuillController.basic();
-  final ScrollController _scrollCtrl = ScrollController();
+  final EditorStore _store = EditorStore();
+
+  Note get _note => _store.note;
 
   @override
   void initState() {
     super.initState();
-    _quillCtrl = QuillController(
-      document: Document.fromJson(jsonDecode(_note.content)),
-      selection: const TextSelection.collapsed(offset: 0),
-    );
+    _store.setNote(widget.note);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Hero(
-          tag: '${Routes.editor}?id=${_note.createdTimestamp}',
-          child: const Opacity(opacity: 0, child: CardItem(child: Nothing())),
-        ),
-        Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(kToolbarHeight),
-            child: EditorAppbar(note: _note),
+    return Provider(
+      create: (_) => _store,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Hero(
+            tag: '${Routes.editor}?id=${_note.createdTimestamp}',
+            child: const Opacity(opacity: 0, child: CardItem(child: Nothing())),
           ),
-          body: SafeArea(
-            child: EditorBody(
-              note: _note,
-              quillController: _quillCtrl,
-              scrollController: _scrollCtrl,
+          Scaffold(
+            appBar: const PreferredSize(
+              preferredSize: Size.fromHeight(kToolbarHeight),
+              child: EditorAppbar(),
+            ),
+            body: const SafeArea(child: EditorBody()),
+            bottomNavigationBar: Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: const EditorToolbar(),
             ),
           ),
-          bottomNavigationBar: Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: EditorToolbar(
-              note: _note,
-              quillController: _quillCtrl,
-              scrollController: _scrollCtrl,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

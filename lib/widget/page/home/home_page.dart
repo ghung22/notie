@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     _noteStore ??= context.read<NoteStore>();
     _body = FutureBuilder(
       future: _noteStore!.getNotes(),
-      builder: (context, snapshot) {
+      builder: (_, snapshot) {
         return CaseContainer(
           cases: [
             Case(
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisSpacing: Dimens.gridSpacing,
             ),
             itemCount: _noteStore!.rootFolder.notes.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (_, index) {
               final note = _noteStore!.rootFolder.notes[index];
               return Hero(
                 tag: '${Routes.editor}?id=${note.createdTimestamp}',
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: Pads.all(Dimens.drawerPadding),
         child: CardItem(
-          child: Observer(builder: (context) {
+          child: Observer(builder: (_) {
             return ListView(
               children: [
                 Stack(
