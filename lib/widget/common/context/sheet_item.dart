@@ -26,8 +26,11 @@ enum EditorSheets {
 
 enum EditorContentType {
   code,
-  image,
+  quote,
   link,
+  image,
+  video,
+  formula,
 }
 
 class EditorContentSheet extends StatefulWidget {
@@ -41,14 +44,17 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
   EditorStore? _store;
 
   Future<void> _btnClicked(EditorContentType type) async {
-    final quillCtrl = _store!.quillCtrl;
-    final sel = quillCtrl.selection;
+    // Run specific actions (may return without showing any dialog)
+    // final quillCtrl = _store!.quillCtrl;
+    // final sel = quillCtrl.selection;
     switch (type) {
       case EditorContentType.code:
-        quillCtrl.formatSelection(Attribute.codeBlock);
-        return;
+        _store!.expandSelection();
+        break;
       default:
     }
+
+    // Show dialog of corresponding type
     await showModalBottomSheet(
       context: context,
       backgroundColor: _store!.note.color,
@@ -77,20 +83,55 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     return Observer(builder: (context) {
       return Sheet(
         title: AppLocalizations.of(context)!.add_content,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * .75,
-          child: Center(
-            child: Wrap(
-              children: [
-                IconBtn(
-                  tooltipText: 'Code',
-                  elevated: true,
-                  onPressed: () => _btnClicked(EditorContentType.code),
-                  child: const Icon(Icons.code_rounded),
-                ),
-              ],
+        alignment: Alignment.center,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: Dimens.editorToolPadding,
+          runSpacing: Dimens.editorToolPadding,
+          children: [
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.codeblock,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.code),
+              child: const Icon(Icons.code_rounded),
             ),
-          ),
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.quote,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.quote),
+              child: const Icon(Icons.format_quote_rounded),
+            ),
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.link,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.link),
+              child: const Icon(Icons.link_rounded),
+            ),
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.image,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.image),
+              child: const Icon(Icons.image_rounded),
+            ),
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.video,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.video),
+              child: const Icon(Icons.videocam_rounded),
+            ),
+            IconBtn(
+              tooltipText: AppLocalizations.of(context)!.formula,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.formula),
+              child: const Icon(Icons.functions_rounded),
+            ),
+          ],
         ),
       );
     });

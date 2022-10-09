@@ -31,7 +31,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
       builder: (_) {
         return Provider(
           create: (_) => _store!,
-          child: Builder(builder: (_) {
+          builder: (_, __) {
             switch (type) {
               case EditorSheets.content:
                 return const EditorContentSheet();
@@ -46,7 +46,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
               case EditorSheets.redo:
                 return const EditorUndoSheet(isUndo: false);
             }
-          }),
+          },
         );
       },
     );

@@ -38,4 +38,27 @@ abstract class _EditorStore with Store {
     );
     quillCtrl.moveCursorToEnd();
   }
+
+  @action
+  void expandSelection() {
+    // Get whole document text * selected text
+    final sel = quillCtrl.selection;
+    final fullText = quillCtrl.document.toPlainText();
+    final selText = quillCtrl.getPlainText();
+
+    // Find the closest newline at both ends of the selection
+    final selStart = fullText.indexOf(selText);
+    final selEnd = selStart + selText.length;
+    var lineStart = fullText.lastIndexOf('\n', selStart) + 1;
+    var lineEnd = fullText.indexOf('\n', selEnd);
+    if (lineStart == -1) lineStart = selStart;
+    if (lineEnd == -1) lineEnd = selEnd;
+
+    // Expand selection to include the whole line
+    quillCtrl.updateSelection(
+      sel.copyWith(baseOffset: lineStart, extentOffset: lineEnd),
+      ChangeSource.LOCAL,
+    );
+    contentFocus.unfocus();
+  }
 }

@@ -119,6 +119,17 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
+  void expandSelection() {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.expandSelection');
+    try {
+      return super.expandSelection();
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 note: ${note},

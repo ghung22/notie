@@ -35,7 +35,9 @@ class Dimens {
   static const drawerItemPadding = 4.0;
 
   static const editorPadding = 8.0;
-  static const editorToolGridPadding = 8.0;
+  static const editorToolPadding = 8.0;
+  static const editorToolContentPaddingHorz = editorToolContentPaddingVert * 2;
+  static const editorToolContentPaddingVert = editorToolPadding;
 
   static const gridSpacing = 12.0;
 
@@ -96,4 +98,5 @@ class Rads {
       BorderRadius.vertical(top: Radius.circular(Dimens.cardRadius));
   static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRadius));
   static const card = BorderRadius.all(Radius.circular(Dimens.cardRadius));
+  static const input = BorderRadius.all(Radius.circular(Dimens.cardRadius));
 }
