@@ -15,21 +15,19 @@ class Case {
 }
 
 class CaseContainer extends StatelessWidget {
-  final List<Case>? cases;
+  final List<Case> cases;
   final Widget child;
 
   const CaseContainer({
     Key? key,
-    this.cases,
+    this.cases = const [],
     required this.child,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (cases != null) {
-      for (final Case caseItem in cases!) {
-        if (caseItem.condition) return caseItem.child;
-      }
+    for (final Case caseItem in cases) {
+      if (caseItem.condition) return caseItem.child;
     }
     return child;
   }

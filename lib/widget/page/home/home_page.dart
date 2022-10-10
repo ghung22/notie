@@ -9,7 +9,7 @@ import 'package:notie/store/data/note_store.dart';
 import 'package:notie/widget/common/button.dart';
 import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/container.dart';
-import 'package:notie/widget/common/context/card_tem.dart';
+import 'package:notie/widget/common/context/card_item.dart';
 import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
 

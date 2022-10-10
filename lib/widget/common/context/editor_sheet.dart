@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/global/colors.dart';
+import 'package:notie/global/dimens.dart';
 import 'package:notie/global/strings.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
@@ -10,8 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../container.dart';
 import '../sheet.dart';
-
-// region Editor sheets
+import 'editor_content_sheet.dart';
 
 enum EditorSheets {
   content,
@@ -22,16 +21,13 @@ enum EditorSheets {
   redo,
 }
 
-// region Editor content sheet
-
-enum EditorContentType {
-  code,
-  quote,
-  link,
-  image,
-  video,
-  formula,
+enum EditorDialogResult {
+  success,
+  failure,
+  canceled,
 }
+
+// region Editor content sheet
 
 class EditorContentSheet extends StatefulWidget {
   const EditorContentSheet({Key? key}) : super(key: key);
@@ -58,23 +54,25 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: _store!.note.color,
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * .35,
-        maxHeight: MediaQuery.of(context).size.height * .35,
-      ),
+      isScrollControlled: true,
       builder: (context) {
-        switch (type) {
-          case EditorContentType.image:
-            // TODO: Handle this case.
-            break;
-          case EditorContentType.link:
-            // TODO: Handle this case.
-            break;
-          default:
-        }
-        return const Nothing();
+        return Provider(
+          create: (_) => _store!,
+          builder: (_, __) {
+            switch (type) {
+              case EditorContentType.code:
+                return const EditorContentCodeblock();
+              default:
+            }
+            return const Nothing();
+          },
+        );
       },
-    );
+    ).then((result) {
+      if (result == EditorDialogResult.success) {
+        Navigator.of(context).pop();
+      }
+    });
   }
 
   @override
@@ -83,18 +81,24 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     return Observer(builder: (context) {
       return Sheet(
         title: AppLocalizations.of(context)!.add_content,
-        alignment: Alignment.center,
         child: Wrap(
           alignment: WrapAlignment.center,
           spacing: Dimens.editorToolPadding,
           runSpacing: Dimens.editorToolPadding,
           children: [
             IconBtn(
+              tooltipText: AppLocalizations.of(context)!.code_inline,
+              elevated: true,
+              showText: true,
+              onPressed: () => _btnClicked(EditorContentType.inline),
+              child: const Icon(Icons.code_rounded),
+            ),
+            IconBtn(
               tooltipText: AppLocalizations.of(context)!.codeblock,
               elevated: true,
               showText: true,
               onPressed: () => _btnClicked(EditorContentType.code),
-              child: const Icon(Icons.code_rounded),
+              child: const Icon(Icons.data_array_rounded),
             ),
             IconBtn(
               tooltipText: AppLocalizations.of(context)!.quote,
@@ -138,8 +142,12 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
   }
 }
 
-class EditorContentCodeSheet extends StatelessWidget {
-  const EditorContentCodeSheet({Key? key}) : super(key: key);
+// endregion
+
+// region Editor format sheet
+
+class EditorFormatSheet extends StatelessWidget {
+  const EditorFormatSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -152,17 +160,7 @@ class EditorContentCodeSheet extends StatelessWidget {
 
 // endregion
 
-class EditorTextFormatSheet extends StatelessWidget {
-  const EditorTextFormatSheet({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Sheet(
-      title: AppLocalizations.of(context)!.text_format,
-      child: const Nothing(),
-    );
-  }
-}
+// region Editor color sheet
 
 class EditorColorSheet extends StatelessWidget {
   final bool forText;
@@ -176,6 +174,7 @@ class EditorColorSheet extends StatelessWidget {
       title: forText
           ? AppLocalizations.of(context)!.text_color
           : AppLocalizations.of(context)!.background_color,
+      alignment: Alignment.center,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * .75,
         child: Center(
@@ -199,6 +198,10 @@ class EditorColorSheet extends StatelessWidget {
     );
   }
 }
+
+// endregion
+
+// region Editor undo sheet
 
 class EditorUndoSheet extends StatelessWidget {
   final bool isUndo;

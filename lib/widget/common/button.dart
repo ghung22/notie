@@ -31,75 +31,137 @@ class IconBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = this.enabled ?? onPressed != null;
+    final bgColor = color ?? Theme.of(context).colorScheme.surface;
     return CaseContainer(
       cases: [
         Case(
-          condition: showText && !elevated,
-          child: TextButton.icon(
+          condition: showText,
+          child: TextBtn(
+            icon: child,
+            color: bgColor,
+            enabled: enabled,
+            onPressed: enabled ? onPressed : null,
+            onLongPressed: enabled ? onLongPressed : null,
+            elevated: elevated,
+            child: Txt(text: tooltipText),
+          ),
+        ),
+      ],
+      child: CaseContainer(
+        cases: [
+          Case(
+            condition: elevated,
+            child: Tooltip(
+              message: tooltipText,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: bgColor,
+                  foregroundColor: ColorBuilder.onColor(bgColor),
+                  padding: Pads.none,
+                  shape: Borders.btnCircle,
+                ),
+                onPressed: enabled ? onPressed : null,
+                onLongPress: enabled ? onLongPressed : null,
+                child: child,
+              ),
+            ),
+          ),
+        ],
+        child: Tooltip(
+          message: tooltipText,
+          child: TextButton(
             style: TextButton.styleFrom(
               foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
-              padding: Pads.horz(Dimens.btnIconPaddingHorz),
+              padding: Pads.none,
+              shape: Borders.btnCircle,
+            ),
+            onPressed: enabled ? onPressed : null,
+            onLongPress: enabled ? onLongPressed : null,
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TextBtn extends StatelessWidget {
+  final Widget child;
+  final Widget? icon;
+  final Color? color;
+  final bool? enabled;
+  final VoidCallback? onPressed;
+  final VoidCallback? onLongPressed;
+  final bool elevated;
+
+  const TextBtn({
+    Key? key,
+    required this.child,
+    this.icon,
+    this.color,
+    this.enabled,
+    this.onPressed,
+    this.onLongPressed,
+    this.elevated = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = this.enabled ?? onPressed != null;
+    final bgColor = color ?? Theme.of(context).colorScheme.surface;
+    return CaseContainer(
+      cases: [
+        Case(
+          condition: elevated,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: bgColor,
+              foregroundColor: ColorBuilder.onColor(bgColor),
+              padding: Pads.sym(
+                h: Dimens.btnPaddingHorz,
+                v: Dimens.btnPaddingVert,
+              ),
               shape: Borders.btnRounded,
               textStyle: Styles.iconBtnLabel,
             ),
             onPressed: enabled ? onPressed : null,
             onLongPress: enabled ? onLongPressed : null,
-            icon: child,
-            label: Txt(text: tooltipText),
-          ),
-        ),
-        Case(
-          condition: elevated,
-          child: Builder(builder: (context) {
-            final bgColor = color ?? Theme.of(context).colorScheme.surface;
-            return CaseContainer(
-              cases: [
-                Case(
-                  condition: showText,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: bgColor,
-                      foregroundColor: ColorBuilder.onColor(bgColor),
-                      padding: Pads.horz(Dimens.btnIconPaddingHorz),
-                      shape: Borders.btnRounded,
-                      textStyle: Styles.iconBtnLabel,
-                    ),
-                    onPressed: enabled ? onPressed : null,
-                    onLongPress: enabled ? onLongPressed : null,
-                    icon: child,
-                    label: Txt(text: tooltipText),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (icon != null)
+                  Padding(
+                    padding: Pads.right(Dimens.btnIconLabelGap),
+                    child: icon!,
                   ),
-                ),
+                child,
               ],
-              child: Tooltip(
-                message: tooltipText,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: bgColor,
-                    foregroundColor: ColorBuilder.onColor(bgColor),
-                    padding: Pads.none,
-                    shape: Borders.btnCircle,
-                  ),
-                  onPressed: enabled ? onPressed : null,
-                  onLongPress: enabled ? onLongPressed : null,
-                  child: child,
-                ),
-              ),
-            );
-          }),
+            ),
+          ),
         ),
       ],
-      child: Tooltip(
-        message: tooltipText,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
-            padding: Pads.none,
-            shape: Borders.btnCircle,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
+          padding: Pads.sym(
+            h: Dimens.btnPaddingHorz,
+            v: Dimens.btnPaddingVert,
           ),
-          onPressed: enabled ? onPressed : null,
-          onLongPress: enabled ? onLongPressed : null,
-          child: child,
+          shape: Borders.btnRounded,
+          textStyle: Styles.iconBtnLabel,
+        ),
+        onPressed: enabled ? onPressed : null,
+        onLongPress: enabled ? onLongPressed : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: Pads.right(Dimens.btnIconLabelGap),
+                child: icon!,
+              ),
+            child,
+          ],
         ),
       ),
     );

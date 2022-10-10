@@ -5,7 +5,7 @@ import 'package:notie/data/model/note.dart';
 import 'package:notie/global/colors.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
-import 'package:notie/widget/common/context/sheet_item.dart';
+import 'package:notie/widget/common/context/editor_sheet.dart';
 import 'package:provider/provider.dart';
 
 class EditorToolbar extends StatefulWidget {
@@ -36,7 +36,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
               case EditorSheets.content:
                 return const EditorContentSheet();
               case EditorSheets.textFormat:
-                return const EditorTextFormatSheet();
+                return const EditorFormatSheet();
               case EditorSheets.textColor:
                 return const EditorColorSheet();
               case EditorSheets.backgroundColor:

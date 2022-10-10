@@ -6,12 +6,14 @@ class Sheet extends StatelessWidget {
   final String title;
   final Widget child;
   final Alignment alignment;
+  final bool bottomPadding;
 
   const Sheet({
     Key? key,
     required this.title,
     required this.child,
     this.alignment = Alignment.topCenter,
+    this.bottomPadding = true,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,8 @@ class Sheet extends StatelessWidget {
             child: child,
           ),
         ),
-        const SizedBox(height: Dimens.sheetTitleHeight),
+        if (bottomPadding && MediaQuery.of(context).viewInsets.bottom <= 0)
+          const SizedBox(height: Dimens.sheetTitleHeight),
       ],
     );
   }

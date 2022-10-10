@@ -10,38 +10,48 @@ class Styles {
 
   // TextView styles
   static TextStyle get header => TextStyle(
-    color: Theme.of(_context!).primaryColor,
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    fontFamily: Themes.fontDisplay,
-  );
+        color: Theme.of(_context!).primaryColor,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontFamily: Themes.fontDisplay,
+      );
 
   static TextStyle get subheader => TextStyle(
-    color: Theme.of(_context!).primaryColor,
-    fontSize: 14,
-  );
+        color: Theme.of(_context!).primaryColor,
+        fontSize: 14,
+      );
 
   static TextStyle get footer => const TextStyle(
-    color: Colors.black54,
-  );
+        color: Colors.black54,
+      );
   static const TextStyle spacedText = TextStyle(
     letterSpacing: 0.5,
   );
 
   static TextStyle get error => const TextStyle(
-    color: Colors.red,
-    fontSize: 12,
-    fontStyle: FontStyle.italic,
-  );
+        color: Colors.red,
+        fontSize: 12,
+        fontStyle: FontStyle.italic,
+      );
+
+  static TextStyle get mono => const TextStyle(
+        fontFamily: Themes.fontMono,
+        fontSize: 13,
+      );
 
   // Widget styles
-  static const TextStyle iconBtnError = TextStyle(fontFamily: 'monospace');
+  static const TextStyle iconBtnError = TextStyle(fontFamily: Themes.fontMono);
   static const TextStyle iconBtnLabel = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
+  
+  static InputDecoration inputOutlined = InputDecoration(
+    border: const OutlineInputBorder(borderRadius: Rads.input),
+    contentPadding: Pads.all(Dimens.inputPadding),
+  );
 
-  // Content styles
+// Content styles
 }
 
 class Themes {
@@ -49,6 +59,7 @@ class Themes {
 
   static const fontText = 'sf_text';
   static const fontDisplay = 'sf_display';
+  static const fontMono = 'monospace';
 
   static ThemeData get light => _generateTheme(from: ThemeData.light());
 
@@ -143,7 +154,7 @@ class Themes {
       ),
       chipTheme: ChipThemeData(
         shape:
-        StadiumBorder(side: BorderSide(color: initialTheme.primaryColor)),
+            StadiumBorder(side: BorderSide(color: initialTheme.primaryColor)),
         backgroundColor: initialTheme.primaryColor.withOpacity(.25),
         selectedColor: initialTheme.primaryColor.withOpacity(.75),
       ),
