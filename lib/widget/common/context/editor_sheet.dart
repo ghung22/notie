@@ -67,6 +67,10 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
         isScrollControlled = true;
         _prepareSelection(forParagraphs: true);
         break;
+      case EditorContentType.quote:
+        isScrollControlled = true;
+        _prepareSelection(forParagraphs: true);
+        break;
       default:
     }
 
@@ -84,6 +88,8 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
                 return const EditorContentInline();
               case EditorContentType.code:
                 return const EditorContentCodeblock();
+              case EditorContentType.quote:
+                return const EditorContentQuote();
               default:
             }
             return const Nothing();

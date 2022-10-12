@@ -122,9 +122,9 @@ class _EditorContentInlineState extends State<EditorContentInline> {
 
 class EditorContentCodeblock extends StatefulWidget {
   /// Custom data to put into the text field (if null, use selection)
-  final String? code;
+  final String? data;
 
-  const EditorContentCodeblock({Key? key, this.code}) : super(key: key);
+  const EditorContentCodeblock({Key? key, this.data}) : super(key: key);
 
   @override
   State<EditorContentCodeblock> createState() => _EditorContentCodeblockState();
@@ -147,7 +147,7 @@ class _EditorContentCodeblockState extends State<EditorContentCodeblock> {
   void _initInput() {
     if (_initialText == null) {
       _initialText =
-          widget.code ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
+          widget.data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
       _ctrl.value = TextEditingValue(
         text: _initialText!,
         selection: TextSelection.collapsed(offset: _initialText!.length),
@@ -302,9 +302,13 @@ class _EditorContentQuoteState extends State<EditorContentQuote> {
     }
     _input = TextField(
       controller: _ctrl,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.multiline,
+      minLines: null,
+      maxLines: null,
+      expands: true,
+      textAlignVertical: TextAlignVertical.top,
       decoration: Styles.inputOutlined.copyWith(
-        hintText: AppLocalizations.of(context)!.paste_code_here,
+        hintText: AppLocalizations.of(context)!.paste_quote_here,
       ),
     );
   }
@@ -351,30 +355,33 @@ class _EditorContentQuoteState extends State<EditorContentQuote> {
     _initPaste();
     _initInsert();
 
-    return SafeArea(
-      child: Sheet(
-        title: AppLocalizations.of(context)!.quote,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * .9,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _input,
-              Padding(
-                padding: Pads.sym(
-                  h: Dimens.editorToolContentPaddingHorz,
-                  v: Dimens.editorToolContentPaddingVert,
+    return FractionallySizedBox(
+      heightFactor: .9,
+      child: SafeArea(
+        child: Sheet(
+          title: AppLocalizations.of(context)!.quote,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width * .9,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(child: _input),
+                Padding(
+                  padding: Pads.sym(
+                    h: Dimens.editorToolContentPaddingHorz,
+                    v: Dimens.editorToolContentPaddingVert,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      _paste,
+                      _insert,
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const SizedBox(width: Dimens.editorToolContentPaddingHorz),
-                    _paste,
-                    _insert,
-                  ],
-                ),
-              ),
-            ],
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+              ],
+            ),
           ),
         ),
       ),

@@ -26,6 +26,7 @@
   "navigation": "Navigation",
   "paste_clipboard": "Paste",
   "paste_code_here": "Paste your code here",
+  "paste_quote_here": "Paste your quote here",
   "quote": "Quote",
   "redo": "Redo",
   "route_unknown": "No route found for {route}",
