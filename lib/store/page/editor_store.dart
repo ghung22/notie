@@ -39,19 +39,18 @@ abstract class _EditorStore with Store {
     quillCtrl.moveCursorToEnd();
   }
 
-  /// Expand selection by line (or word if specified)
+  /// Expand selection to be surrounded by a separator
   @action
-  void expandSelection([bool byWord = false]) {
+  void expandSelection({String separator = '\n'}) {
     // Get whole document text
     final sel = quillCtrl.selection;
     final fullText = quillCtrl.document.toPlainText();
 
     // Find the closest newline at both ends of the selection
-    final sep = byWord ? ' ' : '\n';
     final base = sel.baseOffset;
     final extent = sel.extentOffset;
-    var lineStart = fullText.lastIndexOf(sep, base) + 1;
-    var lineEnd = fullText.indexOf(sep, extent);
+    var lineStart = fullText.lastIndexOf(separator, base) + 1;
+    var lineEnd = fullText.indexOf(separator, extent);
     if (lineStart == -1) lineStart = base;
     if (lineEnd == -1) lineEnd = extent;
 

@@ -75,9 +75,19 @@ class _EditorContentInlineState extends State<EditorContentInline> {
         _ctrl.text.trim();
         if ((_initialText ?? '') == '') _ctrl.text = ' ${_ctrl.text}';
 
-        // Replace editor text and update selection
+        // Replace editor text and update selection if needed
         _quillCtrl.replaceText(_sel.baseOffset,
             _sel.extentOffset - _sel.baseOffset, _ctrl.text, _sel);
+        if ((_initialText ?? '') == '') {
+          _ctrl.text.trim();
+          _quillCtrl.updateSelection(
+            _sel.copyWith(
+              baseOffset: _sel.baseOffset + 1,
+              extentOffset: _sel.baseOffset + _ctrl.text.length,
+            ),
+            ChangeSource.LOCAL,
+          );
+        }
 
         // Format and close sheet
         _quillCtrl.formatSelection(Attribute.inlineCode);

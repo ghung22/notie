@@ -119,11 +119,11 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
-  void expandSelection([bool byWord = false]) {
+  void expandSelection({String separator = '\n'}) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.expandSelection');
     try {
-      return super.expandSelection(byWord);
+      return super.expandSelection(separator: separator);
     } finally {
       _$_EditorStoreActionController.endAction(_$actionInfo);
     }

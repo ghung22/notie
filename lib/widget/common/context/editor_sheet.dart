@@ -39,30 +39,33 @@ class EditorContentSheet extends StatefulWidget {
 class _EditorContentSheetState extends State<EditorContentSheet> {
   EditorStore? _store;
 
-  Future<void> _btnClicked(EditorContentType type) async {
-    // Run specific actions (may return without showing any dialog)
-    bool isScrollControlled = false;
+  void _prepareSelection({bool forParagraphs = false, bool forWords = false}) {
+    if (!forParagraphs && !forWords) return;
     final quillCtrl = _store!.quillCtrl;
     final sel = quillCtrl.selection;
+    var sep = '\n';
+    if (forWords) sep = ' ';
+
+    // Expand both ends if selecting something, or move the cursor if not
+    if (sel.isCollapsed) {
+      final txt = quillCtrl.document.toPlainText();
+      final end = txt.indexOf(sep, sel.baseOffset);
+      quillCtrl.moveCursorToPosition(end);
+    } else {
+      _store!.expandSelection(separator: sep);
+    }
+  }
+
+  Future<void> _btnClicked(EditorContentType type) async {
+    // Run specific actions (may return without showing any dialog)
+    var isScrollControlled = false;
     switch (type) {
       case EditorContentType.inline:
-        if (sel.isCollapsed) {
-          final txt = quillCtrl.document.toPlainText();
-          final endWord = txt.indexOf(' ', sel.baseOffset);
-          quillCtrl.moveCursorToPosition(endWord);
-        } else {
-          _store!.expandSelection(true);
-        }
+        _prepareSelection(forWords: true);
         break;
       case EditorContentType.code:
         isScrollControlled = true;
-        if (sel.isCollapsed) {
-          final txt = quillCtrl.document.toPlainText();
-          final end = txt.indexOf('\n', sel.baseOffset);
-          quillCtrl.moveCursorToPosition(end);
-        } else {
-          _store!.expandSelection();
-        }
+        _prepareSelection(forParagraphs: true);
         break;
       default:
     }
