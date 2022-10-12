@@ -26,10 +26,10 @@ enum EditorContentType {
 // region Inline code
 
 class EditorContentInline extends StatefulWidget {
-  /// Custom code to put into the text field (if null, use selection)
-  final String? code;
+  /// Custom data to put into the text field (if null, use selection)
+  final String? data;
 
-  const EditorContentInline({Key? key, this.code}) : super(key: key);
+  const EditorContentInline({Key? key, this.data}) : super(key: key);
 
   @override
   State<EditorContentInline> createState() => _EditorContentInlineState();
@@ -50,7 +50,7 @@ class _EditorContentInlineState extends State<EditorContentInline> {
   void _initInput() {
     if (_initialText == null) {
       _initialText =
-          widget.code ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
+          widget.data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
       _ctrl.value = TextEditingValue(
         text: _initialText!,
         selection: TextSelection.collapsed(offset: _initialText!.length),
@@ -71,26 +71,12 @@ class _EditorContentInlineState extends State<EditorContentInline> {
     _insert = TextBtn(
       elevated: true,
       onPressed: () {
-        // Trim text and add space if needed
-        _ctrl.text.trim();
-        if ((_initialText ?? '') == '') _ctrl.text = ' ${_ctrl.text}';
-
-        // Replace editor text and update selection if needed
-        _quillCtrl.replaceText(_sel.baseOffset,
-            _sel.extentOffset - _sel.baseOffset, _ctrl.text, _sel);
-        if ((_initialText ?? '') == '') {
-          _ctrl.text.trim();
-          _quillCtrl.updateSelection(
-            _sel.copyWith(
-              baseOffset: _sel.baseOffset + 1,
-              extentOffset: _sel.baseOffset + _ctrl.text.length,
-            ),
-            ChangeSource.LOCAL,
-          );
-        }
-
-        // Format and close sheet
-        _quillCtrl.formatSelection(Attribute.inlineCode);
+        _store!.addContent(
+          _ctrl.text,
+          Attribute.inlineCode,
+          selectionCollapsed: (_initialText ?? '') == '',
+          separator: ' ',
+        );
         Navigator.of(context).pop(EditorDialogResult.success);
       },
       child: Txt(text: AppLocalizations.of(context)!.insert),
@@ -107,10 +93,7 @@ class _EditorContentInlineState extends State<EditorContentInline> {
       child: Sheet(
         title: AppLocalizations.of(context)!.code_inline,
         child: SizedBox(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * .9,
+          width: MediaQuery.of(context).size.width * .9,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -138,7 +121,7 @@ class _EditorContentInlineState extends State<EditorContentInline> {
 // region Codeblock
 
 class EditorContentCodeblock extends StatefulWidget {
-  /// Custom code to put into the text field (if null, use selection)
+  /// Custom data to put into the text field (if null, use selection)
   final String? code;
 
   const EditorContentCodeblock({Key? key, this.code}) : super(key: key);
@@ -226,19 +209,11 @@ class _EditorContentCodeblockState extends State<EditorContentCodeblock> {
     _insert = TextBtn(
       elevated: true,
       onPressed: () {
-        // Trim text and add newline if needed
-        _ctrl.text.trim();
-        if ((_initialText ?? '') == '') _ctrl.text = '\n${_ctrl.text}';
-
-        // Replace editor text and move to the new line if needed
-        _quillCtrl.replaceText(_sel.baseOffset,
-            _sel.extentOffset - _sel.baseOffset, _ctrl.text, _sel);
-        if ((_initialText ?? '') == '') {
-          _quillCtrl.moveCursorToPosition(_sel.extentOffset + 1);
-        }
-
-        // Format and close sheet
-        _quillCtrl.formatSelection(Attribute.codeBlock);
+        _store!.addContent(
+          _ctrl.text,
+          Attribute.codeBlock,
+          selectionCollapsed: (_initialText ?? '') == '',
+        );
         Navigator.of(context).pop(EditorDialogResult.success);
       },
       child: Txt(text: AppLocalizations.of(context)!.insert),
@@ -259,10 +234,7 @@ class _EditorContentCodeblockState extends State<EditorContentCodeblock> {
         child: Sheet(
           title: AppLocalizations.of(context)!.codeblock,
           child: SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width * .9,
+            width: MediaQuery.of(context).size.width * .9,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -282,12 +254,127 @@ class _EditorContentCodeblockState extends State<EditorContentCodeblock> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery
-                    .of(context)
-                    .viewInsets
-                    .bottom),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// endregion
+
+// region Quote
+
+class EditorContentQuote extends StatefulWidget {
+  /// Custom data to put into the text field (if null, use selection)
+  final String? data;
+
+  const EditorContentQuote({Key? key, this.data}) : super(key: key);
+
+  @override
+  State<EditorContentQuote> createState() => _EditorContentQuoteState();
+}
+
+class _EditorContentQuoteState extends State<EditorContentQuote> {
+  Widget _input = const Nothing();
+  Widget _paste = const Nothing();
+  Widget _insert = const Nothing();
+
+  EditorStore? _store;
+  final _ctrl = TextEditingController();
+  String? _initialText;
+
+  QuillController get _quillCtrl => _store!.quillCtrl;
+
+  TextSelection get _sel => _quillCtrl.selection;
+
+  void _initInput() {
+    if (_initialText == null) {
+      _initialText =
+          widget.data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
+      _ctrl.value = TextEditingValue(
+        text: _initialText!,
+        selection: TextSelection.collapsed(offset: _initialText!.length),
+      );
+    }
+    _input = TextField(
+      controller: _ctrl,
+      keyboardType: TextInputType.text,
+      decoration: Styles.inputOutlined.copyWith(
+        hintText: AppLocalizations.of(context)!.paste_code_here,
+      ),
+    );
+  }
+
+  void _initPaste() {
+    _paste = IconBtn(
+      tooltipText: AppLocalizations.of(context)!.paste_clipboard,
+      elevated: true,
+      onPressed: () async {
+        final clip = await Clipboard.getData(Clipboard.kTextPlain);
+        final clipTxt = clip?.text ?? '';
+        if (clipTxt.isNotEmpty) {
+          final start = _ctrl.selection.baseOffset;
+          final end = _ctrl.selection.extentOffset;
+          _ctrl.value = _ctrl.value.copyWith(
+            text: _ctrl.text.replaceRange(start, end, clipTxt),
+            selection: TextSelection.collapsed(offset: start + clipTxt.length),
+          );
+        }
+      },
+      child: const Icon(Icons.paste_rounded),
+    );
+  }
+
+  void _initInsert() {
+    _insert = TextBtn(
+      elevated: true,
+      onPressed: () {
+        _store!.addContent(
+          _ctrl.text,
+          Attribute.blockQuote,
+          selectionCollapsed: (_initialText ?? '') == '',
+        );
+        Navigator.of(context).pop(EditorDialogResult.success);
+      },
+      child: Txt(text: AppLocalizations.of(context)!.insert),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _store ??= context.read<EditorStore>();
+    _initInput();
+    _initPaste();
+    _initInsert();
+
+    return SafeArea(
+      child: Sheet(
+        title: AppLocalizations.of(context)!.quote,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * .9,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              _input,
+              Padding(
+                padding: Pads.sym(
+                  h: Dimens.editorToolContentPaddingHorz,
+                  v: Dimens.editorToolContentPaddingVert,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                    _paste,
+                    _insert,
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

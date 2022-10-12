@@ -43,8 +43,8 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     if (!forParagraphs && !forWords) return;
     final quillCtrl = _store!.quillCtrl;
     final sel = quillCtrl.selection;
-    var sep = '\n';
-    if (forWords) sep = ' ';
+    Pattern sep = '\n';
+    if (forWords) sep = RegExp(r'\s');
 
     // Expand both ends if selecting something, or move the cursor if not
     if (sel.isCollapsed) {

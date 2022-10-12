@@ -41,7 +41,7 @@ abstract class _EditorStore with Store {
 
   /// Expand selection to be surrounded by a separator
   @action
-  void expandSelection({String separator = '\n'}) {
+  void expandSelection({Pattern separator = '\n'}) {
     // Get whole document text
     final sel = quillCtrl.selection;
     final fullText = quillCtrl.document.toPlainText();
@@ -60,5 +60,34 @@ abstract class _EditorStore with Store {
       ChangeSource.LOCAL,
     );
     contentFocus.unfocus();
+  }
+
+  @action
+  void addContent(
+    String data,
+    Attribute attribute, {
+    bool selectionCollapsed = false,
+    String separator = '\n',
+  }) {
+    // Trim text and add newline if needed
+    var text = data.trim();
+    if (selectionCollapsed) text = '$separator$text';
+
+    // Replace editor text and move to the new line if needed
+    final sel = quillCtrl.selection;
+    quillCtrl.replaceText(
+        sel.baseOffset, sel.extentOffset - sel.baseOffset, text, sel);
+    if (selectionCollapsed) {
+      quillCtrl.updateSelection(
+        sel.copyWith(
+          baseOffset: sel.baseOffset + separator.length,
+          extentOffset: sel.baseOffset + text.length,
+        ),
+        ChangeSource.LOCAL,
+      );
+    }
+
+    // Format the new text
+    quillCtrl.formatSelection(attribute);
   }
 }

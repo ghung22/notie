@@ -119,11 +119,24 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
-  void expandSelection({String separator = '\n'}) {
+  void expandSelection({Pattern separator = '\n'}) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.expandSelection');
     try {
       return super.expandSelection(separator: separator);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addContent(String data, Attribute<dynamic> attribute,
+      {bool selectionCollapsed = false, String separator = '\n'}) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.addContent');
+    try {
+      return super.addContent(data, attribute,
+          selectionCollapsed: selectionCollapsed, separator: separator);
     } finally {
       _$_EditorStoreActionController.endAction(_$actionInfo);
     }
