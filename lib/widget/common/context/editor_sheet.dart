@@ -41,11 +41,28 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
 
   Future<void> _btnClicked(EditorContentType type) async {
     // Run specific actions (may return without showing any dialog)
-    // final quillCtrl = _store!.quillCtrl;
-    // final sel = quillCtrl.selection;
+    bool isScrollControlled = false;
+    final quillCtrl = _store!.quillCtrl;
+    final sel = quillCtrl.selection;
     switch (type) {
+      case EditorContentType.inline:
+        if (sel.isCollapsed) {
+          final txt = quillCtrl.document.toPlainText();
+          final endWord = txt.indexOf(' ', sel.baseOffset);
+          quillCtrl.moveCursorToPosition(endWord);
+        } else {
+          _store!.expandSelection(true);
+        }
+        break;
       case EditorContentType.code:
-        _store!.expandSelection();
+        isScrollControlled = true;
+        if (sel.isCollapsed) {
+          final txt = quillCtrl.document.toPlainText();
+          final end = txt.indexOf('\n', sel.baseOffset);
+          quillCtrl.moveCursorToPosition(end);
+        } else {
+          _store!.expandSelection();
+        }
         break;
       default:
     }
@@ -54,12 +71,14 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: _store!.note.color,
-      isScrollControlled: true,
+      isScrollControlled: isScrollControlled,
       builder: (context) {
         return Provider(
           create: (_) => _store!,
           builder: (_, __) {
             switch (type) {
+              case EditorContentType.inline:
+                return const EditorContentInline();
               case EditorContentType.code:
                 return const EditorContentCodeblock();
               default:

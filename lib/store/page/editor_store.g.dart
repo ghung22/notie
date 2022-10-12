@@ -119,11 +119,11 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
-  void expandSelection() {
+  void expandSelection([bool byWord = false]) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.expandSelection');
     try {
-      return super.expandSelection();
+      return super.expandSelection(byWord);
     } finally {
       _$_EditorStoreActionController.endAction(_$actionInfo);
     }

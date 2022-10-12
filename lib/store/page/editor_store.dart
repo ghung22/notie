@@ -39,20 +39,21 @@ abstract class _EditorStore with Store {
     quillCtrl.moveCursorToEnd();
   }
 
+  /// Expand selection by line (or word if specified)
   @action
-  void expandSelection() {
-    // Get whole document text * selected text
+  void expandSelection([bool byWord = false]) {
+    // Get whole document text
     final sel = quillCtrl.selection;
     final fullText = quillCtrl.document.toPlainText();
-    final selText = quillCtrl.getPlainText();
 
     // Find the closest newline at both ends of the selection
-    final selStart = fullText.indexOf(selText);
-    final selEnd = selStart + selText.length;
-    var lineStart = fullText.lastIndexOf('\n', selStart) + 1;
-    var lineEnd = fullText.indexOf('\n', selEnd);
-    if (lineStart == -1) lineStart = selStart;
-    if (lineEnd == -1) lineEnd = selEnd;
+    final sep = byWord ? ' ' : '\n';
+    final base = sel.baseOffset;
+    final extent = sel.extentOffset;
+    var lineStart = fullText.lastIndexOf(sep, base) + 1;
+    var lineEnd = fullText.indexOf(sep, extent);
+    if (lineStart == -1) lineStart = base;
+    if (lineEnd == -1) lineEnd = extent;
 
     // Expand selection to include the whole line
     quillCtrl.updateSelection(
