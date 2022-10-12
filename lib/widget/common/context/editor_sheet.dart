@@ -82,18 +82,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
       builder: (context) {
         return Provider(
           create: (_) => _store!,
-          builder: (_, __) {
-            switch (type) {
-              case EditorContentType.inline:
-                return const EditorContentInline();
-              case EditorContentType.code:
-                return const EditorContentCodeblock();
-              case EditorContentType.quote:
-                return const EditorContentQuote();
-              default:
-            }
-            return const Nothing();
-          },
+          builder: (_, __) => EditorContent(contentType: type),
         );
       },
     ).then((result) {
