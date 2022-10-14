@@ -27,11 +27,13 @@ class EditorContent extends StatefulWidget {
   /// Custom data to put into the text field (if null, use selection)
   final EditorContentType contentType;
   final String? data;
+  final String? value;
 
   const EditorContent({
     Key? key,
     required this.contentType,
     this.data,
+    this.value,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class EditorContent extends StatefulWidget {
 
 class _EditorContentState extends State<EditorContent> {
   Widget _input = const Nothing();
+  Widget _caption = const Nothing();
   Widget _lang = const Nothing();
   Widget _paste = const Nothing();
   Widget _insert = const Nothing();
@@ -57,7 +60,7 @@ class _EditorContentState extends State<EditorContent> {
       case EditorContentType.quote:
         return Attribute.blockQuote;
       case EditorContentType.link:
-        return Attribute.link;
+        return LinkAttribute(_ctrl.text);
       default:
     }
     return Attribute.placeholder;
@@ -127,10 +130,24 @@ class _EditorContentState extends State<EditorContent> {
     return true;
   }
 
+  String get _hintText {
+    switch (_contentType) {
+      case EditorContentType.code:
+        return AppLocalizations.of(context)!.paste_code_here;
+      case EditorContentType.quote:
+        return AppLocalizations.of(context)!.paste_quote_here;
+      case EditorContentType.link:
+        return AppLocalizations.of(context)!.paste_link_here;
+      default:
+    }
+    return '';
+  }
+
   // endregion
 
   EditorStore? _store;
   final _ctrl = TextEditingController();
+  final _captionCtrl = TextEditingController();
   String? _initialText;
 
   QuillController get _quillCtrl => _store!.quillCtrl;
@@ -138,13 +155,15 @@ class _EditorContentState extends State<EditorContent> {
   TextSelection get _sel => _quillCtrl.selection;
 
   void _initInput() {
-    if (_initialText == null) {
-      _initialText =
-          _data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
-      _ctrl.value = TextEditingValue(
-        text: _initialText!,
-        selection: TextSelection.collapsed(offset: _initialText!.length),
-      );
+    if (_contentType != EditorContentType.link) {
+      if (_initialText == null) {
+        _initialText =
+            _data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
+        _ctrl.value = TextEditingValue(
+          text: _initialText!,
+          selection: TextSelection.collapsed(offset: _initialText!.length),
+        );
+      }
     }
     _input = TextField(
       controller: _ctrl,
@@ -156,25 +175,55 @@ class _EditorContentState extends State<EditorContent> {
       textAlignVertical: TextAlignVertical.top,
       style: _inputStyle,
       decoration: Styles.inputOutlined.copyWith(
-        hintText: AppLocalizations.of(context)!.paste_code_here,
+        hintText: _hintText,
+      ),
+    );
+  }
+
+  void _initCaption() {
+    if (_contentType != EditorContentType.link) return;
+    if (_initialText == null) {
+      _initialText =
+          _data ?? (_sel.isCollapsed ? '' : _quillCtrl.getPlainText());
+      _captionCtrl.value = TextEditingValue(
+        text: _initialText!,
+        selection: TextSelection.collapsed(offset: _initialText!.length),
+      );
+      final value = widget.value ?? '';
+      _ctrl.value = TextEditingValue(
+        text: value,
+        selection: TextSelection.collapsed(offset: value.length),
+      );
+    }
+    _caption = Padding(
+      padding: Pads.top(Dimens.editorToolContentPaddingVert),
+      child: TextField(
+        controller: _captionCtrl,
+        keyboardType: TextInputType.text,
+        decoration: Styles.inputOutlined.copyWith(
+          hintText: AppLocalizations.of(context)!.caption,
+        ),
       ),
     );
   }
 
   void _initLang() {
-    _lang = DropdownButton(
-      isExpanded: true,
-      items: [
-        DropdownMenuItem(
-          value: null,
-          child: Txt(text: AppLocalizations.of(context)!.language),
-        ),
-        const DropdownMenuItem(
-          value: 'java',
-          child: Txt(text: 'Java'),
-        ),
-      ],
-      onChanged: (item) {},
+    _lang = Padding(
+      padding: Pads.right(Dimens.editorToolContentPaddingHorz),
+      child: DropdownButton(
+        isExpanded: true,
+        items: [
+          DropdownMenuItem(
+            value: null,
+            child: Txt(text: AppLocalizations.of(context)!.language),
+          ),
+          const DropdownMenuItem(
+            value: 'java',
+            child: Txt(text: 'Java'),
+          ),
+        ],
+        onChanged: (item) {},
+      ),
     );
   }
 
@@ -203,7 +252,7 @@ class _EditorContentState extends State<EditorContent> {
       elevated: true,
       onPressed: () {
         _store!.addContent(
-          _ctrl.text,
+          _captionCtrl.text.isEmpty ? _ctrl.text : _captionCtrl.text,
           _format,
           selectionCollapsed: (_initialText ?? '') == '',
           separator: _multiline ? '\n' : ' ',
@@ -218,6 +267,7 @@ class _EditorContentState extends State<EditorContent> {
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     _initInput();
+    _initCaption();
     _initLang();
     _initPaste();
     _initInsert();
@@ -236,6 +286,7 @@ class _EditorContentState extends State<EditorContent> {
                   if (_multiline) return Expanded(child: _input);
                   return _input;
                 }),
+                _caption,
                 Padding(
                   padding: Pads.sym(
                     h: Dimens.editorToolContentPaddingHorz,
@@ -244,13 +295,9 @@ class _EditorContentState extends State<EditorContent> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (_format == Attribute.codeBlock)
+                      if (_contentType == EditorContentType.code)
                         Expanded(child: _lang),
-                      const SizedBox(
-                          width: Dimens.editorToolContentPaddingHorz),
-                      if (_format == Attribute.codeBlock ||
-                          _format == Attribute.blockQuote)
-                        _paste,
+                      _paste,
                       _insert,
                     ],
                   ),

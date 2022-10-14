@@ -31,12 +31,18 @@ class NoteCard extends StatelessWidget {
           Expanded(
             child: IgnorePointer(
               ignoring: true,
-              child: QuillEditor.basic(
+              child: QuillEditor(
                 controller: QuillController(
                   document: Document.fromJson(jsonDecode(note.content)),
                   selection: const TextSelection.collapsed(offset: 0),
                 ),
-                readOnly: true, // true for view only mode
+                readOnly: true,
+                scrollController: ScrollController(),
+                scrollable: true,
+                focusNode: FocusNode(canRequestFocus: false),
+                autoFocus: false,
+                expands: true,
+                padding: EdgeInsets.zero,
               ),
             ),
           ),

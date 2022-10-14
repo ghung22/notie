@@ -119,6 +119,28 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
+  bool hasStyle(Attribute<dynamic> attribute) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.hasStyle');
+    try {
+      return super.hasStyle(attribute);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool expandStyle(Attribute<dynamic> attribute) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.expandStyle');
+    try {
+      return super.expandStyle(attribute);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void expandSelection({Pattern separator = '\n'}) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.expandSelection');
