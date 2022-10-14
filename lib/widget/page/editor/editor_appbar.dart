@@ -5,6 +5,7 @@ import 'package:notie/data/model/note.dart';
 import 'package:notie/global/colors.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
+import 'package:notie/widget/common/container.dart';
 import 'package:provider/provider.dart';
 
 class EditorAppbar extends StatefulWidget {
@@ -30,6 +31,7 @@ class _EditorAppbarState extends State<EditorAppbar> {
           controller: _store!.titleCtrl,
           focusNode: _store!.titleFocus,
           autofocus: _note.isEmpty,
+          readOnly: _store!.readOnly,
           maxLines: 1,
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.title,
@@ -38,10 +40,20 @@ class _EditorAppbarState extends State<EditorAppbar> {
         );
       }),
       actions: [
-        IconBtn(
-          onPressed: () {},
-          child: const Icon(Icons.search),
-        ),
+        Observer(builder: (context) {
+          return IconBtn(
+            onPressed: () => _store!.toggleReadOnly(),
+            child: CaseContainer(
+              cases: [
+                Case(
+                  condition: _store!.readOnly,
+                  child: const Icon(Icons.edit_rounded),
+                ),
+              ],
+              child: const Icon(Icons.remove_red_eye_rounded),
+            ),
+          );
+        }),
       ],
     );
   }

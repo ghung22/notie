@@ -1,4 +1,13 @@
 {
+  "@open_link": {
+    "description": "Open link in default browser.",
+    "placeholders": {
+      "link": {
+        "type": "String",
+        "example": "pub.dev"
+      }
+    }
+  },
   "@route_unknown": {
     "description": "Error for providing an unknown route.",
     "placeholders": {
@@ -16,6 +25,7 @@
   "code_inline": "Inline code",
   "codeblock": "Codeblock",
   "copy": "Copy",
+  "copy_link": "Copy link",
   "copyright": "© 2022 Notie - Made with Flutter",
   "formula": "Formula",
   "home": "Home",
@@ -25,12 +35,14 @@
   "link": "Link",
   "navigate_to": "Navigate to",
   "navigation": "Navigation",
+  "open_link": "Open {link} in default browser",
   "paste_clipboard": "Paste",
   "paste_code_here": "Paste your code here",
-  "paste_quote_here": "Paste your quote here",
   "paste_link_here": "Paste your link here",
+  "paste_quote_here": "Paste your quote here",
   "quote": "Quote",
   "redo": "Redo",
+  "remove_link": "Remove link from text",
   "route_unknown": "No route found for {route}",
   "search": "Search",
   "text_color": "Text color",

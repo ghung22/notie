@@ -24,6 +24,38 @@ mixin _$EditorStore on _EditorStore, Store {
     });
   }
 
+  late final _$readOnlyAtom =
+      Atom(name: '_EditorStore.readOnly', context: context);
+
+  @override
+  bool get readOnly {
+    _$readOnlyAtom.reportRead();
+    return super.readOnly;
+  }
+
+  @override
+  set readOnly(bool value) {
+    _$readOnlyAtom.reportWrite(value, super.readOnly, () {
+      super.readOnly = value;
+    });
+  }
+
+  late final _$tapPositionAtom =
+      Atom(name: '_EditorStore.tapPosition', context: context);
+
+  @override
+  Offset get tapPosition {
+    _$tapPositionAtom.reportRead();
+    return super.tapPosition;
+  }
+
+  @override
+  set tapPosition(Offset value) {
+    _$tapPositionAtom.reportWrite(value, super.tapPosition, () {
+      super.tapPosition = value;
+    });
+  }
+
   late final _$titleCtrlAtom =
       Atom(name: '_EditorStore.titleCtrl', context: context);
 
@@ -119,11 +151,55 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
+  void setReadOnly(bool readOnly) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.setReadOnly');
+    try {
+      return super.setReadOnly(readOnly);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void toggleReadOnly() {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.toggleReadOnly');
+    try {
+      return super.toggleReadOnly();
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setTapPosition(Offset tapPosition) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.setTapPosition');
+    try {
+      return super.setTapPosition(tapPosition);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   bool hasStyle(Attribute<dynamic> attribute) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.hasStyle');
     try {
       return super.hasStyle(attribute);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic getValue(Attribute<dynamic> attribute) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.getValue');
+    try {
+      return super.getValue(attribute);
     } finally {
       _$_EditorStoreActionController.endAction(_$actionInfo);
     }
@@ -168,6 +244,8 @@ mixin _$EditorStore on _EditorStore, Store {
   String toString() {
     return '''
 note: ${note},
+readOnly: ${readOnly},
+tapPosition: ${tapPosition},
 titleCtrl: ${titleCtrl},
 quillCtrl: ${quillCtrl},
 scrollCtrl: ${scrollCtrl},

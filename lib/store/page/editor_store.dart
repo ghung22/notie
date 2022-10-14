@@ -15,6 +15,12 @@ abstract class _EditorStore with Store {
   Note note = const Note();
 
   @observable
+  bool readOnly = false;
+
+  @observable
+  Offset tapPosition = Offset.zero;
+
+  @observable
   TextEditingController titleCtrl = TextEditingController();
 
   @observable
@@ -31,13 +37,7 @@ abstract class _EditorStore with Store {
 
   // endregion
 
-  // region computed
-
-  TextSelection get _selection => quillCtrl.selection;
-
-  String get _plainContent => quillCtrl.document.toPlainText();
-
-  // endregion
+  // Editor actions
 
   @action
   void setNote(Note note) {
@@ -49,6 +49,23 @@ abstract class _EditorStore with Store {
     );
     quillCtrl.moveCursorToEnd();
   }
+
+  @action
+  void setReadOnly(bool readOnly) => this.readOnly = readOnly;
+
+  @action
+  void toggleReadOnly() => readOnly = !readOnly;
+
+  @action
+  void setTapPosition(Offset tapPosition) => this.tapPosition = tapPosition;
+
+  // endregion
+
+  // region Quill actions
+
+  TextSelection get _selection => quillCtrl.selection;
+
+  String get _plainContent => quillCtrl.document.toPlainText();
 
   /// Check if selection has the given style
   @action
@@ -166,4 +183,6 @@ abstract class _EditorStore with Store {
     // Format the new text
     quillCtrl.formatSelection(attribute);
   }
+
+  //endregion
 }
