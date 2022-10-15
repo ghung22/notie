@@ -209,26 +209,19 @@ class _EditorContentState extends State<EditorContent> {
   }
 
   void _initLang() {
-    _lang = CardItem(
-      padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
-      elevation: 2,
-      shape: Borders.btnRounded,
-      child: DropdownButton(
-        isExpanded: true,
-        underline: const Nothing(),
-        borderRadius: Rads.card,
-        items: [
-          DropdownMenuItem(
-            value: null,
-            child: Txt(text: AppLocalizations.of(context)!.language),
-          ),
-          const DropdownMenuItem(
-            value: 'java',
-            child: Txt(text: 'Java'),
-          ),
-        ],
-        onChanged: (item) {},
-      ),
+    _lang = Dropdown(
+      isExpanded: true,
+      items: [
+        DropdownMenuItem(
+          value: null,
+          child: Txt(text: AppLocalizations.of(context)!.language),
+        ),
+        const DropdownMenuItem(
+          value: 'java',
+          child: Txt(text: 'Java'),
+        ),
+      ],
+      onChanged: (item) {},
     );
   }
 

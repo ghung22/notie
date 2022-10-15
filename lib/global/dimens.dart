@@ -23,10 +23,12 @@ class Dimens {
 
   static const btnElevation = 5.0;
   static const btnIconLabelGap = 8.0;
+  static const btnIconMinSize = 48.0;
   static const btnIconPaddingHorz = btnPaddingHorz / 2;
   static const btnPaddingHorz = btnPaddingVert * 3;
   static const btnPaddingVert = 8.0;
   static const btnRadius = 30.0;
+  static const btnToggleMinSize = 40.0;
 
   static const cardElevation = 8.0;
   static const cardRadius = 12.0;
@@ -34,6 +36,10 @@ class Dimens {
 
   static const drawerPadding = 8.0;
   static const drawerItemPadding = 4.0;
+
+  static const dropdownElevation = 2.0;
+  static const dropdownMenuMaxHeight = 320.0;
+  static const dropdownPaddingHorz = 16.0;
 
   static const editorPadding = 8.0;
   static const editorToolPadding = 8.0;

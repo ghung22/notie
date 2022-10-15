@@ -11,6 +11,12 @@ class Vars {
   static const animationSlow = Duration(milliseconds: 600);
   static const animationSluggish = Duration(milliseconds: 1200);
 
+  static List<int> get textSizes {
+    return List.generate(20 - 6, (i) => i + 6)
+      ..addAll(List.generate(10, (i) => i * 2 + 22))
+      ..addAll(List.generate(8, (i) => i * 4 + 36));
+  }
+
   static BuildContext? get context {
     if (_context == null) {
       Debug.print(

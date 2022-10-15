@@ -6,9 +6,12 @@ import 'package:notie/widget/common/container.dart';
 
 import 'text.dart';
 
+// region Icon and Text
+
 class IconBtn extends StatelessWidget {
   final Widget child;
   final Color? color;
+  final double size;
   final bool? enabled;
   final String tooltipText;
   final VoidCallback? onPressed;
@@ -20,6 +23,7 @@ class IconBtn extends StatelessWidget {
     Key? key,
     required this.child,
     this.color,
+    this.size = Dimens.btnIconMinSize,
     this.enabled,
     this.tooltipText = '',
     this.onPressed,
@@ -59,6 +63,8 @@ class IconBtn extends StatelessWidget {
                   foregroundColor: ColorBuilder.onColor(bgColor),
                   padding: Pads.none,
                   shape: Borders.btnCircle,
+                  minimumSize: Size.square(size),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 onPressed: enabled ? onPressed : null,
                 onLongPress: enabled ? onLongPressed : null,
@@ -74,6 +80,8 @@ class IconBtn extends StatelessWidget {
               foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
               padding: Pads.none,
               shape: Borders.btnCircle,
+              minimumSize: Size.square(size),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             onPressed: enabled ? onPressed : null,
             onLongPress: enabled ? onLongPressed : null,
@@ -167,3 +175,91 @@ class TextBtn extends StatelessWidget {
     );
   }
 }
+
+// endregion
+
+// region Toggle
+
+class ToggleBtn extends StatefulWidget {
+  final List<Widget> children;
+  final List<bool> isSelected;
+  final List<String>? tooltipTexts;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
+  final Color? activeColor;
+  final bool? enabled;
+  final bool? elevated;
+  final ValueChanged<int>? onChanged;
+
+  const ToggleBtn({
+    Key? key,
+    required this.children,
+    required this.isSelected,
+    this.tooltipTexts,
+    this.foregroundColor,
+    this.backgroundColor,
+    this.activeColor,
+    this.enabled,
+    this.elevated,
+    this.onChanged,
+  })  : assert(children.length == isSelected.length),
+        super(key: key);
+
+  @override
+  State<ToggleBtn> createState() => _ToggleBtnState();
+}
+
+class _ToggleBtnState extends State<ToggleBtn> {
+  late List<bool> isSelected;
+
+  List<Widget> get _children => widget.children;
+
+  List<bool> get _selected => widget.isSelected;
+
+  List<String>? get _tooltipTexts => widget.tooltipTexts;
+
+  Color? get _fg => widget.foregroundColor;
+
+  Color? get _bg => widget.backgroundColor;
+
+  Color? get _active => widget.activeColor;
+
+  bool? get _enabled => widget.enabled;
+
+  bool? get _elevated => widget.elevated;
+
+  ValueChanged<int>? get _onChanged => widget.onChanged;
+
+  @override
+  void initState() {
+    super.initState();
+    isSelected = widget.isSelected;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: Rads.btnRounded,
+        color: _bg ?? Theme.of(context).colorScheme.onSurface.withOpacity(.2),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: _children.map((child) {
+          final selected = _selected[_children.indexOf(child)];
+          return IconBtn(
+            tooltipText: _tooltipTexts?[_children.indexOf(child)] ?? '',
+            color: selected ? (_active ?? _fg) : _fg,
+            size: Dimens.btnToggleMinSize,
+            elevated: _elevated ?? selected,
+            enabled: _enabled,
+            onPressed: () => _onChanged?.call(_children.indexOf(child)),
+            child: child,
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+// endregion

@@ -6,6 +6,7 @@ import 'package:notie/global/colors.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/strings.dart';
 import 'package:notie/global/styles.dart';
+import 'package:notie/global/vars.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
 import 'package:notie/widget/common/card.dart';
@@ -283,69 +284,103 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   EditorStore? _store;
 
   void _initFont() {
-    _font = CardItem(
-      padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
-      elevation: 2,
-      shape: Borders.btnRounded,
-      child: DropdownButton(
-        underline: const Nothing(),
-        borderRadius: Rads.card,
-        items: [
-          DropdownMenuItem(
-            value: null,
-            child: Txt(text: AppLocalizations.of(context)!.font),
+    _font = Dropdown(
+      items: [
+        DropdownMenuItem(
+          value: null,
+          child: Txt(text: AppLocalizations.of(context)!.font),
+        ),
+        DropdownMenuItem(
+          value: 'h1',
+          child: Txt(
+            text: AppLocalizations.of(context)!.heading('1'),
+            style: Styles.h1,
           ),
-          DropdownMenuItem(
-            value: 'h1',
-            child: Txt(
-              text: AppLocalizations.of(context)!.heading('1'),
-              style: Styles.h1,
-            ),
+        ),
+        DropdownMenuItem(
+          value: 'h2',
+          child: Txt(
+            text: AppLocalizations.of(context)!.heading('2'),
+            style: Styles.h2,
           ),
-          DropdownMenuItem(
-            value: 'h2',
-            child: Txt(
-              text: AppLocalizations.of(context)!.heading('2'),
-              style: Styles.h2,
-            ),
+        ),
+        DropdownMenuItem(
+          value: 'h3',
+          child: Txt(
+            text: AppLocalizations.of(context)!.heading('3'),
+            style: Styles.h3,
           ),
-          DropdownMenuItem(
-            value: 'h3',
-            child: Txt(
-              text: AppLocalizations.of(context)!.heading('3'),
-              style: Styles.h3,
-            ),
+        ),
+        DropdownMenuItem(
+          value: Themes.fontMono,
+          child: Txt(
+            text: Strings.capitalize(Themes.fontMono),
+            style: Styles.mono,
           ),
-          DropdownMenuItem(
-            value: Themes.fontMono,
-            child: Txt(
-              text: Strings.capitalize(Themes.fontMono),
-              style: Styles.mono,
-            ),
+        ),
+        DropdownMenuItem(
+          value: Themes.fontCursive,
+          child: Txt(
+            text: Strings.capitalize(Themes.fontCursive),
+            style: Styles.cursive,
           ),
-          DropdownMenuItem(
-            value: Themes.fontCursive,
-            child: Txt(
-              text: Strings.capitalize(Themes.fontCursive),
-              style: Styles.cursive,
-            ),
-          ),
-        ],
-        onChanged: (item) {},
-      ),
+        ),
+      ],
+      onChanged: (item) {},
     );
   }
 
   void _initAlign() {
-    _align = const Nothing();
+    _align = ToggleBtn(
+      isSelected: const [true, false, false],
+      onChanged: (index) {},
+      tooltipTexts: [
+        AppLocalizations.of(context)!.align_left,
+        AppLocalizations.of(context)!.align_center,
+        AppLocalizations.of(context)!.align_right,
+      ],
+      children: const [
+        Icon(Icons.format_align_left_rounded),
+        Icon(Icons.format_align_center_rounded),
+        Icon(Icons.format_align_right_rounded),
+      ],
+    );
   }
 
   void _initStyle() {
-    _style = const Nothing();
+    _style = ToggleBtn(
+      isSelected: const [false, false, false, false],
+      activeColor: Theme.of(context).primaryColor,
+      elevated: false,
+      onChanged: (index) {},
+      tooltipTexts: [
+        AppLocalizations.of(context)!.bold,
+        AppLocalizations.of(context)!.italic,
+        AppLocalizations.of(context)!.underline,
+        AppLocalizations.of(context)!.strikethrough,
+      ],
+      children: const [
+        Icon(Icons.format_bold_rounded),
+        Icon(Icons.format_italic_rounded),
+        Icon(Icons.format_underlined_rounded),
+        Icon(Icons.format_strikethrough_rounded),
+      ],
+    );
   }
 
   void _initSize() {
-    _size = const Nothing();
+    _size = Dropdown(
+      value: 0,
+      items: [
+        ...Vars.textSizes.map((size) {
+          return DropdownMenuItem(
+            value: '$size',
+            child: Txt(text: '$size'),
+          );
+        }).toList(),
+      ],
+      onChanged: (item) {},
+    );
   }
 
   void _initScript() {
@@ -371,6 +406,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
         title: AppLocalizations.of(context)!.text_format,
         child: Wrap(
           alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
           spacing: Dimens.editorToolPadding,
           runSpacing: Dimens.editorToolPadding,
           children: [
