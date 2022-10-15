@@ -46,7 +46,7 @@ class _CardItemState extends State<CardItem> {
 
 class Dropdown extends StatefulWidget {
   final List<DropdownMenuItem<String>> items;
-  final int? value;
+  final String? value;
   final Widget? hint;
   final Widget? disabledHint;
   final bool isExpanded;
@@ -71,7 +71,7 @@ class Dropdown extends StatefulWidget {
 }
 
 class _DropdownState extends State<Dropdown> {
-  int? _value;
+  String? _value;
 
   List<DropdownMenuItem<String>> get _items => widget.items;
 
@@ -107,7 +107,7 @@ class _DropdownState extends State<Dropdown> {
         onChanged: _enabled ? (item) => _onChanged?.call(item as int) : null,
         menuMaxHeight: Dimens.dropdownMenuMaxHeight,
         items: _items,
-        value: _items[_value ?? 0].value,
+        value: _value,
       ),
     );
   }

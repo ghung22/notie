@@ -275,9 +275,9 @@ class EditorFormatSheet extends StatefulWidget {
 
 class _EditorFormatSheetState extends State<EditorFormatSheet> {
   Widget _font = const Nothing();
-  Widget _align = const Nothing();
-  Widget _style = const Nothing();
   Widget _size = const Nothing();
+  Widget _style = const Nothing();
+  Widget _align = const Nothing();
   Widget _script = const Nothing();
   Widget _indent = const Nothing();
 
@@ -285,10 +285,11 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   void _initFont() {
     _font = Dropdown(
+      value: 'body',
       items: [
         DropdownMenuItem(
-          value: null,
-          child: Txt(text: AppLocalizations.of(context)!.font),
+          value: 'body',
+          child: Txt(text: AppLocalizations.of(context)!.body),
         ),
         DropdownMenuItem(
           value: 'h1',
@@ -330,20 +331,18 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     );
   }
 
-  void _initAlign() {
-    _align = ToggleBtn(
-      isSelected: const [true, false, false],
-      onChanged: (index) {},
-      tooltipTexts: [
-        AppLocalizations.of(context)!.align_left,
-        AppLocalizations.of(context)!.align_center,
-        AppLocalizations.of(context)!.align_right,
+  void _initSize() {
+    _size = Dropdown(
+      value: '6',
+      items: [
+        ...Vars.textSizes.map((size) {
+          return DropdownMenuItem(
+            value: '$size',
+            child: Txt(text: '${size}pt'),
+          );
+        }).toList(),
       ],
-      children: const [
-        Icon(Icons.format_align_left_rounded),
-        Icon(Icons.format_align_center_rounded),
-        Icon(Icons.format_align_right_rounded),
-      ],
+      onChanged: (item) {},
     );
   }
 
@@ -368,54 +367,101 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     );
   }
 
-  void _initSize() {
-    _size = Dropdown(
-      value: 0,
-      items: [
-        ...Vars.textSizes.map((size) {
-          return DropdownMenuItem(
-            value: '$size',
-            child: Txt(text: '$size'),
-          );
-        }).toList(),
+  void _initAlign() {
+    _align = ToggleBtn(
+      isSelected: const [true, false, false],
+      onChanged: (index) {},
+      tooltipTexts: [
+        AppLocalizations.of(context)!.align_left,
+        AppLocalizations.of(context)!.align_center,
+        AppLocalizations.of(context)!.align_right,
       ],
-      onChanged: (item) {},
+      children: const [
+        Icon(Icons.format_align_left_rounded),
+        Icon(Icons.format_align_center_rounded),
+        Icon(Icons.format_align_right_rounded),
+      ],
     );
   }
 
   void _initScript() {
-    _script = const Nothing();
+    _script = ToggleBtn(
+      isSelected: const [false, false],
+      activeColor: Theme.of(context).primaryColor,
+      elevated: false,
+      onChanged: (index) {},
+      tooltipTexts: [
+        AppLocalizations.of(context)!.superscript,
+        AppLocalizations.of(context)!.subscript,
+      ],
+      children: const [
+        Icon(Icons.superscript_rounded),
+        Icon(Icons.subscript_rounded),
+      ],
+    );
   }
 
   void _initIndent() {
-    _indent = const Nothing();
+    _indent = ToggleBtn(
+      isSelected: const [false, false],
+      activeColor: Theme.of(context).primaryColor,
+      elevated: false,
+      onChanged: (index) {},
+      tooltipTexts: [
+        AppLocalizations.of(context)!.indent_increase,
+        AppLocalizations.of(context)!.indent_decrease,
+      ],
+      children: const [
+        Icon(Icons.format_indent_increase_rounded),
+        Icon(Icons.format_indent_decrease_rounded),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     _initFont();
-    _initAlign();
-    _initStyle();
     _initSize();
+    _initStyle();
+    _initAlign();
     _initScript();
     _initIndent();
 
     return Observer(builder: (context) {
       return Sheet(
         title: AppLocalizations.of(context)!.text_format,
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          spacing: Dimens.editorToolPadding,
-          runSpacing: Dimens.editorToolPadding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _font,
-            _align,
-            _style,
-            _size,
-            _script,
-            _indent,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _font,
+                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                _size,
+              ],
+            ),
+            const SizedBox(height: Dimens.editorToolContentPaddingVert * 2),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _style,
+                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                _align,
+              ],
+            ),
+            const SizedBox(height: Dimens.editorToolContentPaddingVert * 2),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _script,
+                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                _indent,
+              ],
+            ),
           ],
         ),
       );
