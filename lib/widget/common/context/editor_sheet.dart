@@ -70,7 +70,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
 
   // endregion
 
-  // region Button highlight checks
+  // region Button active checks
 
   bool get _inlineActive => _store!.hasStyle(Attribute.inlineCode);
 
@@ -283,9 +283,60 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   EditorStore? _store;
 
+  // region Button active checks
+
+  bool get _h1Active => _store!.hasStyle(Attribute.h1);
+
+  bool get _h2Active => _store!.hasStyle(Attribute.h2);
+
+  bool get _h3Active => _store!.hasStyle(Attribute.h3);
+
+  bool get _monoActive => _store!.hasStyle(Attribute.font, Themes.fontMono);
+
+  bool get _cursiveActive =>
+      _store!.hasStyle(Attribute.font, Themes.fontCursive);
+
+  String get _fontValue {
+    var value = 'body';
+    if (_h1Active) {
+      value = 'h1';
+    } else if (_h2Active) {
+      value = 'h2';
+    } else if (_h3Active) {
+      value = 'h3';
+    } else if (_monoActive) {
+      value = 'mono';
+    } else if (_cursiveActive) {
+      value = 'cursive';
+    }
+    return value;
+  }
+
+  bool get _boldActive => _store!.hasStyle(Attribute.bold);
+
+  bool get _italicActive => _store!.hasStyle(Attribute.italic);
+
+  bool get _underlineActive => _store!.hasStyle(Attribute.underline);
+
+  bool get _strikeActive => _store!.hasStyle(Attribute.strikeThrough);
+
+  bool get _superscriptActive => _store!.hasStyle(Attribute.script);
+
+  bool get _subscriptActive => _store!.hasStyle(Attribute.script);
+
+  bool get _leftActive => _store!.hasStyle(Attribute.align, 'left');
+
+  bool get _centerActive => _store!.hasStyle(Attribute.align, 'center');
+
+  bool get _rightActive => _store!.hasStyle(Attribute.align, 'right');
+
+  bool get _justifyActive => _store!.hasStyle(Attribute.align, 'justify');
+
+  // endregion
+
   void _initFont() {
     _font = Dropdown(
-      value: 'body',
+      value: _fontValue,
       items: [
         DropdownMenuItem(
           value: 'body',
@@ -348,7 +399,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   void _initStyle() {
     _style = ToggleBtn(
-      isSelected: const [false, false, false, false],
+      isSelected: [_boldActive, _italicActive, _underlineActive, _strikeActive],
       activeColor: Theme.of(context).primaryColor,
       elevated: false,
       onChanged: (index) {},
@@ -369,7 +420,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   void _initAlign() {
     _align = ToggleBtn(
-      isSelected: const [true, false, false],
+      isSelected: [_leftActive, _centerActive, _rightActive],
       onChanged: (index) {},
       tooltipTexts: [
         AppLocalizations.of(context)!.align_left,
@@ -386,7 +437,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   void _initScript() {
     _script = ToggleBtn(
-      isSelected: const [false, false],
+      isSelected: [_superscriptActive, _subscriptActive],
       activeColor: Theme.of(context).primaryColor,
       elevated: false,
       onChanged: (index) {},

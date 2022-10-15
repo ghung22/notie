@@ -184,11 +184,11 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
-  bool hasStyle(Attribute<dynamic> attribute) {
+  bool hasStyle(Attribute<dynamic> attribute, [dynamic value]) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.hasStyle');
     try {
-      return super.hasStyle(attribute);
+      return super.hasStyle(attribute, value);
     } finally {
       _$_EditorStoreActionController.endAction(_$actionInfo);
     }

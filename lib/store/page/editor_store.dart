@@ -69,10 +69,15 @@ abstract class _EditorStore with Store {
 
   /// Check if selection has the given style
   @action
-  bool hasStyle(Attribute attribute) => quillCtrl
-      .getAllSelectionStyles()
-      .map((e) => e.containsKey(attribute.key))
-      .contains(true);
+  bool hasStyle(Attribute attribute, [dynamic value]) {
+    final attrs = quillCtrl
+        .getAllSelectionStyles()
+        .where((e) => e.containsKey(attribute.key))
+        .toList();
+    if (value == null) return attrs.isNotEmpty;
+    return attrs
+        .any((e) => e.attributes.values.any((attr) => attr.value == value));
+  }
 
   /// Get value of the given style for the current selection
   @action
@@ -184,5 +189,5 @@ abstract class _EditorStore with Store {
     quillCtrl.formatSelection(attribute);
   }
 
-  //endregion
+//endregion
 }

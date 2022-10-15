@@ -7,6 +7,7 @@ import 'package:notie/global/dimens.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EditorBody extends StatefulWidget {
   const EditorBody({Key? key}) : super(key: key);
@@ -54,7 +55,7 @@ class _EditorBodyState extends State<EditorBody> {
     _store ??= context.read<EditorStore>();
     return Observer(builder: (_) {
       return GestureDetector(
-        onTapDown: (details) => _store!.tapPosition = details.globalPosition,
+        onTapDown: (details) => _store!.setTapPosition(details.globalPosition),
         child: QuillEditor(
           // Basic params
           controller: _store!.quillCtrl,
@@ -68,6 +69,8 @@ class _EditorBodyState extends State<EditorBody> {
 
           // Events
           linkActionPickerDelegate: (_, link, __) => linkMenuAction(link),
+          onLaunchUrl: (link) => launchUrl(Uri.https('', link),
+              mode: LaunchMode.externalApplication),
         ),
       );
     });
