@@ -30,6 +30,7 @@ class _EditorBodyState extends State<EditorBody> {
         Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
             overlay.paintBounds.size.height),
       ),
+      shape: Borders.card,
       items: [
         PopupMenuItem(
           value: LinkMenuAction.launch,

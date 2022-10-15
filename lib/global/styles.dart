@@ -34,9 +34,33 @@ class Styles {
         fontStyle: FontStyle.italic,
       );
 
+  // Font styles
+  static TextStyle get h1 => const TextStyle(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        fontFamily: Themes.fontDisplay,
+      );
+
+  static TextStyle get h2 => const TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+        fontFamily: Themes.fontDisplay,
+      );
+
+  static TextStyle get h3 => const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontFamily: Themes.fontDisplay,
+      );
+
   static TextStyle get mono => const TextStyle(
         fontFamily: Themes.fontMono,
         fontSize: 13,
+      );
+
+  static TextStyle get cursive => const TextStyle(
+        fontFamily: Themes.fontCursive,
+        fontSize: 20,
       );
 
   // Widget styles
@@ -45,7 +69,7 @@ class Styles {
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
-  
+
   static InputDecoration inputOutlined = InputDecoration(
     border: const OutlineInputBorder(borderRadius: Rads.input),
     contentPadding: Pads.all(Dimens.inputPadding),
@@ -60,6 +84,7 @@ class Themes {
   static const fontText = 'sf_text';
   static const fontDisplay = 'sf_display';
   static const fontMono = 'monospace';
+  static const fontCursive = 'carattere';
 
   static ThemeData get light => _generateTheme(from: ThemeData.light());
 

@@ -1,4 +1,13 @@
 {
+  "@heading": {
+    "description": "Heading of a line of text",
+    "placeholders": {
+      "level": {
+        "type": "String",
+        "example": "1"
+      }
+    }
+  },
   "@open_link": {
     "description": "Open link in default browser.",
     "placeholders": {
@@ -27,7 +36,9 @@
   "copy": "Copy",
   "copy_link": "Copy link",
   "copyright": "© 2022 Notie - Made with Flutter",
+  "font": "Text font",
   "formula": "Formula",
+  "heading": "Heading {level}",
   "home": "Home",
   "image": "Image",
   "insert": "Insert",

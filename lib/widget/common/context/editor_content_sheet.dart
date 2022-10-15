@@ -5,6 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/styles.dart';
 import 'package:notie/store/page/editor_store.dart';
+import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
 
@@ -208,10 +209,14 @@ class _EditorContentState extends State<EditorContent> {
   }
 
   void _initLang() {
-    _lang = Padding(
-      padding: Pads.right(Dimens.editorToolContentPaddingHorz),
+    _lang = CardItem(
+      padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
+      elevation: 2,
+      shape: Borders.btnRounded,
       child: DropdownButton(
         isExpanded: true,
+        underline: const Nothing(),
+        borderRadius: Rads.card,
         items: [
           DropdownMenuItem(
             value: null,
@@ -288,10 +293,7 @@ class _EditorContentState extends State<EditorContent> {
                 }),
                 _caption,
                 Padding(
-                  padding: Pads.sym(
-                    h: Dimens.editorToolContentPaddingHorz,
-                    v: Dimens.editorToolContentPaddingVert,
-                  ),
+                  padding: Pads.sym(v: Dimens.editorToolContentPaddingVert),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

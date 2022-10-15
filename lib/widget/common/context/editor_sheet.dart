@@ -5,8 +5,11 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/global/colors.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/strings.dart';
+import 'package:notie/global/styles.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
+import 'package:notie/widget/common/card.dart';
+import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
 
 import '../container.dart';
@@ -179,7 +182,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _inlineEnabled,
-              color: _inlineActive ? Theme.of(context).primaryColor : null,
+              color: _inlineActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.inline),
               child: const Icon(Icons.code_rounded),
             ),
@@ -188,7 +193,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _codeEnabled,
-              color: _codeActive ? Theme.of(context).primaryColor : null,
+              color: _codeActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.code),
               child: const Icon(Icons.data_array_rounded),
             ),
@@ -197,7 +204,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _quoteEnabled,
-              color: _quoteActive ? Theme.of(context).primaryColor : null,
+              color: _quoteActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.quote),
               child: const Icon(Icons.format_quote_rounded),
             ),
@@ -206,7 +215,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _linkEnabled,
-              color: _linkActive ? Theme.of(context).primaryColor : null,
+              color: _linkActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.link),
               child: const Icon(Icons.link_rounded),
             ),
@@ -215,7 +226,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _imageEnabled,
-              color: _imageActive ? Theme.of(context).primaryColor : null,
+              color: _imageActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.image),
               child: const Icon(Icons.image_rounded),
             ),
@@ -224,7 +237,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _videoEnabled,
-              color: _videoActive ? Theme.of(context).primaryColor : null,
+              color: _videoActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.video),
               child: const Icon(Icons.videocam_rounded),
             ),
@@ -233,7 +248,9 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _formulaEnabled,
-              color: _formulaActive ? Theme.of(context).primaryColor : null,
+              color: _formulaActive
+                  ? Theme.of(context).primaryColor.withOpacity(.5)
+                  : null,
               onPressed: () => _btnClicked(EditorContentType.formula),
               child: const Icon(Icons.functions_rounded),
             ),
@@ -248,15 +265,125 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
 
 // region Editor format sheet
 
-class EditorFormatSheet extends StatelessWidget {
+class EditorFormatSheet extends StatefulWidget {
   const EditorFormatSheet({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Sheet(
-      title: AppLocalizations.of(context)!.text_format,
-      child: const Nothing(),
+  State<EditorFormatSheet> createState() => _EditorFormatSheetState();
+}
+
+class _EditorFormatSheetState extends State<EditorFormatSheet> {
+  Widget _font = const Nothing();
+  Widget _align = const Nothing();
+  Widget _style = const Nothing();
+  Widget _size = const Nothing();
+  Widget _script = const Nothing();
+  Widget _indent = const Nothing();
+
+  EditorStore? _store;
+
+  void _initFont() {
+    _font = CardItem(
+      padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
+      elevation: 2,
+      shape: Borders.btnRounded,
+      child: DropdownButton(
+        underline: const Nothing(),
+        borderRadius: Rads.card,
+        items: [
+          DropdownMenuItem(
+            value: null,
+            child: Txt(text: AppLocalizations.of(context)!.font),
+          ),
+          DropdownMenuItem(
+            value: 'h1',
+            child: Txt(
+              text: AppLocalizations.of(context)!.heading('1'),
+              style: Styles.h1,
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'h2',
+            child: Txt(
+              text: AppLocalizations.of(context)!.heading('2'),
+              style: Styles.h2,
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'h3',
+            child: Txt(
+              text: AppLocalizations.of(context)!.heading('3'),
+              style: Styles.h3,
+            ),
+          ),
+          DropdownMenuItem(
+            value: Themes.fontMono,
+            child: Txt(
+              text: Strings.capitalize(Themes.fontMono),
+              style: Styles.mono,
+            ),
+          ),
+          DropdownMenuItem(
+            value: Themes.fontCursive,
+            child: Txt(
+              text: Strings.capitalize(Themes.fontCursive),
+              style: Styles.cursive,
+            ),
+          ),
+        ],
+        onChanged: (item) {},
+      ),
     );
+  }
+
+  void _initAlign() {
+    _align = const Nothing();
+  }
+
+  void _initStyle() {
+    _style = const Nothing();
+  }
+
+  void _initSize() {
+    _size = const Nothing();
+  }
+
+  void _initScript() {
+    _script = const Nothing();
+  }
+
+  void _initIndent() {
+    _indent = const Nothing();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _store ??= context.read<EditorStore>();
+    _initFont();
+    _initAlign();
+    _initStyle();
+    _initSize();
+    _initScript();
+    _initIndent();
+
+    return Observer(builder: (context) {
+      return Sheet(
+        title: AppLocalizations.of(context)!.text_format,
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          spacing: Dimens.editorToolPadding,
+          runSpacing: Dimens.editorToolPadding,
+          children: [
+            _font,
+            _align,
+            _style,
+            _size,
+            _script,
+            _indent,
+          ],
+        ),
+      );
+    });
   }
 }
 

@@ -6,6 +6,7 @@ class CardItem extends StatefulWidget {
   final EdgeInsets padding;
   final Color? color;
   final double? elevation;
+  final ShapeBorder? shape;
   final VoidCallback? onPressed;
 
   const CardItem({
@@ -14,6 +15,7 @@ class CardItem extends StatefulWidget {
     this.padding = const EdgeInsets.all(Dimens.cardPadding),
     this.color,
     this.elevation,
+    this.shape,
     this.onPressed,
   }) : super(key: key);
 
@@ -27,6 +29,7 @@ class _CardItemState extends State<CardItem> {
     return Card(
       color: widget.color,
       elevation: widget.elevation,
+      shape: widget.shape,
       child: InkWell(
         onTap: widget.onPressed,
         borderRadius: Rads.card,
