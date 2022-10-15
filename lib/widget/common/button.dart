@@ -246,15 +246,39 @@ class _ToggleBtnState extends State<ToggleBtn> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: _children.map((child) {
-          final selected = _selected[_children.indexOf(child)];
-          return IconBtn(
-            tooltipText: _tooltipTexts?[_children.indexOf(child)] ?? '',
-            color: selected ? (_active ?? _fg) : _fg,
-            size: Dimens.btnToggleMinSize,
-            elevated: _elevated ?? selected,
-            enabled: _enabled,
-            onPressed: () => _onChanged?.call(_children.indexOf(child)),
-            child: child,
+          final i = _children.indexOf(child);
+          final selected = _selected[i];
+          final active =
+              _active ?? _fg ?? Theme.of(context).colorScheme.surface;
+          final onActive =
+              _active != null ? ColorBuilder.onColor(active) : null;
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: i == 0
+                    ? const Radius.circular(Dimens.btnRadius)
+                    : Radius.zero,
+                bottomLeft: i == 0
+                    ? const Radius.circular(Dimens.btnRadius)
+                    : Radius.zero,
+                topRight: i == _children.length - 1
+                    ? const Radius.circular(Dimens.btnRadius)
+                    : Radius.zero,
+                bottomRight: i == _children.length - 1
+                    ? const Radius.circular(Dimens.btnRadius)
+                    : Radius.zero,
+              ),
+              color: (selected && _elevated == false) ? active : null,
+            ),
+            child: IconBtn(
+              tooltipText: _tooltipTexts?[_children.indexOf(child)] ?? '',
+              color: selected ? ((_elevated == true) ? active : onActive) : _fg,
+              size: Dimens.btnToggleMinSize,
+              elevated: _elevated ?? selected,
+              enabled: _enabled,
+              onPressed: () => _onChanged?.call(_children.indexOf(child)),
+              child: child,
+            ),
           );
         }).toList(),
       ),

@@ -5,6 +5,7 @@ import 'package:notie/widget/common/text.dart';
 class Sheet extends StatelessWidget {
   final String title;
   final Widget child;
+  final Color? titleColor;
   final Alignment alignment;
   final bool bottomPadding;
 
@@ -12,6 +13,7 @@ class Sheet extends StatelessWidget {
     Key? key,
     required this.title,
     required this.child,
+    this.titleColor,
     this.alignment = Alignment.topCenter,
     this.bottomPadding = true,
   }) : super(key: key);
@@ -22,7 +24,7 @@ class Sheet extends StatelessWidget {
       children: [
         SizedBox(
           height: Dimens.sheetTitleHeight,
-          child: Center(child: Txt.header(text: title)),
+          child: Center(child: Txt.header(text: title, color: titleColor)),
         ),
         Expanded(
           child: Align(

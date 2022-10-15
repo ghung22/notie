@@ -43,6 +43,7 @@ class EditorContentSheet extends StatefulWidget {
 
 class _EditorContentSheetState extends State<EditorContentSheet> {
   EditorStore? _store;
+  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   // region Button enable checks
 
@@ -173,6 +174,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     return Observer(builder: (context) {
       return Sheet(
         title: AppLocalizations.of(context)!.add_content,
+        titleColor: _activeColor,
         child: Wrap(
           alignment: WrapAlignment.center,
           spacing: Dimens.editorToolPadding,
@@ -183,9 +185,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _inlineEnabled,
-              color: _inlineActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _inlineActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.inline),
               child: const Icon(Icons.code_rounded),
             ),
@@ -194,9 +194,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _codeEnabled,
-              color: _codeActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _codeActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.code),
               child: const Icon(Icons.data_array_rounded),
             ),
@@ -205,9 +203,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _quoteEnabled,
-              color: _quoteActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _quoteActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.quote),
               child: const Icon(Icons.format_quote_rounded),
             ),
@@ -216,9 +212,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _linkEnabled,
-              color: _linkActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _linkActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.link),
               child: const Icon(Icons.link_rounded),
             ),
@@ -227,9 +221,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _imageEnabled,
-              color: _imageActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _imageActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.image),
               child: const Icon(Icons.image_rounded),
             ),
@@ -238,9 +230,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _videoEnabled,
-              color: _videoActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _videoActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.video),
               child: const Icon(Icons.videocam_rounded),
             ),
@@ -249,9 +239,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
               elevated: true,
               showText: true,
               enabled: _formulaEnabled,
-              color: _formulaActive
-                  ? Theme.of(context).primaryColor.withOpacity(.5)
-                  : null,
+              color: _formulaActive ? _activeColor : null,
               onPressed: () => _btnClicked(EditorContentType.formula),
               child: const Icon(Icons.functions_rounded),
             ),
@@ -282,6 +270,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   Widget _indent = const Nothing();
 
   EditorStore? _store;
+  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   // region Button active checks
 
@@ -398,29 +387,34 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   }
 
   void _initStyle() {
-    _style = ToggleBtn(
-      isSelected: [_boldActive, _italicActive, _underlineActive, _strikeActive],
-      activeColor: Theme.of(context).primaryColor,
-      elevated: false,
-      onChanged: (index) {},
-      tooltipTexts: [
-        AppLocalizations.of(context)!.bold,
-        AppLocalizations.of(context)!.italic,
-        AppLocalizations.of(context)!.underline,
-        AppLocalizations.of(context)!.strikethrough,
-      ],
-      children: const [
-        Icon(Icons.format_bold_rounded),
-        Icon(Icons.format_italic_rounded),
-        Icon(Icons.format_underlined_rounded),
-        Icon(Icons.format_strikethrough_rounded),
-      ],
+    _style = Observer(
+      builder: (context) {
+        return ToggleBtn(
+          isSelected: [_boldActive, _italicActive, _underlineActive, _strikeActive],
+          activeColor: _activeColor,
+          elevated: false,
+          onChanged: (index) {},
+          tooltipTexts: [
+            AppLocalizations.of(context)!.bold,
+            AppLocalizations.of(context)!.italic,
+            AppLocalizations.of(context)!.underline,
+            AppLocalizations.of(context)!.strikethrough,
+          ],
+          children: const [
+            Icon(Icons.format_bold_rounded),
+            Icon(Icons.format_italic_rounded),
+            Icon(Icons.format_underlined_rounded),
+            Icon(Icons.format_strikethrough_rounded),
+          ],
+        );
+      }
     );
   }
 
   void _initAlign() {
     _align = ToggleBtn(
       isSelected: [_leftActive, _centerActive, _rightActive],
+      activeColor: _activeColor,
       onChanged: (index) {},
       tooltipTexts: [
         AppLocalizations.of(context)!.align_left,
@@ -438,7 +432,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   void _initScript() {
     _script = ToggleBtn(
       isSelected: [_superscriptActive, _subscriptActive],
-      activeColor: Theme.of(context).primaryColor,
+      activeColor: _activeColor,
       elevated: false,
       onChanged: (index) {},
       tooltipTexts: [
@@ -455,7 +449,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   void _initIndent() {
     _indent = ToggleBtn(
       isSelected: const [false, false],
-      activeColor: Theme.of(context).primaryColor,
+      activeColor: _activeColor,
       elevated: false,
       onChanged: (index) {},
       tooltipTexts: [
@@ -482,6 +476,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     return Observer(builder: (context) {
       return Sheet(
         title: AppLocalizations.of(context)!.text_format,
+        titleColor: _activeColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
@@ -524,40 +519,53 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
 // region Editor color sheet
 
-class EditorColorSheet extends StatelessWidget {
+class EditorColorSheet extends StatefulWidget {
   final bool forText;
 
   const EditorColorSheet({Key? key, this.forText = true}) : super(key: key);
 
   @override
+  State<EditorColorSheet> createState() => _EditorColorSheetState();
+}
+
+class _EditorColorSheetState extends State<EditorColorSheet> {
+  EditorStore? _store;
+  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+
+  @override
   Widget build(BuildContext context) {
-    final options = forText ? ColorOptions.textColors : ColorOptions.noteColors;
-    return Sheet(
-      title: forText
-          ? AppLocalizations.of(context)!.text_color
-          : AppLocalizations.of(context)!.background_color,
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * .75,
-        child: Center(
-          child: Builder(builder: (context) {
-            final names = options.keys.toList();
-            final colors = options.values.toList();
-            return Wrap(
-              children: List.generate(names.length, (index) {
-                return IconBtn(
-                  tooltipText: Strings.capitalize(names[index]),
-                  color: colors[index],
-                  elevated: true,
-                  onPressed: () {},
-                  child: const Nothing(),
-                );
-              }),
-            );
-          }),
+    _store ??= context.read<EditorStore>();
+    final options =
+        widget.forText ? ColorOptions.textColors : ColorOptions.noteColors;
+    return Observer(builder: (context) {
+      return Sheet(
+        title: widget.forText
+            ? AppLocalizations.of(context)!.text_color
+            : AppLocalizations.of(context)!.background_color,
+        titleColor: _activeColor,
+        alignment: Alignment.center,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * .75,
+          child: Center(
+            child: Builder(builder: (context) {
+              final names = options.keys.toList();
+              final colors = options.values.toList();
+              return Wrap(
+                children: List.generate(names.length, (index) {
+                  return IconBtn(
+                    tooltipText: Strings.capitalize(names[index]),
+                    color: colors[index],
+                    elevated: true,
+                    onPressed: () {},
+                    child: const Nothing(),
+                  );
+                }),
+              );
+            }),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
@@ -565,18 +573,32 @@ class EditorColorSheet extends StatelessWidget {
 
 // region Editor undo sheet
 
-class EditorUndoSheet extends StatelessWidget {
+class EditorUndoSheet extends StatefulWidget {
   final bool isUndo;
 
   const EditorUndoSheet({Key? key, this.isUndo = true}) : super(key: key);
 
   @override
+  State<EditorUndoSheet> createState() => _EditorUndoSheetState();
+}
+
+class _EditorUndoSheetState extends State<EditorUndoSheet> {
+  EditorStore? _store;
+  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+
+  @override
   Widget build(BuildContext context) {
-    return Sheet(
-      title: isUndo
-          ? AppLocalizations.of(context)!.undo
-          : AppLocalizations.of(context)!.redo,
-      child: const Nothing(),
+    _store ??= context.read<EditorStore>();
+    return Observer(
+      builder: (context) {
+        return Sheet(
+          title: widget.isUndo
+              ? AppLocalizations.of(context)!.undo
+              : AppLocalizations.of(context)!.redo,
+          titleColor: _activeColor,
+          child: const Nothing(),
+        );
+      }
     );
   }
 }
