@@ -54,23 +54,26 @@ class _EditorBodyState extends State<EditorBody> {
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     return Observer(builder: (_) {
-      return GestureDetector(
-        onTapDown: (details) => _store!.setTapPosition(details.globalPosition),
-        child: QuillEditor(
-          // Basic params
-          controller: _store!.quillCtrl,
-          focusNode: _store!.contentFocus,
-          scrollController: _store!.scrollCtrl,
-          scrollable: true,
-          padding: Pads.all(Dimens.editorPadding),
-          autoFocus: _note.isNotEmpty,
-          readOnly: _store!.readOnly,
-          expands: true,
+      return Container(
+        color: _note.color,
+        child: GestureDetector(
+          onTapDown: (details) => _store!.setTapPosition(details.globalPosition),
+          child: QuillEditor(
+            // Basic params
+            controller: _store!.quillCtrl,
+            focusNode: _store!.contentFocus,
+            scrollController: _store!.scrollCtrl,
+            scrollable: true,
+            padding: Pads.all(Dimens.editorPadding),
+            autoFocus: _note.isNotEmpty,
+            readOnly: _store!.readOnly,
+            expands: true,
 
-          // Events
-          linkActionPickerDelegate: (_, link, __) => linkMenuAction(link),
-          onLaunchUrl: (link) => launchUrl(Uri.https('', link),
-              mode: LaunchMode.externalApplication),
+            // Events
+            linkActionPickerDelegate: (_, link, __) => linkMenuAction(link),
+            onLaunchUrl: (link) => launchUrl(Uri.https('', link),
+                mode: LaunchMode.externalApplication),
+          ),
         ),
       );
     });

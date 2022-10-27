@@ -506,47 +506,46 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   }
 
   void _initIndent() {
-    _indent = StatefulBuilder(
-      builder: (context, setLocalState) {
-        return ToggleBtn(
-          isSelected: [!_indentL3Active, !_indentL0Active],
-          activeColor: _activeColor,
-          elevated: false,
-          multiple: true,
-          onChanged: (index) {
-            switch (index) {
-              case 0:
-                if (_indentL0Active) {
-                  _store!.formatSelection(Attribute.indentL1);
-                } else if (_indentL1Active) {
-                  _store!.formatSelection(Attribute.indentL2);
-                } else if (_indentL2Active) {
-                  _store!.formatSelection(Attribute.indentL3);
-                }
-                break;
-              case 1:
-                if (_indentL3Active) {
-                  _store!.formatSelection(Attribute.indentL2);
-                } else if (_indentL2Active) {
-                  _store!.formatSelection(Attribute.indentL1);
-                } else if (_indentL1Active) {
-                  _store!.formatSelection(Attribute.clone(Attribute.indent, null));
-                }
-                break;
-            }
-            setLocalState(() {});
-          },
-          tooltipTexts: [
-            AppLocalizations.of(context)!.indent_increase,
-            AppLocalizations.of(context)!.indent_decrease,
-          ],
-          children: const [
-            Icon(Icons.format_indent_increase_rounded),
-            Icon(Icons.format_indent_decrease_rounded),
-          ],
-        );
-      }
-    );
+    _indent = StatefulBuilder(builder: (context, setLocalState) {
+      return ToggleBtn(
+        isSelected: [!_indentL3Active, !_indentL0Active],
+        activeColor: _activeColor,
+        elevated: false,
+        multiple: true,
+        onChanged: (index) {
+          switch (index) {
+            case 0:
+              if (_indentL0Active) {
+                _store!.formatSelection(Attribute.indentL1);
+              } else if (_indentL1Active) {
+                _store!.formatSelection(Attribute.indentL2);
+              } else if (_indentL2Active) {
+                _store!.formatSelection(Attribute.indentL3);
+              }
+              break;
+            case 1:
+              if (_indentL3Active) {
+                _store!.formatSelection(Attribute.indentL2);
+              } else if (_indentL2Active) {
+                _store!.formatSelection(Attribute.indentL1);
+              } else if (_indentL1Active) {
+                _store!
+                    .formatSelection(Attribute.clone(Attribute.indent, null));
+              }
+              break;
+          }
+          setLocalState(() {});
+        },
+        tooltipTexts: [
+          AppLocalizations.of(context)!.indent_increase,
+          AppLocalizations.of(context)!.indent_decrease,
+        ],
+        children: const [
+          Icon(Icons.format_indent_increase_rounded),
+          Icon(Icons.format_indent_decrease_rounded),
+        ],
+      );
+    });
   }
 
   @override
@@ -638,12 +637,22 @@ class _EditorColorSheetState extends State<EditorColorSheet> {
               final names = options.keys.toList();
               final colors = options.values.toList();
               return Wrap(
+                spacing: Dimens.editorToolContentPaddingHorz,
+                runSpacing: Dimens.editorToolContentPaddingVert,
                 children: List.generate(names.length, (index) {
                   return IconBtn(
                     tooltipText: Strings.capitalize(names[index]),
                     color: colors[index],
                     elevated: true,
-                    onPressed: () {},
+                    onPressed: () {
+                      if (widget.forText) {
+                        _store!.formatSelection(ColorAttribute(
+                            '#${colors[index].value.toRadixString(16)}'));
+                      } else {
+                        _store!.setNote(_store!.note
+                            .copyWith(colorHex: colors[index].value));
+                      }
+                    },
                     child: const Nothing(),
                   );
                 }),

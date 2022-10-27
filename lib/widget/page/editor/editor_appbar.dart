@@ -23,25 +23,26 @@ class _EditorAppbarState extends State<EditorAppbar> {
   @override
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
-    return AppBar(
-      backgroundColor: _note.color,
-      foregroundColor: ColorBuilder.onColor(_note.color),
-      title: Observer(builder: (_) {
-        return TextField(
-          controller: _store!.titleCtrl,
-          focusNode: _store!.titleFocus,
-          autofocus: _note.isEmpty,
-          readOnly: _store!.readOnly,
-          maxLines: 1,
-          decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.title,
-            border: InputBorder.none,
-          ),
-        );
-      }),
-      actions: [
-        Observer(builder: (context) {
-          return IconBtn(
+    return Observer(builder: (context) {
+      return AppBar(
+        backgroundColor: _note.color,
+        foregroundColor: ColorBuilder.onColor(_note.color),
+        title: Observer(builder: (_) {
+          return TextField(
+            controller: _store!.titleCtrl,
+            focusNode: _store!.titleFocus,
+            autofocus: _note.isEmpty,
+            readOnly: _store!.readOnly,
+            maxLines: 1,
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.title,
+              border: InputBorder.none,
+            ),
+          );
+        }),
+        actions: [
+          IconBtn(
+            color: ColorBuilder.onColor(_note.color),
             onPressed: () => _store!.toggleReadOnly(),
             child: CaseContainer(
               cases: [
@@ -52,9 +53,9 @@ class _EditorAppbarState extends State<EditorAppbar> {
               ],
               child: const Icon(Icons.remove_red_eye_rounded),
             ),
-          );
-        }),
-      ],
-    );
+          ),
+        ],
+      );
+    });
   }
 }
