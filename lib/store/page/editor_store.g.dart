@@ -241,6 +241,17 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
+  void formatSelection(Attribute<dynamic> attribute) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.formatSelection');
+    try {
+      return super.formatSelection(attribute);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 note: ${note},

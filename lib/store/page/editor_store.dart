@@ -189,5 +189,12 @@ abstract class _EditorStore with Store {
     quillCtrl.formatSelection(attribute);
   }
 
+  /// Format a selection and hide keyboard
+  @action
+  void formatSelection(Attribute attribute) {
+    quillCtrl.formatSelection(attribute);
+    contentFocus.unfocus();
+  }
+
 //endregion
 }

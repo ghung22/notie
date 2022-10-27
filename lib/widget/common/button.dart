@@ -189,6 +189,7 @@ class ToggleBtn extends StatefulWidget {
   final Color? activeColor;
   final bool? enabled;
   final bool? elevated;
+  final bool? multiple;
   final ValueChanged<int>? onChanged;
 
   const ToggleBtn({
@@ -201,6 +202,7 @@ class ToggleBtn extends StatefulWidget {
     this.activeColor,
     this.enabled,
     this.elevated,
+    this.multiple,
     this.onChanged,
   })  : assert(children.length == isSelected.length),
         super(key: key);
@@ -253,30 +255,43 @@ class _ToggleBtnState extends State<ToggleBtn> {
           final onActive =
               _active != null ? ColorBuilder.onColor(active) : null;
           return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: i == 0
-                    ? const Radius.circular(Dimens.btnRadius)
-                    : Radius.zero,
-                bottomLeft: i == 0
-                    ? const Radius.circular(Dimens.btnRadius)
-                    : Radius.zero,
-                topRight: i == _children.length - 1
-                    ? const Radius.circular(Dimens.btnRadius)
-                    : Radius.zero,
-                bottomRight: i == _children.length - 1
-                    ? const Radius.circular(Dimens.btnRadius)
-                    : Radius.zero,
-              ),
-              color: (selected && _elevated == false) ? active : null,
-            ),
+            decoration: (_elevated == false)
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: i == 0
+                          ? const Radius.circular(Dimens.btnRadius)
+                          : Radius.zero,
+                      bottomLeft: i == 0
+                          ? const Radius.circular(Dimens.btnRadius)
+                          : Radius.zero,
+                      topRight: i == _children.length - 1
+                          ? const Radius.circular(Dimens.btnRadius)
+                          : Radius.zero,
+                      bottomRight: i == _children.length - 1
+                          ? const Radius.circular(Dimens.btnRadius)
+                          : Radius.zero,
+                    ),
+                    color: (selected && _elevated == false) ? active : null,
+                  )
+                : null,
             child: IconBtn(
               tooltipText: _tooltipTexts?[_children.indexOf(child)] ?? '',
               color: selected ? ((_elevated == true) ? active : onActive) : _fg,
               size: Dimens.btnToggleMinSize,
-              elevated: _elevated ?? selected,
+              elevated: _elevated == true && selected,
               enabled: _enabled,
-              onPressed: () => _onChanged?.call(_children.indexOf(child)),
+              onPressed: () {
+                _onChanged?.call(i);
+                setState(() {
+                  if (widget.multiple == true) {
+                    isSelected[i] = !isSelected[i];
+                    return;
+                  }
+                  for (var ii = 0; ii < isSelected.length; ii++) {
+                    isSelected[ii] = (ii == i);
+                  }
+                });
+              },
               child: child,
             ),
           );

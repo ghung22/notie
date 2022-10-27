@@ -43,6 +43,7 @@ class EditorContentSheet extends StatefulWidget {
 
 class _EditorContentSheetState extends State<EditorContentSheet> {
   EditorStore? _store;
+
   Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   // region Button enable checks
@@ -254,6 +255,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
 
 // region Editor format sheet
 
+// FIXME: Bottom sheet open lag
 class EditorFormatSheet extends StatefulWidget {
   const EditorFormatSheet({Key? key}) : super(key: key);
 
@@ -270,6 +272,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   Widget _indent = const Nothing();
 
   EditorStore? _store;
+
   Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   // region Button active checks
@@ -313,13 +316,18 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   bool get _subscriptActive => _store!.hasStyle(Attribute.script);
 
-  bool get _leftActive => _store!.hasStyle(Attribute.align, 'left');
+  bool get _leftActive =>
+      _store!.hasStyle(Attribute.align, Attribute.leftAlignment.value) ||
+      !_store!.hasStyle(Attribute.align);
 
-  bool get _centerActive => _store!.hasStyle(Attribute.align, 'center');
+  bool get _centerActive =>
+      _store!.hasStyle(Attribute.align, Attribute.centerAlignment.value);
 
-  bool get _rightActive => _store!.hasStyle(Attribute.align, 'right');
+  bool get _rightActive =>
+      _store!.hasStyle(Attribute.align, Attribute.rightAlignment.value);
 
-  bool get _justifyActive => _store!.hasStyle(Attribute.align, 'justify');
+  bool get _justifyActive =>
+      _store!.hasStyle(Attribute.align, Attribute.justifyAlignment.value);
 
   // endregion
 
@@ -387,35 +395,75 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   }
 
   void _initStyle() {
-    _style = Observer(
-      builder: (context) {
-        return ToggleBtn(
-          isSelected: [_boldActive, _italicActive, _underlineActive, _strikeActive],
-          activeColor: _activeColor,
-          elevated: false,
-          onChanged: (index) {},
-          tooltipTexts: [
-            AppLocalizations.of(context)!.bold,
-            AppLocalizations.of(context)!.italic,
-            AppLocalizations.of(context)!.underline,
-            AppLocalizations.of(context)!.strikethrough,
-          ],
-          children: const [
-            Icon(Icons.format_bold_rounded),
-            Icon(Icons.format_italic_rounded),
-            Icon(Icons.format_underlined_rounded),
-            Icon(Icons.format_strikethrough_rounded),
-          ],
-        );
-      }
-    );
+    _style = Observer(builder: (context) {
+      return ToggleBtn(
+        isSelected: [
+          _boldActive,
+          _italicActive,
+          _underlineActive,
+          _strikeActive
+        ],
+        activeColor: _activeColor,
+        elevated: false,
+        multiple: true,
+        onChanged: (index) {
+          switch (index) {
+            case 0:
+              _store!.formatSelection(_boldActive
+                  ? Attribute.clone(Attribute.bold, null)
+                  : Attribute.bold);
+              break;
+            case 1:
+              _store!.formatSelection(_italicActive
+                  ? Attribute.clone(Attribute.italic, null)
+                  : Attribute.italic);
+              break;
+            case 2:
+              _store!.formatSelection(_underlineActive
+                  ? Attribute.clone(Attribute.underline, null)
+                  : Attribute.underline);
+              break;
+            case 3:
+              _store!.formatSelection(_strikeActive
+                  ? Attribute.clone(Attribute.strikeThrough, null)
+                  : Attribute.strikeThrough);
+              break;
+          }
+        },
+        tooltipTexts: [
+          AppLocalizations.of(context)!.bold,
+          AppLocalizations.of(context)!.italic,
+          AppLocalizations.of(context)!.underline,
+          AppLocalizations.of(context)!.strikethrough,
+        ],
+        children: const [
+          Icon(Icons.format_bold_rounded),
+          Icon(Icons.format_italic_rounded),
+          Icon(Icons.format_underlined_rounded),
+          Icon(Icons.format_strikethrough_rounded),
+        ],
+      );
+    });
   }
 
   void _initAlign() {
     _align = ToggleBtn(
       isSelected: [_leftActive, _centerActive, _rightActive],
+      elevated: true,
       activeColor: _activeColor,
-      onChanged: (index) {},
+      onChanged: (index) {
+        switch (index) {
+          case 0:
+            _store!.formatSelection(Attribute.leftAlignment);
+            break;
+          case 1:
+            _store!.formatSelection(Attribute.centerAlignment);
+            break;
+          case 2:
+            _store!.formatSelection(Attribute.rightAlignment);
+            break;
+        }
+      },
       tooltipTexts: [
         AppLocalizations.of(context)!.align_left,
         AppLocalizations.of(context)!.align_center,
@@ -530,6 +578,7 @@ class EditorColorSheet extends StatefulWidget {
 
 class _EditorColorSheetState extends State<EditorColorSheet> {
   EditorStore? _store;
+
   Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   @override
@@ -584,22 +633,21 @@ class EditorUndoSheet extends StatefulWidget {
 
 class _EditorUndoSheetState extends State<EditorUndoSheet> {
   EditorStore? _store;
+
   Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
 
   @override
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
-    return Observer(
-      builder: (context) {
-        return Sheet(
-          title: widget.isUndo
-              ? AppLocalizations.of(context)!.undo
-              : AppLocalizations.of(context)!.redo,
-          titleColor: _activeColor,
-          child: const Nothing(),
-        );
-      }
-    );
+    return Observer(builder: (context) {
+      return Sheet(
+        title: widget.isUndo
+            ? AppLocalizations.of(context)!.undo
+            : AppLocalizations.of(context)!.redo,
+        titleColor: _activeColor,
+        child: const Nothing(),
+      );
+    });
   }
 }
 
