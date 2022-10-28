@@ -33,6 +33,64 @@ class CaseContainer extends StatelessWidget {
   }
 }
 
+/// A builder wrapped in a container
+class BuilderContainer extends Container {
+  final Widget Function(BuildContext context) builder;
+  final double? width;
+  final double? height;
+
+  BuilderContainer({
+    Key? key,
+    required this.builder,
+    AlignmentGeometry? alignment,
+    EdgeInsetsGeometry? padding,
+    Color? color,
+    Decoration? decoration,
+    Decoration? foregroundDecoration,
+    this.width,
+    this.height,
+    BoxConstraints? constraints,
+    EdgeInsetsGeometry? margin,
+    Matrix4? transform,
+    AlignmentGeometry? transformAlignment,
+    Clip clipBehavior = Clip.none,
+  }) : super(
+          key: key,
+          alignment: alignment,
+          padding: padding,
+          color: color,
+          decoration: decoration,
+          foregroundDecoration: foregroundDecoration,
+          width: width,
+          height: height,
+          constraints: constraints,
+          margin: margin,
+          transform: transform,
+          transformAlignment: transformAlignment,
+          clipBehavior: clipBehavior,
+        );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: key,
+      alignment: alignment,
+      padding: padding,
+      color: color,
+      decoration: decoration,
+      foregroundDecoration: foregroundDecoration,
+      width: width,
+      height: height,
+      constraints: constraints,
+      margin: margin,
+      transform: transform,
+      transformAlignment: transformAlignment,
+      clipBehavior: clipBehavior,
+      child: Builder(builder: builder),
+    );
+  }
+}
+
 class RedContainer extends StatelessWidget {
   final Widget child;
 
