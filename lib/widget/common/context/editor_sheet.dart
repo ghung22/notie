@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -645,12 +646,21 @@ class _EditorColorSheetState extends State<EditorColorSheet> {
                     color: colors[index],
                     elevated: true,
                     onPressed: () {
+                      final c = colors[index];
                       if (widget.forText) {
-                        _store!.formatSelection(ColorAttribute(
-                            '#${colors[index].value.toRadixString(16)}'));
+                        _store!.formatSelection(
+                            ColorAttribute('#${c.value.toRadixString(16)}'));
                       } else {
-                        _store!.setNote(_store!.note
-                            .copyWith(colorHex: colors[index].value));
+                        _store!
+                            .setNote(_store!.note.copyWith(colorHex: c.value));
+                        SystemChrome.setSystemUIOverlayStyle(
+                          SystemUiOverlayStyle(
+                            statusBarColor: c,
+                            systemNavigationBarColor: c,
+                            systemNavigationBarIconBrightness:
+                                ColorBuilder.colorBrightnessInvert(c),
+                          ),
+                        );
                       }
                     },
                     child: const Nothing(),

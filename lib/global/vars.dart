@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notie/global/debug.dart';
 
+import 'styles.dart';
+
 class Vars {
   static const appName = 'Notie';
 
@@ -30,5 +32,8 @@ class Vars {
 
   static BuildContext? _context;
 
-  static void init(BuildContext context) => _context = context;
+  static void init(BuildContext context) {
+    _context = context;
+    Themes.updateSystemUi();
+  }
 }

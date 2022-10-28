@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:notie/store/global/theme_store.dart';
 import 'package:provider/provider.dart';
 
+import 'colors.dart';
 import 'dimens.dart';
 import 'vars.dart';
 
@@ -113,6 +115,19 @@ class Themes {
   static bool get isLightMode => themeMode == ThemeMode.light;
 
   static bool get isDarkMode => themeMode == ThemeMode.dark;
+
+  static void updateSystemUi() {
+    if (_context == null) return;
+    final c = Theme.of(_context!).colorScheme.surface;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: c,
+        systemNavigationBarColor: c,
+        systemNavigationBarIconBrightness:
+            ColorBuilder.colorBrightnessInvert(c),
+      ),
+    );
+  }
 
   static ThemeData _generateTheme({required ThemeData from}) {
     final initialTheme = ThemeData(

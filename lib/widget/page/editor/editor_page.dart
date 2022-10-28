@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notie/data/model/note.dart';
 import 'package:notie/global/routes.dart';
+import 'package:notie/global/styles.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/container.dart';
@@ -12,6 +13,12 @@ import 'editor_toolbar.dart';
 
 class EditorPage extends StatefulWidget {
   final Note note;
+
+  static Future<bool> onBackPressed(BuildContext context) async {
+    Themes.updateSystemUi();
+    Navigator.of(context).pop();
+    return true;
+  }
 
   const EditorPage(this.note, {super.key});
 
@@ -32,27 +39,31 @@ class _EditorPageState extends State<EditorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => _store,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Hero(
-            tag: '${Routes.editor}?id=${_note.createdTimestamp}',
-            child: const Opacity(opacity: 0, child: CardItem(child: Nothing())),
-          ),
-          Scaffold(
-            appBar: const PreferredSize(
-              preferredSize: Size.fromHeight(kToolbarHeight),
-              child: EditorAppbar(),
+    return WillPopScope(
+      onWillPop: () => EditorPage.onBackPressed(context),
+      child: Provider(
+        create: (_) => _store,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Hero(
+              tag: '${Routes.editor}?id=${_note.createdTimestamp}',
+              child:
+                  const Opacity(opacity: 0, child: CardItem(child: Nothing())),
             ),
-            body: const SafeArea(child: EditorBody()),
-            bottomNavigationBar: Padding(
-              padding: MediaQuery.of(context).viewInsets,
-              child: const EditorToolbar(),
+            Scaffold(
+              appBar: const PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: EditorAppbar(),
+              ),
+              body: const SafeArea(child: EditorBody()),
+              bottomNavigationBar: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: const EditorToolbar(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

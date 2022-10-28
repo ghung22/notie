@@ -35,6 +35,7 @@ class _EditorAppbarState extends State<EditorAppbar> {
             autofocus: _note.isEmpty,
             readOnly: _store!.readOnly,
             maxLines: 1,
+            style: TextStyle(color: ColorBuilder.onColor(_note.color)),
             decoration: Styles.inputBorderless
                 .copyWith(hintText: AppLocalizations.of(context)!.title),
           );

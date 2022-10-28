@@ -18,6 +18,12 @@ class ColorBuilder {
 
   static Color onColorShadow(Color color) =>
       color.computeLuminance() > .5 ? Colors.white : Colors.black;
+
+  static Brightness colorBrightness(Color color) =>
+      color.computeLuminance() > .5 ? Brightness.light : Brightness.dark;
+
+  static Brightness colorBrightnessInvert(Color color) =>
+      color.computeLuminance() > .5 ? Brightness.dark : Brightness.light;
 }
 
 // region Template colors
