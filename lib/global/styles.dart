@@ -70,8 +70,15 @@ class Styles {
     fontWeight: FontWeight.bold,
   );
 
-  static InputDecoration inputOutlined = InputDecoration(
+  static InputDecoration inputFilled = InputDecoration(
     border: const OutlineInputBorder(borderRadius: Rads.input),
+    fillColor: Theme.of(_context!).colorScheme.surface,
+    filled: true,
+    contentPadding: Pads.all(Dimens.inputPadding),
+  );
+
+  static InputDecoration inputBorderless = InputDecoration(
+    border: InputBorder.none,
     contentPadding: Pads.all(Dimens.inputPadding),
   );
 

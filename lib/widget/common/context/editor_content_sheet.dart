@@ -175,9 +175,7 @@ class _EditorContentState extends State<EditorContent> {
       expands: _multiline,
       textAlignVertical: TextAlignVertical.top,
       style: _inputStyle,
-      decoration: Styles.inputOutlined.copyWith(
-        hintText: _hintText,
-      ),
+      decoration: Styles.inputFilled.copyWith(hintText: _hintText),
     );
   }
 
@@ -201,7 +199,7 @@ class _EditorContentState extends State<EditorContent> {
       child: TextField(
         controller: _captionCtrl,
         keyboardType: TextInputType.text,
-        decoration: Styles.inputOutlined.copyWith(
+        decoration: Styles.inputFilled.copyWith(
           hintText: AppLocalizations.of(context)!.caption,
         ),
       ),
@@ -209,6 +207,7 @@ class _EditorContentState extends State<EditorContent> {
   }
 
   void _initLang() {
+    if (_contentType != EditorContentType.code) return;
     _lang = Dropdown(
       isExpanded: true,
       items: [
@@ -290,9 +289,12 @@ class _EditorContentState extends State<EditorContent> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (_contentType == EditorContentType.code)
+                      if (_lang is! Nothing)
                         Expanded(child: _lang),
-                      _paste,
+                      Padding(
+                        padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
+                        child: _paste,
+                      ),
                       _insert,
                     ],
                   ),

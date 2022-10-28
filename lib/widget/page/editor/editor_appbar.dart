@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:notie/data/model/note.dart';
 import 'package:notie/global/colors.dart';
+import 'package:notie/global/styles.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/button.dart';
 import 'package:notie/widget/common/container.dart';
@@ -34,10 +35,8 @@ class _EditorAppbarState extends State<EditorAppbar> {
             autofocus: _note.isEmpty,
             readOnly: _store!.readOnly,
             maxLines: 1,
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context)!.title,
-              border: InputBorder.none,
-            ),
+            decoration: Styles.inputBorderless
+                .copyWith(hintText: AppLocalizations.of(context)!.title),
           );
         }),
         actions: [
