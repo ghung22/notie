@@ -30,6 +30,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
         minHeight: MediaQuery.of(context).size.height * .4,
         maxHeight: MediaQuery.of(context).size.height * .4,
       ),
+      useRootNavigator: true,
       builder: (_) {
         return Provider(
           create: (_) => _store!,

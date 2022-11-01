@@ -114,12 +114,11 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     } else {
       _store!.expandSelection(separator: sep);
     }
-    _store!.contentFocus.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   Future<void> _btnClicked(EditorContentType type) async {
     // Run specific actions (may return without showing any dialog)
-    var isScrollControlled = false;
     String? value;
     switch (type) {
       case EditorContentType.inline:
@@ -129,14 +128,12 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
         );
         break;
       case EditorContentType.code:
-        isScrollControlled = true;
         _prepareSelection(
           forParagraphs: true,
           forAttribute: Attribute.codeBlock,
         );
         break;
       case EditorContentType.quote:
-        isScrollControlled = true;
         _prepareSelection(
           forParagraphs: true,
           forAttribute: Attribute.blockQuote,
@@ -153,7 +150,8 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: _store!.note.color,
-      isScrollControlled: isScrollControlled,
+      isScrollControlled: true,
+      useRootNavigator: true,
       builder: (context) {
         return Provider(
           create: (_) => _store!,
@@ -164,6 +162,7 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
         );
       },
     ).then((result) {
+      FocusManager.instance.primaryFocus?.unfocus();
       if (result == EditorDialogResult.success) {
         Navigator.of(context).pop();
       }

@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.7.0"
+  any_link_preview:
+    dependency: "direct main"
+    description:
+      name: any_link_preview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.9"
   args:
     dependency: transitive
     description:
@@ -902,7 +909,7 @@ packages:
     source: hosted
     version: "1.0.0"
   tuple:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: tuple
       url: "https://pub.dartlang.org"

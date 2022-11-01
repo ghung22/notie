@@ -107,5 +107,6 @@ class Rads {
       BorderRadius.vertical(top: Radius.circular(Dimens.cardRadius));
   static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRadius));
   static const card = BorderRadius.all(Radius.circular(Dimens.cardRadius));
+  static const code = card;
   static const input = BorderRadius.all(Radius.circular(Dimens.cardRadius));
 }

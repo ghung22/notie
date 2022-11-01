@@ -61,6 +61,7 @@ class _EditorPageState extends State<EditorPage> {
                 padding: MediaQuery.of(context).viewInsets,
                 child: const EditorToolbar(),
               ),
+              resizeToAvoidBottomInset: true,
             ),
           ],
         ),

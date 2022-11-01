@@ -270,38 +270,40 @@ class _EditorContentState extends State<EditorContent> {
     _initInsert();
 
     return FractionallySizedBox(
-      heightFactor: _multiline ? .9 : null,
+      heightFactor: .9,
       child: SafeArea(
-        child: Sheet(
-          title: _title,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width * .9,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Builder(builder: (context) {
-                  if (_multiline) return Expanded(child: _input);
-                  return _input;
-                }),
-                _caption,
-                Padding(
-                  padding: Pads.sym(v: Dimens.editorToolContentPaddingVert),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      if (_lang is! Nothing)
-                        Expanded(child: _lang),
-                      Padding(
-                        padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
-                        child: _paste,
-                      ),
-                      _insert,
-                    ],
+        child: Padding(
+          padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
+          child: Sheet(
+            title: _title,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * .9,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Builder(builder: (context) {
+                    if (_multiline) return Expanded(child: _input);
+                    return _input;
+                  }),
+                  _caption,
+                  Padding(
+                    padding: Pads.sym(v: Dimens.editorToolContentPaddingVert),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (_lang is! Nothing) Expanded(child: _lang),
+                        Padding(
+                          padding:
+                              Pads.horz(Dimens.editorToolContentPaddingHorz),
+                          child: _paste,
+                        ),
+                        _insert,
+                      ],
+                    ),
                   ),
-                ),
-                if (_multiline)
                   SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-              ],
+                ],
+              ),
             ),
           ),
         ),

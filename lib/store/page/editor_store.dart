@@ -193,7 +193,7 @@ abstract class _EditorStore with Store {
   @action
   void formatSelection(Attribute attribute) {
     quillCtrl.formatSelection(attribute);
-    contentFocus.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
 //endregion

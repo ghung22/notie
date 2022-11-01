@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notie/store/global/theme_store.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +85,38 @@ class Styles {
     contentPadding: Pads.all(Dimens.inputPadding),
   );
 
-// Content styles
+  // Content styles
+  static DefaultStyles get quillStyles {
+    final style = DefaultStyles.getInstance(_context!);
+    final theme = Theme.of(_context!);
+    final boxColor = theme.colorScheme.onSurface.withOpacity(.1);
+    return DefaultStyles(
+      inlineCode: InlineCodeStyle(
+        backgroundColor: boxColor,
+        radius: Rads.code.topLeft,
+        style: style.inlineCode!.style.copyWith(fontFamily: Themes.fontMono),
+        header1:
+            style.inlineCode!.header1!.copyWith(fontFamily: Themes.fontMono),
+        header2:
+            style.inlineCode!.header2!.copyWith(fontFamily: Themes.fontMono),
+        header3:
+            style.inlineCode!.header3!.copyWith(fontFamily: Themes.fontMono),
+      ),
+      code: DefaultTextBlockStyle(
+          style.code!.style.copyWith(fontFamily: Themes.fontMono),
+          style.code!.verticalSpacing,
+          style.code!.lineSpacing,
+          BoxDecoration(color: boxColor, borderRadius: Rads.code)),
+      quote: DefaultTextBlockStyle(
+          style.quote!.style.copyWith(
+            color: theme.colorScheme.onSurface.withOpacity(.5),
+          ),
+          style.quote!.verticalSpacing,
+          style.quote!.lineSpacing,
+          BoxDecoration(
+              border: Border(left: BorderSide(width: 4, color: boxColor)))),
+    );
+  }
 }
 
 class Themes {

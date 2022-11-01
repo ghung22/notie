@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:notie/data/model/note.dart';
 import 'package:notie/global/dimens.dart';
+import 'package:notie/global/styles.dart';
 import 'package:notie/store/page/editor_store.dart';
 import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +23,7 @@ class _EditorBodyState extends State<EditorBody> {
 
   Note get _note => _store?.note ?? const Note();
 
-  Future<LinkMenuAction> linkMenuAction(String link) async {
+  Future<LinkMenuAction> _linkMenuAction(String link) async {
     link = '${link.split('/').first}/...';
     final overlay = Overlay.of(context)?.context.findRenderObject();
     final result = await showMenu<LinkMenuAction>(
@@ -34,8 +36,10 @@ class _EditorBodyState extends State<EditorBody> {
       shape: Borders.card,
       items: [
         PopupMenuItem(
-          value: LinkMenuAction.launch,
+          value: LinkMenuAction.none,
           child: Txt(text: AppLocalizations.of(context)!.open_link(link)),
+          onTap: () => launchUrl(Uri.https('', link),
+              mode: LaunchMode.externalApplication),
         ),
         PopupMenuItem(
           value: LinkMenuAction.copy,
@@ -57,7 +61,8 @@ class _EditorBodyState extends State<EditorBody> {
       return Container(
         color: _note.color,
         child: GestureDetector(
-          onTapDown: (details) => _store!.setTapPosition(details.globalPosition),
+          onTapDown: (details) =>
+              _store!.setTapPosition(details.globalPosition),
           child: QuillEditor(
             // Basic params
             controller: _store!.quillCtrl,
@@ -69,10 +74,15 @@ class _EditorBodyState extends State<EditorBody> {
             readOnly: _store!.readOnly,
             expands: true,
 
+            // Styles
+            customStyles: Styles.quillStyles,
+            embedBuilders: [
+              ...FlutterQuillEmbeds.builders(),
+            ],
+
             // Events
-            linkActionPickerDelegate: (_, link, __) => linkMenuAction(link),
-            onLaunchUrl: (link) => launchUrl(Uri.https('', link),
-                mode: LaunchMode.externalApplication),
+            linkActionPickerDelegate: (_, link, __) => _linkMenuAction(link),
+            onLaunchUrl: (link) => _linkMenuAction(link),
           ),
         ),
       );
