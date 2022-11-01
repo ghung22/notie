@@ -75,10 +75,8 @@ class _EditorBodyState extends State<EditorBody> {
             expands: true,
 
             // Styles
-            customStyles: Styles.quillStyles,
-            embedBuilders: [
-              ...FlutterQuillEmbeds.builders(),
-            ],
+            customStyles: Styles.quillStyles(background: _note.color),
+            embedBuilders: FlutterQuillEmbeds.builders(),
 
             // Events
             linkActionPickerDelegate: (_, link, __) => _linkMenuAction(link),

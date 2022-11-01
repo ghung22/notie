@@ -8,7 +8,7 @@ part 'note.g.dart';
 class Note {
   final String title;
   final String content;
-  final int colorHex;
+  final int? colorHex;
   final int createdTimestamp;
   final int updatedTimestamp;
   final int deletedTimestamp;
@@ -18,7 +18,7 @@ class Note {
   const Note({
     this.title = '',
     this.content = '',
-    this.colorHex = BgColors.whiteHex,
+    this.colorHex,
     this.createdTimestamp = 0,
     this.updatedTimestamp = 0,
     this.deletedTimestamp = 0,
@@ -72,7 +72,7 @@ class Note {
 
   // region getters
 
-  Color get color => Color(colorHex);
+  Color? get color => colorHex == null ? null : Color(colorHex!);
 
   DateTime get createdAt =>
       DateTime.fromMillisecondsSinceEpoch(createdTimestamp);
@@ -112,7 +112,7 @@ class Notes {
 
   int get length => _v.length;
 
-  Note operator[] (int index) => value[index];
+  Note operator [](int index) => value[index];
 
   // endregion
 
@@ -126,8 +126,11 @@ class Notes {
 
   List<Note> get byName => value..sort((a, b) => a.title.compareTo(b.title));
 
-  List<Note> get byColor =>
-      value..sort((a, b) => a.colorHex.compareTo(b.colorHex));
+  List<Note> get byColor => value
+    ..sort((a, b) {
+      if (a.color == null || b.color == null) return 1;
+      return a.colorHex!.compareTo(b.colorHex!);
+    });
 
   List<Note> get byCreateTime => value;
 

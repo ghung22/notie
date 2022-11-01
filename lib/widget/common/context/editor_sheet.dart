@@ -45,7 +45,8 @@ class EditorContentSheet extends StatefulWidget {
 class _EditorContentSheetState extends State<EditorContentSheet> {
   EditorStore? _store;
 
-  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+  Color get _activeColor => ColorBuilder.onColor(
+      _store!.note.color ?? Theme.of(context).colorScheme.surface);
 
   // region Button enable checks
 
@@ -273,7 +274,8 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   EditorStore? _store;
 
-  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+  Color get _activeColor => ColorBuilder.onColor(
+      _store!.note.color ?? Theme.of(context).colorScheme.surface);
 
   // region Button active checks
 
@@ -616,7 +618,8 @@ class EditorColorSheet extends StatefulWidget {
 class _EditorColorSheetState extends State<EditorColorSheet> {
   EditorStore? _store;
 
-  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+  Color get _activeColor => ColorBuilder.onColor(
+      _store!.note.color ?? Theme.of(context).colorScheme.surface);
 
   @override
   Widget build(BuildContext context) {
@@ -690,7 +693,8 @@ class EditorUndoSheet extends StatefulWidget {
 class _EditorUndoSheetState extends State<EditorUndoSheet> {
   EditorStore? _store;
 
-  Color get _activeColor => ColorBuilder.onColor(_store!.note.color);
+  Color get _activeColor => ColorBuilder.onColor(
+      _store!.note.color ?? Theme.of(context).colorScheme.surface);
 
   @override
   Widget build(BuildContext context) {

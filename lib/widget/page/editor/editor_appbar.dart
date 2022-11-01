@@ -25,9 +25,11 @@ class _EditorAppbarState extends State<EditorAppbar> {
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     return Observer(builder: (context) {
+      final color = ColorBuilder.onColor(
+          _note.color ?? Theme.of(context).colorScheme.surface);
       return AppBar(
         backgroundColor: _note.color,
-        foregroundColor: ColorBuilder.onColor(_note.color),
+        foregroundColor: color,
         title: Observer(builder: (_) {
           return TextField(
             controller: _store!.titleCtrl,
@@ -35,14 +37,14 @@ class _EditorAppbarState extends State<EditorAppbar> {
             autofocus: _note.isEmpty,
             readOnly: _store!.readOnly,
             maxLines: 1,
-            style: TextStyle(color: ColorBuilder.onColor(_note.color)),
+            style: TextStyle(color: color),
             decoration: Styles.inputBorderless
                 .copyWith(hintText: AppLocalizations.of(context)!.title),
           );
         }),
         actions: [
           IconBtn(
-            color: ColorBuilder.onColor(_note.color),
+            color: color,
             onPressed: () => _store!.toggleReadOnly(),
             child: CaseContainer(
               cases: [

@@ -112,6 +112,8 @@ class FgColors {
 class ColorOptions {
   static const textColors = {
     'white': FgColors.white,
+    'gray': FgColors.gray,
+    'black': FgColors.black,
     'red': FgColors.red,
     'orange': FgColors.orange,
     'yellow': FgColors.yellow,
@@ -127,6 +129,8 @@ class ColorOptions {
 
   static const noteColors = {
     'white': BgColors.white,
+    'gray': BgColors.gray,
+    'black': BgColors.black,
     'red': BgColors.red,
     'orange': BgColors.orange,
     'yellow': BgColors.yellow,

@@ -12,21 +12,21 @@ class Styles {
   static BuildContext? get _context => Vars.context;
 
   // TextView styles
-  static TextStyle get header => TextStyle(
-        color: Theme.of(_context!).primaryColor,
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        fontFamily: Themes.fontDisplay,
-      );
+  static TextStyle header = TextStyle(
+    color: Theme.of(_context!).primaryColor,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    fontFamily: Themes.fontDisplay,
+  );
 
-  static TextStyle get subheader => TextStyle(
-        color: Theme.of(_context!).primaryColor,
-        fontSize: 14,
-      );
+  static TextStyle subheader = TextStyle(
+    color: Theme.of(_context!).primaryColor,
+    fontSize: 14,
+  );
 
-  static TextStyle get footer => const TextStyle(
-        color: Colors.black54,
-      );
+  static TextStyle footer = const TextStyle(
+    color: Colors.black54,
+  );
   static const TextStyle spacedText = TextStyle(
     letterSpacing: 0.5,
   );
@@ -38,33 +38,33 @@ class Styles {
       );
 
   // Font styles
-  static TextStyle get h1 => const TextStyle(
-        fontSize: 28,
-        fontWeight: FontWeight.bold,
-        fontFamily: Themes.fontDisplay,
-      );
+  static TextStyle h1 = const TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    fontFamily: Themes.fontDisplay,
+  );
 
-  static TextStyle get h2 => const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        fontFamily: Themes.fontDisplay,
-      );
+  static TextStyle h2 = const TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    fontFamily: Themes.fontDisplay,
+  );
 
-  static TextStyle get h3 => const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        fontFamily: Themes.fontDisplay,
-      );
+  static TextStyle h3 = const TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    fontFamily: Themes.fontDisplay,
+  );
 
-  static TextStyle get mono => const TextStyle(
-        fontFamily: Themes.fontMono,
-        fontSize: 13,
-      );
+  static TextStyle mono = const TextStyle(
+    fontFamily: Themes.fontMono,
+    fontSize: 13,
+  );
 
-  static TextStyle get cursive => const TextStyle(
-        fontFamily: Themes.fontCursive,
-        fontSize: 20,
-      );
+  static TextStyle cursive = const TextStyle(
+    fontFamily: Themes.fontCursive,
+    fontSize: 20,
+  );
 
   // Widget styles
   static const TextStyle iconBtnError = TextStyle(fontFamily: Themes.fontMono);
@@ -86,35 +86,87 @@ class Styles {
   );
 
   // Content styles
-  static DefaultStyles get quillStyles {
+  static DefaultStyles quillStyles({Color? background}) {
     final style = DefaultStyles.getInstance(_context!);
     final theme = Theme.of(_context!);
-    final boxColor = theme.colorScheme.onSurface.withOpacity(.1);
+    background ??= theme.colorScheme.surface;
+    final onBg = ColorBuilder.onColor(background);
+    final faded = onBg.withOpacity(.1);
+    final half = onBg.withOpacity(.5);
+    final base = TextStyle(fontFamily: Themes.fontDefault, color: onBg);
     return DefaultStyles(
+      // region Base style
+      paragraph: DefaultTextBlockStyle(
+        style.paragraph!.style.merge(base).copyWith(
+              fontWeight: FontWeight.normal,
+              fontSize: 14,
+              height: 1.3,
+              decoration: TextDecoration.none,
+            ),
+        style.paragraph!.verticalSpacing,
+        style.paragraph!.lineSpacing,
+        style.paragraph!.decoration,
+      ),
+      h1: DefaultTextBlockStyle(
+        style.h1!.style.merge(base),
+        style.h1!.verticalSpacing,
+        style.h1!.lineSpacing,
+        style.h1!.decoration,
+      ),
+      h2: DefaultTextBlockStyle(
+        style.h2!.style.merge(base),
+        style.h2!.verticalSpacing,
+        style.h2!.lineSpacing,
+        style.h2!.decoration,
+      ),
+      h3: DefaultTextBlockStyle(
+        style.h3!.style.merge(base),
+        style.h3!.verticalSpacing,
+        style.h3!.lineSpacing,
+        style.h3!.decoration,
+      ),
+      bold: style.bold!.merge(base),
+      italic: style.italic!.merge(base),
+      underline: style.underline!.merge(base),
+      strikeThrough: style.strikeThrough!.merge(base),
+      //endregion
+
+      // region Content style
       inlineCode: InlineCodeStyle(
-        backgroundColor: boxColor,
+        backgroundColor: faded,
         radius: Rads.code.topLeft,
-        style: style.inlineCode!.style.copyWith(fontFamily: Themes.fontMono),
-        header1:
-            style.inlineCode!.header1!.copyWith(fontFamily: Themes.fontMono),
-        header2:
-            style.inlineCode!.header2!.copyWith(fontFamily: Themes.fontMono),
-        header3:
-            style.inlineCode!.header3!.copyWith(fontFamily: Themes.fontMono),
+        style: style.inlineCode!.style
+            .merge(base)
+            .copyWith(fontFamily: Themes.fontMono),
+        header1: style.inlineCode!.header1!
+            .merge(base)
+            .copyWith(fontFamily: Themes.fontMono),
+        header2: style.inlineCode!.header2!
+            .merge(base)
+            .copyWith(fontFamily: Themes.fontMono),
+        header3: style.inlineCode!.header3!
+            .merge(base)
+            .copyWith(fontFamily: Themes.fontMono),
       ),
       code: DefaultTextBlockStyle(
-          style.code!.style.copyWith(fontFamily: Themes.fontMono),
-          style.code!.verticalSpacing,
-          style.code!.lineSpacing,
-          BoxDecoration(color: boxColor, borderRadius: Rads.code)),
+        style.code!.style.merge(base).copyWith(fontFamily: Themes.fontMono),
+        style.code!.verticalSpacing,
+        style.code!.lineSpacing,
+        BoxDecoration(color: faded, borderRadius: Rads.code),
+      ),
       quote: DefaultTextBlockStyle(
-          style.quote!.style.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(.5),
-          ),
-          style.quote!.verticalSpacing,
-          style.quote!.lineSpacing,
-          BoxDecoration(
-              border: Border(left: BorderSide(width: 4, color: boxColor)))),
+        style.quote!.style.merge(base).copyWith(color: half),
+        style.quote!.verticalSpacing,
+        style.quote!.lineSpacing,
+        BoxDecoration(border: Border(left: BorderSide(width: 4, color: faded))),
+      ),
+      link: TextStyle(
+        color: theme.primaryColor,
+        decoration: TextDecoration.underline,
+        decorationStyle: TextDecorationStyle.dotted,
+        decorationColor: theme.primaryColor,
+      ),
+      // endregion
     );
   }
 }
@@ -122,6 +174,7 @@ class Styles {
 class Themes {
   static BuildContext? get _context => Vars.context;
 
+  static const fontDefault = 'roboto';
   static const fontText = 'sf_text';
   static const fontDisplay = 'sf_display';
   static const fontMono = 'monospace';

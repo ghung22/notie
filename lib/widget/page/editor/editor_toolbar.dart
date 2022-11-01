@@ -72,6 +72,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     return Observer(builder: (context) {
+      final color = ColorBuilder.onColor(
+          _note.color ?? Theme.of(context).colorScheme.surface);
       return AnimatedOpacity(
         opacity: _store!.readOnly ? .25 : 1,
         duration: Vars.animationFast,
@@ -85,31 +87,31 @@ class _EditorToolbarState extends State<EditorToolbar> {
               children: [
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.add_content,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   onPressed: () => _btnClicked(EditorSheets.content),
                   child: const Icon(Icons.add_box_rounded),
                 ),
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.text_format,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   onPressed: () => _btnClicked(EditorSheets.textFormat),
                   child: const Icon(Icons.format_size_rounded),
                 ),
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.text_color,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   onPressed: () => _btnClicked(EditorSheets.textColor),
                   child: const Icon(Icons.format_color_text_rounded),
                 ),
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.background_color,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   onPressed: () => _btnClicked(EditorSheets.backgroundColor),
                   child: const Icon(Icons.format_color_fill_rounded),
                 ),
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.undo,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   enabled: _store!.quillCtrl.hasUndo,
                   onPressed: () => _store!.quillCtrl.undo(),
                   onLongPressed: () => _btnClicked(EditorSheets.undo),
@@ -117,7 +119,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
                 ),
                 IconBtn(
                   tooltipText: AppLocalizations.of(context)!.redo,
-                  color: ColorBuilder.onColor(_note.color),
+                  color: color,
                   enabled: _store!.quillCtrl.hasRedo,
                   onPressed: () => _store!.quillCtrl.redo(),
                   onLongPressed: () => _btnClicked(EditorSheets.redo),
