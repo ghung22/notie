@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/model/note.dart';
+import 'package:notie/global/strings.dart';
+import 'package:notie/global/vars.dart';
 
 part 'editor_store.g.dart';
 
@@ -36,6 +38,30 @@ abstract class _EditorStore with Store {
   FocusNode contentFocus = FocusNode();
 
   // endregion
+
+  // region computed
+
+  @computed
+  String get currentWord => _getTextFrom(separator: ' ');
+
+  @computed
+  String get currentLine => _getTextFrom(separator: '\n');
+
+  // endregion
+
+  // Private actions
+  String _getTextFrom({required String separator}) {
+    // Find the closest newline at both ends of the cursor
+    final base = _selection.baseOffset;
+    final extent = _selection.extentOffset;
+    var lineStart = _plainContent.lastIndexOf(separator, base) + 1;
+    var lineEnd = _plainContent.indexOf(separator, extent);
+    if (lineStart == -1) lineStart = base;
+    if (lineEnd == -1) lineEnd = extent;
+
+    // Expand selection to include the whole line
+    return _plainContent.substring(lineStart, lineEnd);
+  }
 
   // Editor actions
 
@@ -172,7 +198,7 @@ abstract class _EditorStore with Store {
     if (selectionCollapsed) text = '$separator$text';
 
     // Replace editor text and move to the new line if needed
-    final sel = quillCtrl.selection;
+    final sel = _selection;
     quillCtrl.replaceText(
         sel.baseOffset, sel.extentOffset - sel.baseOffset, text, sel);
     if (selectionCollapsed) {
@@ -192,7 +218,39 @@ abstract class _EditorStore with Store {
   /// Format a selection and hide keyboard
   @action
   void formatSelection(Attribute attribute) {
-    quillCtrl.formatSelection(attribute);
+    switch (attribute.key) {
+      // Text casing
+      case Formats.lower:
+      case Formats.caps:
+      case Formats.upper:
+        // Get selection text (expand to current word if selection is collapsed)
+        if (_selection.isCollapsed) expandSelection(separator: ' ');
+        final sel = _selection;
+        var text = quillCtrl.document.getPlainText(_selection.baseOffset,
+            _selection.extentOffset - _selection.baseOffset);
+
+        // Change text casing
+        switch (attribute.key) {
+          case Formats.lower:
+            text = text.toLowerCase();
+            break;
+          case Formats.caps:
+            text = Strings.capitalize(text, eachWord: true);
+            break;
+          case Formats.upper:
+            text = text.toUpperCase();
+            break;
+        }
+
+        // Replace selection with new text
+        quillCtrl.replaceText(
+            sel.baseOffset, sel.extentOffset - sel.baseOffset, text, sel);
+        break;
+
+      default:
+        quillCtrl.formatSelection(attribute);
+        break;
+    }
     FocusManager.instance.primaryFocus?.unfocus();
   }
 

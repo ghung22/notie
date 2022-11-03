@@ -268,8 +268,8 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
   Widget _font = const Nothing();
   Widget _size = const Nothing();
   Widget _style = const Nothing();
+  Widget _case = const Nothing();
   Widget _align = const Nothing();
-  Widget _script = const Nothing();
   Widget _indent = const Nothing();
 
   EditorStore? _store;
@@ -314,9 +314,11 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   bool get _strikeActive => _store!.hasStyle(Attribute.strikeThrough);
 
-  bool get _superscriptActive => _store!.hasStyle(Attribute.script);
+  bool get _lowerActive => Strings.isLowercase(_store!.currentWord);
 
-  bool get _subscriptActive => _store!.hasStyle(Attribute.script);
+  bool get _capsActive => Strings.isCapitalized(_store!.currentWord);
+
+  bool get _upperActive => Strings.isUppercase(_store!.currentWord);
 
   bool get _leftActive =>
       _store!.hasStyle(Attribute.align, Attribute.leftAlignment.value) ||
@@ -327,9 +329,6 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
   bool get _rightActive =>
       _store!.hasStyle(Attribute.align, Attribute.rightAlignment.value);
-
-  bool get _justifyActive =>
-      _store!.hasStyle(Attribute.align, Attribute.justifyAlignment.value);
 
   bool get _indentL0Active => !_store!.hasStyle(Attribute.indent);
 
@@ -417,6 +416,7 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
           _strikeActive
         ],
         activeColor: _activeColor,
+        foregroundColor: _activeColor,
         elevated: false,
         multiple: true,
         onChanged: (index) {
@@ -459,11 +459,47 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     });
   }
 
+  void _initCase() {
+    _case = ToggleBtn(
+      isSelected: [_lowerActive, _capsActive, _upperActive],
+      elevated: true,
+      activeColor: _activeColor,
+      foregroundColor: _activeColor,
+      onChanged: (index) {
+        switch (index) {
+          case 0:
+            _store!.formatSelection(
+                const Attribute(Formats.lower, AttributeScope.IGNORE, null));
+            break;
+          case 1:
+            _store!.formatSelection(
+                const Attribute(Formats.caps, AttributeScope.IGNORE, null));
+            break;
+          case 2:
+            _store!.formatSelection(
+                const Attribute(Formats.upper, AttributeScope.IGNORE, null));
+            break;
+        }
+      },
+      tooltipTexts: [
+        AppLocalizations.of(context)!.lowercase,
+        AppLocalizations.of(context)!.capitalize,
+        AppLocalizations.of(context)!.uppercase,
+      ],
+      children: const [
+        Icon(Icons.keyboard_double_arrow_down_rounded),
+        Icon(Icons.keyboard_capslock_rounded),
+        Icon(Icons.keyboard_double_arrow_up_rounded),
+      ],
+    );
+  }
+
   void _initAlign() {
     _align = ToggleBtn(
       isSelected: [_leftActive, _centerActive, _rightActive],
       elevated: true,
       activeColor: _activeColor,
+      foregroundColor: _activeColor,
       onChanged: (index) {
         switch (index) {
           case 0:
@@ -490,28 +526,12 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     );
   }
 
-  void _initScript() {
-    _script = ToggleBtn(
-      isSelected: [_superscriptActive, _subscriptActive],
-      activeColor: _activeColor,
-      elevated: false,
-      onChanged: (index) {},
-      tooltipTexts: [
-        AppLocalizations.of(context)!.superscript,
-        AppLocalizations.of(context)!.subscript,
-      ],
-      children: const [
-        Icon(Icons.superscript_rounded),
-        Icon(Icons.subscript_rounded),
-      ],
-    );
-  }
-
   void _initIndent() {
     _indent = StatefulBuilder(builder: (context, setLocalState) {
       return ToggleBtn(
         isSelected: [!_indentL3Active, !_indentL0Active],
         activeColor: _activeColor,
+        foregroundColor: _activeColor,
         elevated: false,
         multiple: true,
         onChanged: (index) {
@@ -556,8 +576,8 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
     _initFont();
     _initSize();
     _initStyle();
+    _initCase();
     _initAlign();
-    _initScript();
     _initIndent();
 
     return Observer(builder: (context) {
@@ -583,14 +603,14 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
               children: [
                 _style,
                 const SizedBox(width: Dimens.editorToolContentPaddingHorz),
-                _align,
+                _case,
               ],
             ),
             const SizedBox(height: Dimens.editorToolContentPaddingVert * 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _script,
+                _align,
                 const SizedBox(width: Dimens.editorToolContentPaddingHorz),
                 _indent,
               ],

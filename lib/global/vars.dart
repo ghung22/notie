@@ -37,3 +37,9 @@ class Vars {
     Themes.updateSystemUi();
   }
 }
+
+class Formats {
+  static const lower = 'lower';
+  static const caps = 'caps';
+  static const upper = 'upper';
+}
