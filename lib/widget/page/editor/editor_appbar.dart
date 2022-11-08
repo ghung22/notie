@@ -19,7 +19,7 @@ class EditorAppbar extends StatefulWidget {
 class _EditorAppbarState extends State<EditorAppbar> {
   EditorStore? _store;
 
-  Note get _note => _store?.note ?? const Note();
+  Note get _note => _store?.note ?? Note.empty;
 
   @override
   Widget build(BuildContext context) {

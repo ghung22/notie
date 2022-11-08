@@ -21,7 +21,7 @@ class EditorBody extends StatefulWidget {
 class _EditorBodyState extends State<EditorBody> {
   EditorStore? _store;
 
-  Note get _note => _store?.note ?? const Note();
+  Note get _note => _store?.note ?? Note.empty;
 
   Future<LinkMenuAction> _linkMenuAction(String link) async {
     link = '${link.split('/').first}/...';

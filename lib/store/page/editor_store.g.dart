@@ -9,6 +9,21 @@ part of 'editor_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$EditorStore on _EditorStore, Store {
+  Computed<String>? _$currentWordComputed;
+
+  @override
+  String get currentWord =>
+      (_$currentWordComputed ??= Computed<String>(() => super.currentWord,
+              name: '_EditorStore.currentWord'))
+          .value;
+  Computed<String>? _$currentLineComputed;
+
+  @override
+  String get currentLine =>
+      (_$currentLineComputed ??= Computed<String>(() => super.currentLine,
+              name: '_EditorStore.currentLine'))
+          .value;
+
   late final _$noteAtom = Atom(name: '_EditorStore.note', context: context);
 
   @override
@@ -261,7 +276,9 @@ titleCtrl: ${titleCtrl},
 quillCtrl: ${quillCtrl},
 scrollCtrl: ${scrollCtrl},
 titleFocus: ${titleFocus},
-contentFocus: ${contentFocus}
+contentFocus: ${contentFocus},
+currentWord: ${currentWord},
+currentLine: ${currentLine}
     ''';
   }
 }

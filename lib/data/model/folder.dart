@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:notie/global/colors.dart';
 
-import 'note.dart';
-
 part 'folder.g.dart';
 
 class FolderPaths {
@@ -15,8 +13,6 @@ class FolderPaths {
 class Folder {
   final String path;
   final int colorHex;
-  final Notes notes;
-  final Folders folders;
   final int createdTimestamp;
   final int updatedTimestamp;
   final int deletedTimestamp;
@@ -25,8 +21,6 @@ class Folder {
   const Folder({
     this.path = FolderPaths.root,
     this.colorHex = BwColors.lightHex,
-    this.notes = const Notes(),
-    this.folders = const Folders(),
     this.createdTimestamp = 0,
     this.updatedTimestamp = 0,
     this.deletedTimestamp = 0,
@@ -39,8 +33,6 @@ class Folder {
   Folder copyWith({
     String? path,
     int? colorHex,
-    Notes? notes,
-    Folders? folders,
     int? createdTimestamp,
     int? updatedTimestamp,
     int? deletedTimestamp,
@@ -48,8 +40,6 @@ class Folder {
     return Folder(
       path: path ?? this.path,
       colorHex: colorHex ?? this.colorHex,
-      notes: notes ?? this.notes,
-      folders: folders ?? this.folders,
       createdTimestamp: createdTimestamp ?? this.createdTimestamp,
       updatedTimestamp: updatedTimestamp ?? this.updatedTimestamp,
       deletedTimestamp: deletedTimestamp ?? this.deletedTimestamp,
@@ -77,51 +67,6 @@ class Folder {
       DateTime.fromMillisecondsSinceEpoch(deletedTimestamp);
 
 // endregion
-}
-
-class RootFolder extends Folder {
-  const RootFolder({
-    int colorHex = BwColors.lightHex,
-    Notes notes = const Notes(),
-    Folders folders = const Folders(),
-    int createdTimestamp = 0,
-    int updatedTimestamp = 0,
-    int deletedTimestamp = 0,
-  }) : super(
-          path: FolderPaths.root,
-          colorHex: colorHex,
-          notes: notes,
-          folders: folders,
-          createdTimestamp: createdTimestamp,
-          updatedTimestamp: updatedTimestamp,
-          deletedTimestamp: deletedTimestamp,
-        );
-
-  static RootFolder fromFolder(Folder folder) {
-    return RootFolder(
-      colorHex: folder.colorHex,
-      notes: folder.notes,
-      folders: folder.folders,
-      createdTimestamp: folder.createdTimestamp,
-      updatedTimestamp: folder.updatedTimestamp,
-      deletedTimestamp: folder.deletedTimestamp,
-    );
-  }
-
-  /// Convert path to list of folders
-  List<Folder> getFolderBranch(String path) {
-    final locations = path.split('/');
-    locations.removeAt(0);
-    List<Folder> branch = [this];
-    for (String p = locations.removeAt(0);
-        p != path;
-        p += '/${locations.removeAt(0)}') {
-      final f = branch.last.folders.get('/$p');
-      if (f.createdTimestamp == 0) return [];
-      branch.add(f);
-    }
-    return branch;
-  }
 }
 
 @JsonSerializable()

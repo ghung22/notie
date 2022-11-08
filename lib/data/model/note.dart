@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:mobx/mobx.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:notie/global/colors.dart';
+
+import 'folder.dart';
 
 part 'note.g.dart';
 
 @JsonSerializable()
 class Note {
-  final String title;
-  final String content;
-  final int? colorHex;
-  final int createdTimestamp;
-  final int updatedTimestamp;
-  final int deletedTimestamp;
+  String title;
+  String content;
+  String path;
+  int? colorHex;
+  int createdTimestamp;
+  int updatedTimestamp;
+  int deletedTimestamp;
 
   // region core methods
 
-  const Note({
+  Note({
     this.title = '',
     this.content = '',
+    this.path = FolderPaths.root,
     this.colorHex,
     this.createdTimestamp = 0,
     this.updatedTimestamp = 0,
@@ -88,24 +92,28 @@ class Note {
   bool get isEmpty => title.isEmpty && content.isEmpty;
 
   bool get isNotEmpty => !isEmpty;
+
+  static Note get empty => _empty.copyWith();
+
+  static final _empty = Note();
+
+  bool get isBlank => this == _empty;
 }
 
 @JsonSerializable()
 class Notes {
-  final List<Note> _v;
+  final ObservableList<Note> _v;
 
   // region core methods
 
-  const Notes([this._v = const []]);
+  Notes([List<Note>? notes])
+      : _v = notes != null
+            ? ObservableList<Note>.of(notes)
+            : ObservableList<Note>();
 
   factory Notes.fromJson(Map<String, dynamic> json) => _$NotesFromJson(json);
 
   Map<String, dynamic> toJson() => _$NotesToJson(this);
-
-  Notes copyWith({List<Note>? v, Notes? notes}) {
-    if (notes != null) return Notes(notes._v);
-    return Notes(v ?? _v);
-  }
 
   @override
   String toString() => '${toJson()}';
@@ -142,20 +150,27 @@ class Notes {
 
   // endregion
 
-  void add(Note note) {
+  Note add(Note note) {
     // Ensure createdTimestamp is unique
     var created = DateTime.now().millisecondsSinceEpoch;
     if (_v.indexWhere((n) => n.createdTimestamp == created) != -1) created++;
-    note.copyWith(createdTimestamp: created);
+    note = note.copyWith(createdTimestamp: created, updatedTimestamp: created);
     _v.add(note);
+    return note;
   }
 
   void remove(Note note) => _v.remove(note);
 
-  void update(Note note) {
-    note.copyWith(updatedTimestamp: DateTime.now().millisecondsSinceEpoch);
+  Note update(Note note) {
     final index =
         _v.indexWhere((n) => n.createdTimestamp == note.createdTimestamp);
-    if (index != -1) _v[index] = note;
+    if (index != -1) {
+      note = note.copyWith(
+          updatedTimestamp: DateTime.now().millisecondsSinceEpoch);
+      _v[index] = note;
+    } else {
+      note = add(note);
+    }
+    return note;
   }
 }

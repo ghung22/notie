@@ -33,7 +33,9 @@ class NoteCard extends StatelessWidget {
               ignoring: true,
               child: QuillEditor(
                 controller: QuillController(
-                  document: Document.fromJson(jsonDecode(note.content)),
+                  document: note.content.isNotEmpty
+                      ? Document.fromJson(jsonDecode(note.content))
+                      : Document(),
                   selection: const TextSelection.collapsed(offset: 0),
                 ),
                 readOnly: true,

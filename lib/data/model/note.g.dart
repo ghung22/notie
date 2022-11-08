@@ -9,7 +9,8 @@ part of 'note.dart';
 Note _$NoteFromJson(Map<String, dynamic> json) => Note(
       title: json['title'] as String? ?? '',
       content: json['content'] as String? ?? '',
-      colorHex: json['colorHex'] as int? ?? BgColors.whiteHex,
+      path: json['path'] as String? ?? FolderPaths.root,
+      colorHex: json['colorHex'] as int?,
       createdTimestamp: json['createdTimestamp'] as int? ?? 0,
       updatedTimestamp: json['updatedTimestamp'] as int? ?? 0,
       deletedTimestamp: json['deletedTimestamp'] as int? ?? 0,
@@ -18,6 +19,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) => Note(
 Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'title': instance.title,
       'content': instance.content,
+      'path': instance.path,
       'colorHex': instance.colorHex,
       'createdTimestamp': instance.createdTimestamp,
       'updatedTimestamp': instance.updatedTimestamp,

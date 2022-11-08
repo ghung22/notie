@@ -14,9 +14,9 @@ import 'editor_toolbar.dart';
 class EditorPage extends StatefulWidget {
   final Note note;
 
-  static Future<bool> onBackPressed(BuildContext context) async {
+  static Future<bool> onBackPressed(BuildContext context, Note result) async {
     Themes.updateSystemUi();
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(result);
     return true;
   }
 
@@ -38,9 +38,15 @@ class _EditorPageState extends State<EditorPage> {
   }
 
   @override
+  void dispose() {
+    _store.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => EditorPage.onBackPressed(context),
+      onWillPop: () => EditorPage.onBackPressed(context, _note),
       child: Provider(
         create: (_) => _store,
         child: Stack(

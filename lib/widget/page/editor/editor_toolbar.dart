@@ -21,7 +21,7 @@ class EditorToolbar extends StatefulWidget {
 class _EditorToolbarState extends State<EditorToolbar> {
   EditorStore? _store;
 
-  Note get _note => _store?.note ?? const Note();
+  Note get _note => _store?.note ?? Note.empty;
 
   Future<void> _btnClicked(EditorSheets type) async {
     await showModalBottomSheet(

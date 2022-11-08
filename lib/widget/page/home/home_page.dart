@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:notie/data/model/note.dart';
 import 'package:notie/global/debug.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/routes.dart';
@@ -74,28 +75,30 @@ class _HomePageState extends State<HomePage> {
               }),
             ),
           ],
-          child: GridView.builder(
-            padding: Pads.all(Dimens.gridSpacing),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisExtent: Dimens.noteGridTileHeight,
-              mainAxisSpacing: Dimens.gridSpacing,
-              crossAxisSpacing: Dimens.gridSpacing,
-            ),
-            itemCount: _noteStore!.rootFolder.notes.length,
-            itemBuilder: (_, index) {
-              final note = _noteStore!.rootFolder.notes[index];
-              return Hero(
-                tag: '${Routes.editor}?id=${note.createdTimestamp}',
-                child: NoteCard(
-                  note: note,
-                  onTap: () => Navigator.pushNamed(context, Routes.editor,
-                      arguments: note),
-                  onLongPress: () {},
-                ),
-              );
-            },
-          ),
+          child: Observer(builder: (context) {
+            final notes = _noteStore!.notes;
+            return GridView.builder(
+              padding: Pads.all(Dimens.gridSpacing),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: Dimens.noteGridTileHeight,
+                mainAxisSpacing: Dimens.gridSpacing,
+                crossAxisSpacing: Dimens.gridSpacing,
+              ),
+              itemCount: notes.length,
+              itemBuilder: (_, index) {
+                final note = notes[index];
+                return Hero(
+                  tag: '${Routes.editor}?id=${note.createdTimestamp}',
+                  child: NoteCard(
+                    note: note,
+                    onTap: () => openEditor(note),
+                    onLongPress: () {},
+                  ),
+                );
+              },
+            );
+          }),
         );
       },
     );
@@ -130,7 +133,7 @@ class _HomePageState extends State<HomePage> {
 
   void _initFab() {
     _fab = FloatingActionButton(
-      onPressed: () => Navigator.pushNamed(context, Routes.editor),
+      onPressed: () => openEditor(),
       tooltip: AppLocalizations.of(context)!.add_note,
       child: const Icon(Icons.add),
     );
@@ -146,6 +149,15 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  Future<void> openEditor([Note? note]) async {
+    Note? result =
+        await Navigator.pushNamed(context, Routes.editor, arguments: note);
+    if (result == null) return;
+    if (result == Note.empty) return;
+    if (result == note) return;
+    _noteStore!.insertNote(result);
   }
 
   @override

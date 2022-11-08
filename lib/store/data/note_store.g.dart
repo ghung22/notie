@@ -9,19 +9,18 @@ part of 'note_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$NoteStore on _NoteStore, Store {
-  late final _$rootFolderAtom =
-      Atom(name: '_NoteStore.rootFolder', context: context);
+  late final _$notesAtom = Atom(name: '_NoteStore.notes', context: context);
 
   @override
-  RootFolder get rootFolder {
-    _$rootFolderAtom.reportRead();
-    return super.rootFolder;
+  Notes get notes {
+    _$notesAtom.reportRead();
+    return super.notes;
   }
 
   @override
-  set rootFolder(RootFolder value) {
-    _$rootFolderAtom.reportWrite(value, super.rootFolder, () {
-      super.rootFolder = value;
+  set notes(Notes value) {
+    _$notesAtom.reportWrite(value, super.notes, () {
+      super.notes = value;
     });
   }
 
@@ -33,42 +32,26 @@ mixin _$NoteStore on _NoteStore, Store {
     return _$getNotesAsyncAction.run(() => super.getNotes());
   }
 
-  late final _$addNoteAsyncAction =
-      AsyncAction('_NoteStore.addNote', context: context);
+  late final _$debugInitNotesAsyncAction =
+      AsyncAction('_NoteStore.debugInitNotes', context: context);
 
   @override
-  Future<void> addNote(Note note, Folder folder) {
-    return _$addNoteAsyncAction.run(() => super.addNote(note, folder));
+  Future<void> debugInitNotes() {
+    return _$debugInitNotesAsyncAction.run(() => super.debugInitNotes());
   }
 
-  late final _$updateNoteAsyncAction =
-      AsyncAction('_NoteStore.updateNote', context: context);
+  late final _$saveNotesAsyncAction =
+      AsyncAction('_NoteStore.saveNotes', context: context);
 
   @override
-  Future<void> updateNote(Note note, Folder folder) {
-    return _$updateNoteAsyncAction.run(() => super.updateNote(note, folder));
-  }
-
-  late final _$addFolderAsyncAction =
-      AsyncAction('_NoteStore.addFolder', context: context);
-
-  @override
-  Future<void> addFolder(Folder folder, Folder parent) {
-    return _$addFolderAsyncAction.run(() => super.addFolder(folder, parent));
-  }
-
-  late final _$updateFolderAsyncAction =
-      AsyncAction('_NoteStore.updateFolder', context: context);
-
-  @override
-  Future<void> updateFolder(Folder folder) {
-    return _$updateFolderAsyncAction.run(() => super.updateFolder(folder));
+  Future<void> saveNotes() {
+    return _$saveNotesAsyncAction.run(() => super.saveNotes());
   }
 
   @override
   String toString() {
     return '''
-rootFolder: ${rootFolder}
+notes: ${notes}
     ''';
   }
 }

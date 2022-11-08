@@ -14,7 +14,7 @@ class EditorStore = _EditorStore with _$EditorStore;
 abstract class _EditorStore with Store {
   // region observable
   @observable
-  Note note = const Note();
+  Note note = Note.empty;
 
   @observable
   bool readOnly = false;
@@ -39,6 +39,13 @@ abstract class _EditorStore with Store {
 
   // endregion
 
+  // region Private observables
+
+  String Function()? _onTitleChanged;
+  String Function()? _onContentChanged;
+
+  // endregion
+
   // region computed
 
   @computed
@@ -49,7 +56,17 @@ abstract class _EditorStore with Store {
 
   // endregion
 
-  // Private actions
+  @action
+  void dispose() {
+    titleCtrl.dispose();
+    quillCtrl.dispose();
+    scrollCtrl.dispose();
+    titleFocus.dispose();
+    contentFocus.dispose();
+  }
+
+  // region Private actions
+
   String _getTextFrom({required String separator}) {
     // Find the closest newline at both ends of the cursor
     final base = _selection.baseOffset;
@@ -63,17 +80,30 @@ abstract class _EditorStore with Store {
     return _plainContent.substring(lineStart, lineEnd);
   }
 
-  // Editor actions
+  // endregion
+
+  // region Editor actions
 
   @action
   void setNote(Note note) {
     this.note = note;
     titleCtrl.text = note.title;
     quillCtrl = QuillController(
-      document: Document.fromJson(jsonDecode(note.content)),
+      document: note.content.isNotEmpty
+          ? Document.fromJson(jsonDecode(note.content))
+          : Document(),
       selection: const TextSelection.collapsed(offset: 0),
     );
     quillCtrl.moveCursorToEnd();
+    if (_onTitleChanged == null) {
+      _onTitleChanged = () => note.title = titleCtrl.text;
+      titleCtrl.addListener(_onTitleChanged!);
+    }
+    if (_onContentChanged == null) {
+      _onContentChanged = () =>
+          note.content = jsonEncode(quillCtrl.document.toDelta().toJson());
+      quillCtrl.addListener(_onContentChanged!);
+    }
   }
 
   @action

@@ -24,11 +24,11 @@ class Router {
           });
         case Routes.editor:
           if (settings.arguments == null) {
-            return SlidePageRoute(
-              pageBuilder: (_, __, ___) => const EditorPage(Note()),
+            return SlidePageRoute<Note>(
+              pageBuilder: (_, __, ___) => EditorPage(Note.empty),
             );
           }
-          return FadePageRoute(builder: (context) {
+          return FadePageRoute<Note>(builder: (context) {
             if (settings.arguments is! Note) {
               throw 'Editor page requires a Note object as argument';
             }
@@ -44,14 +44,14 @@ class Router {
   }
 }
 
-class FadePageRoute extends MaterialPageRoute {
+class FadePageRoute<T> extends MaterialPageRoute<T> {
   @override
   Duration get transitionDuration => Vars.animationSlow;
 
   FadePageRoute({builder}) : super(builder: builder);
 }
 
-class SlidePageRoute extends PageRouteBuilder {
+class SlidePageRoute<T> extends PageRouteBuilder<T> {
   @override
   Duration get transitionDuration => Vars.animationSlow;
 
