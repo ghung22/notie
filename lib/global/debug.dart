@@ -5,6 +5,7 @@ import "dart:core" as core show print;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Debug {
   static bool get isDebug => kDebugMode;
@@ -16,7 +17,7 @@ class Debug {
     DiagnosticLevel minLevel = DiagnosticLevel.debug,
   }) {
     final now = DateTime.now();
-    final time = '${now.month}.${now.day}/${now.hour}:${now.minute}:${now.second}';
+    final time = DateFormat('MMMdd/HH:mm:ss').format(now);
     final tree = context?.widget.toStringDeep(prefixOtherLines: '>') ?? 'null';
     final str = '[$time - $tree]: $message';
     debugPrint(str);

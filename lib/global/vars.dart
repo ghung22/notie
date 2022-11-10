@@ -43,3 +43,17 @@ class Formats {
   static const caps = 'caps';
   static const upper = 'upper';
 }
+
+enum SortType {
+  byDefault,
+  byName,
+  byColor,
+  byCreateTime,
+  byUpdateTime,
+  byDeleteTime,
+}
+
+enum SortOrder {
+  ascending,
+  descending,
+}

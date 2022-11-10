@@ -39,13 +39,6 @@ abstract class _EditorStore with Store {
 
   // endregion
 
-  // region Private observables
-
-  String Function()? _onTitleChanged;
-  String Function()? _onContentChanged;
-
-  // endregion
-
   // region computed
 
   @computed
@@ -64,23 +57,6 @@ abstract class _EditorStore with Store {
     titleFocus.dispose();
     contentFocus.dispose();
   }
-
-  // region Private actions
-
-  String _getTextFrom({required String separator}) {
-    // Find the closest newline at both ends of the cursor
-    final base = _selection.baseOffset;
-    final extent = _selection.extentOffset;
-    var lineStart = _plainContent.lastIndexOf(separator, base) + 1;
-    var lineEnd = _plainContent.indexOf(separator, extent);
-    if (lineStart == -1) lineStart = base;
-    if (lineEnd == -1) lineEnd = extent;
-
-    // Expand selection to include the whole line
-    return _plainContent.substring(lineStart, lineEnd);
-  }
-
-  // endregion
 
   // region Editor actions
 
@@ -285,4 +261,28 @@ abstract class _EditorStore with Store {
   }
 
 //endregion
+
+  // region Private vars
+
+  String Function()? _onTitleChanged;
+  String Function()? _onContentChanged;
+
+  // endregion
+
+  // region Private methods
+
+  String _getTextFrom({required String separator}) {
+    // Find the closest newline at both ends of the cursor
+    final base = _selection.baseOffset;
+    final extent = _selection.extentOffset;
+    var lineStart = _plainContent.lastIndexOf(separator, base) + 1;
+    var lineEnd = _plainContent.indexOf(separator, extent);
+    if (lineStart == -1) lineStart = base;
+    if (lineEnd == -1) lineEnd = extent;
+
+    // Expand selection to include the whole line
+    return _plainContent.substring(lineStart, lineEnd);
+  }
+
+// endregion
 }

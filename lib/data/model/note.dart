@@ -148,6 +148,10 @@ class Notes {
   List<Note> get byDeleteTime =>
       value..sort((a, b) => b.deletedTimestamp.compareTo(a.deletedTimestamp));
 
+  bool get isEmpty => _v.isEmpty;
+
+  bool get isNotEmpty => _v.isNotEmpty;
+
   // endregion
 
   Note add(Note note) {

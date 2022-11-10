@@ -155,6 +155,17 @@ mixin _$EditorStore on _EditorStore, Store {
       ActionController(name: '_EditorStore', context: context);
 
   @override
+  void dispose() {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setNote(Note note) {
     final _$actionInfo = _$_EditorStoreActionController.startAction(
         name: '_EditorStore.setNote');

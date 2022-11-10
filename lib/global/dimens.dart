@@ -23,7 +23,7 @@ class Dimens {
 
   static const btnElevation = 5.0;
   static const btnIconLabelGap = 8.0;
-  static const btnIconMinSize = 48.0;
+  static const btnIconMinSize = iconSize;
   static const btnIconPaddingHorz = btnPaddingHorz / 2;
   static const btnPaddingHorz = btnPaddingVert * 3;
   static const btnPaddingVert = 8.0;
@@ -47,6 +47,8 @@ class Dimens {
   static const editorToolContentPaddingVert = editorToolPadding;
 
   static const gridSpacing = 12.0;
+
+  static const iconSize = 48.0;
 
   static const inputPadding = cardPadding * 1.5;
 

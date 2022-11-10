@@ -32,20 +32,20 @@ mixin _$NoteStore on _NoteStore, Store {
     return _$getNotesAsyncAction.run(() => super.getNotes());
   }
 
-  late final _$debugInitNotesAsyncAction =
-      AsyncAction('_NoteStore.debugInitNotes', context: context);
-
-  @override
-  Future<void> debugInitNotes() {
-    return _$debugInitNotesAsyncAction.run(() => super.debugInitNotes());
-  }
-
   late final _$saveNotesAsyncAction =
       AsyncAction('_NoteStore.saveNotes', context: context);
 
   @override
   Future<void> saveNotes() {
     return _$saveNotesAsyncAction.run(() => super.saveNotes());
+  }
+
+  late final _$debugInitNotesAsyncAction =
+      AsyncAction('_NoteStore.debugInitNotes', context: context);
+
+  @override
+  Future<void> debugInitNotes() {
+    return _$debugInitNotesAsyncAction.run(() => super.debugInitNotes());
   }
 
   @override

@@ -26,6 +26,7 @@ class Styles {
 
   static TextStyle footer = const TextStyle(
     color: Colors.black54,
+    fontSize: 14,
   );
   static const TextStyle spacedText = TextStyle(
     letterSpacing: 0.5,

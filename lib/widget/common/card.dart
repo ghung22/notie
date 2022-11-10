@@ -10,6 +10,7 @@ class CardItem extends StatefulWidget {
   final double? elevation;
   final ShapeBorder? shape;
   final VoidCallback? onPressed;
+  final VoidCallback? onLongPress;
 
   const CardItem({
     Key? key,
@@ -19,6 +20,7 @@ class CardItem extends StatefulWidget {
     this.elevation,
     this.shape,
     this.onPressed,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -34,6 +36,7 @@ class _CardItemState extends State<CardItem> {
       shape: widget.shape,
       child: InkWell(
         onTap: widget.onPressed,
+        onLongPress: widget.onLongPress,
         borderRadius: Rads.card,
         child: Padding(
           padding: widget.padding,

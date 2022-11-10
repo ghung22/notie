@@ -26,7 +26,7 @@ class NotesDb {
     final os = _notes!.value;
     for (final n in ns) {
       final o = os.firstWhere(
-        (n) => n.createdTimestamp == n.createdTimestamp,
+        (o) => o.createdTimestamp == n.createdTimestamp,
         orElse: () => Note.empty,
       );
 
