@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notie/global/debug.dart';
+import 'package:notie/global/routes.dart';
 
 import 'styles.dart';
 
@@ -34,7 +35,15 @@ class Vars {
 
   static void init(BuildContext context) {
     _context = context;
+
     Themes.updateSystemUi();
+    WidgetsBinding.instance.window.onPlatformBrightnessChanged = () {
+      WidgetsBinding.instance.handlePlatformBrightnessChanged();
+      Future.delayed(Vars.animationSlow, () {
+        // Editor page handles this itself
+        if (!RouteController.inEditor) Themes.updateSystemUi();
+      });
+    };
   }
 }
 

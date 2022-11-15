@@ -13,9 +13,19 @@ class Routes {
   static const String settings = '/settings';
 }
 
-class Router {
+class RouteController {
+  static String currentRoute = Routes.home;
+
+  static bool get inHome => currentRoute == Routes.home;
+
+  static bool get inEditor => currentRoute == Routes.editor;
+
+  static bool get inSettings => currentRoute == Routes.settings;
+
   static Route? generateRoute(RouteSettings settings) {
+    final oldRoute = currentRoute;
     try {
+      currentRoute = settings.name!;
       switch (settings.name) {
         case Routes.home:
           return FadePageRoute(builder: (context) {
@@ -40,6 +50,7 @@ class Router {
     } catch (e) {
       Debug.print(null, '$e', minLevel: DiagnosticLevel.error);
     }
+    currentRoute = oldRoute;
     return null;
   }
 }

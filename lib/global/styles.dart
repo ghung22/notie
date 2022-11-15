@@ -87,13 +87,13 @@ class Styles {
   );
 
   // Content styles
-  static DefaultStyles quillStyles({Color? background}) {
+  static DefaultStyles quillStylesFrom({Color? background}) {
     final style = DefaultStyles.getInstance(_context!);
     final theme = Theme.of(_context!);
     background ??= theme.colorScheme.surface;
     final onBg = ColorBuilder.onColor(background);
-    final faded = onBg.withOpacity(.1);
-    final half = onBg.withOpacity(.5);
+    final onBgFaded = onBg.withOpacity(.1);
+    final onBgHalf = onBg.withOpacity(.5);
     final base = TextStyle(fontFamily: Themes.fontDefault, color: onBg);
     return DefaultStyles(
       // region Base style
@@ -134,7 +134,7 @@ class Styles {
 
       // region Content style
       inlineCode: InlineCodeStyle(
-        backgroundColor: faded,
+        backgroundColor: onBgFaded,
         radius: Rads.code.topLeft,
         style: style.inlineCode!.style
             .merge(base)
@@ -153,13 +153,14 @@ class Styles {
         style.code!.style.merge(base).copyWith(fontFamily: Themes.fontMono),
         style.code!.verticalSpacing,
         style.code!.lineSpacing,
-        BoxDecoration(color: faded, borderRadius: Rads.code),
+        BoxDecoration(color: onBgFaded, borderRadius: Rads.code),
       ),
       quote: DefaultTextBlockStyle(
-        style.quote!.style.merge(base).copyWith(color: half),
+        style.quote!.style.merge(base).copyWith(color: onBgHalf),
         style.quote!.verticalSpacing,
         style.quote!.lineSpacing,
-        BoxDecoration(border: Border(left: BorderSide(width: 4, color: faded))),
+        BoxDecoration(
+            border: Border(left: BorderSide(width: 4, color: onBgFaded))),
       ),
       link: TextStyle(
         color: theme.primaryColor,
@@ -202,15 +203,15 @@ class Themes {
 
   static bool get isDarkMode => themeMode == ThemeMode.dark;
 
-  static void updateSystemUi() {
+  static void updateSystemUi({Color? surface}) {
     if (_context == null) return;
-    final c = Theme.of(_context!).colorScheme.surface;
+    surface ??= Theme.of(_context!).colorScheme.surface;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: c,
-        systemNavigationBarColor: c,
+        statusBarColor: surface,
+        systemNavigationBarColor: surface,
         systemNavigationBarIconBrightness:
-            ColorBuilder.colorBrightnessInvert(c),
+            ColorBuilder.colorBrightnessInvert(surface),
       ),
     );
   }

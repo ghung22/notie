@@ -26,21 +26,30 @@ class EditorPage extends StatefulWidget {
   State<EditorPage> createState() => _EditorPageState();
 }
 
-class _EditorPageState extends State<EditorPage> {
+class _EditorPageState extends State<EditorPage> with WidgetsBindingObserver {
   final EditorStore _store = EditorStore();
 
   Note get _note => _store.note;
 
   @override
   void initState() {
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _store.setNote(widget.note);
+    super.initState();
+    Themes.updateSystemUi(surface: _store.note.color);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _store.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    Themes.updateSystemUi(surface: _store.note.color);
+    super.didChangePlatformBrightness();
   }
 
   @override

@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'global/debug.dart';
-import 'global/routes.dart' as rt;
+import 'global/routes.dart';
 import 'global/strings.dart';
 import 'global/styles.dart';
 import 'store/data/note_store.dart';
@@ -44,7 +44,7 @@ class Notie extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             // Routes
             initialRoute: '/',
-            onGenerateRoute: rt.Router.generateRoute,
+            onGenerateRoute: RouteController.generateRoute,
           );
         }
     );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/model/note.dart';
+import 'package:notie/global/debug.dart';
 import 'package:notie/global/strings.dart';
 import 'package:notie/global/vars.dart';
 
@@ -71,6 +72,8 @@ abstract class _EditorStore with Store {
       selection: const TextSelection.collapsed(offset: 0),
     );
     quillCtrl.moveCursorToEnd();
+    Debug.print(null, 'Editor opened for data: $note');
+
     if (_onTitleChanged == null) {
       _onTitleChanged = () => note.title = titleCtrl.text;
       titleCtrl.addListener(_onTitleChanged!);
@@ -260,7 +263,10 @@ abstract class _EditorStore with Store {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-//endregion
+  @action
+  void setNoteColor(Color color) => note = note.copyWith(colorHex: color.value);
+
+  //endregion
 
   // region Private vars
 

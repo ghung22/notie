@@ -278,6 +278,17 @@ mixin _$EditorStore on _EditorStore, Store {
   }
 
   @override
+  void setNoteColor(Color color) {
+    final _$actionInfo = _$_EditorStoreActionController.startAction(
+        name: '_EditorStore.setNoteColor');
+    try {
+      return super.setNoteColor(color);
+    } finally {
+      _$_EditorStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 note: ${note},

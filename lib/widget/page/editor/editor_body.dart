@@ -21,7 +21,7 @@ class EditorBody extends StatefulWidget {
 class _EditorBodyState extends State<EditorBody> {
   EditorStore? _store;
 
-  Note get _note => _store?.note ?? Note.empty;
+  Note get _note => _store!.note;
 
   Future<LinkMenuAction> _linkMenuAction(String link) async {
     link = '${link.split('/').first}/...';
@@ -58,8 +58,9 @@ class _EditorBodyState extends State<EditorBody> {
   Widget build(BuildContext context) {
     _store ??= context.read<EditorStore>();
     return Observer(builder: (_) {
+      final bg = _note.color ?? Theme.of(context).colorScheme.surface;
       return Container(
-        color: _note.color,
+        color: bg,
         child: GestureDetector(
           onTapDown: (details) =>
               _store!.setTapPosition(details.globalPosition),
@@ -75,7 +76,7 @@ class _EditorBodyState extends State<EditorBody> {
             expands: true,
 
             // Styles
-            customStyles: Styles.quillStyles(background: _note.color),
+            customStyles: Styles.quillStylesFrom(background: bg),
             embedBuilders: FlutterQuillEmbeds.builders(),
 
             // Events

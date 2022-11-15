@@ -627,7 +627,6 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
 
 // region Editor color sheet
 
-// TODO: Automatic note/text color
 class EditorColorSheet extends StatefulWidget {
   final bool forText;
 
@@ -675,15 +674,8 @@ class _EditorColorSheetState extends State<EditorColorSheet> {
                         _store!.formatSelection(
                             ColorAttribute('#${c.value.toRadixString(16)}'));
                       } else {
-                        _store!.note.colorHex = c.value;
-                        SystemChrome.setSystemUIOverlayStyle(
-                          SystemUiOverlayStyle(
-                            statusBarColor: c,
-                            systemNavigationBarColor: c,
-                            systemNavigationBarIconBrightness:
-                                ColorBuilder.colorBrightnessInvert(c),
-                          ),
-                        );
+                        _store!.setNoteColor(c);
+                        Themes.updateSystemUi(surface: c);
                       }
                     },
                     child: const Nothing(),
