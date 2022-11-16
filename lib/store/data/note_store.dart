@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/db/notes_db.dart';
 import 'package:notie/data/model/note.dart';
@@ -16,7 +15,7 @@ abstract class _NoteStore with Store {
   Future<void> getNotes() async {
     notes = await NotesDb.query();
     await debugInitNotes();
-    Debug.print(null, 'notes: $notes', minLevel: DiagnosticLevel.info);
+    Debug.info(null, 'notes: $notes');
   }
 
   @action

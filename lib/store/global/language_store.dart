@@ -26,7 +26,7 @@ abstract class _LanguageStore with Store {
     if (await SharedPref.setLanguage(language)) {
       activeLanguage = language;
     } else {
-      Debug.print(null, 'Failed to set language');
+      Debug.log(null, 'Failed to set language');
     }
     await Future.delayed(Vars.animationFast);
     changingLanguage = false;

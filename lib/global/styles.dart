@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:notie/global/debug.dart';
 import 'package:notie/store/global/theme_store.dart';
 import 'package:provider/provider.dart';
 
@@ -191,7 +192,7 @@ class Themes {
     final themeStore = _context!.read<ThemeStore>();
     switch (themeStore.activeTheme) {
       case ThemeMode.system:
-        final br = MediaQuery.of(_context!).platformBrightness;
+        final br = MediaQuery.platformBrightnessOf(_context!);
         return (br == Brightness.dark) ? ThemeMode.dark : ThemeMode.light;
       case ThemeMode.light:
       case ThemeMode.dark:
@@ -203,9 +204,16 @@ class Themes {
 
   static bool get isDarkMode => themeMode == ThemeMode.dark;
 
-  static void updateSystemUi({Color? surface}) {
+  static void updateSystemUi({Color? surface, String? reason}) async {
     if (_context == null) return;
-    surface ??= Theme.of(_context!).colorScheme.surface;
+    Debug.info(
+        _context,
+        'Updating UI with surface color '
+        '${surface?.value.toRadixString(16) ?? '<default>'}\n'
+        'Reason: ${reason ?? 'Unknown'}');
+    surface ??= (isDarkMode ? dark : light).colorScheme.surface;
+
+    await Future.delayed(const Duration(milliseconds: 1));
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: surface,

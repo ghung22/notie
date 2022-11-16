@@ -72,7 +72,7 @@ abstract class _EditorStore with Store {
       selection: const TextSelection.collapsed(offset: 0),
     );
     quillCtrl.moveCursorToEnd();
-    Debug.print(null, 'Editor opened for data: $note');
+    Debug.log(null, 'Editor opened for data: $note');
 
     if (_onTitleChanged == null) {
       _onTitleChanged = () => note.title = titleCtrl.text;

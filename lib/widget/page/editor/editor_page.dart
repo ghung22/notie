@@ -15,7 +15,7 @@ class EditorPage extends StatefulWidget {
   final Note note;
 
   static Future<bool> onBackPressed(BuildContext context, Note result) async {
-    Themes.updateSystemUi();
+    Themes.updateSystemUi(reason: 'EditorPage.onBackPressed');
     Navigator.of(context).pop(result);
     return true;
   }
@@ -36,7 +36,8 @@ class _EditorPageState extends State<EditorPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _store.setNote(widget.note);
     super.initState();
-    Themes.updateSystemUi(surface: _store.note.color);
+    Themes.updateSystemUi(
+        surface: _store.note.color, reason: 'EditorPage.initState');
   }
 
   @override
@@ -48,7 +49,8 @@ class _EditorPageState extends State<EditorPage> with WidgetsBindingObserver {
 
   @override
   void didChangePlatformBrightness() {
-    Themes.updateSystemUi(surface: _store.note.color);
+    Themes.updateSystemUi(
+        surface: _store.note.color, reason: 'Brightness changed in EditorPage');
     super.didChangePlatformBrightness();
   }
 

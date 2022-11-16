@@ -50,6 +50,7 @@ dependencies:
   any_link_preview: ^2.0.9
   sqflite: ^2.2.0+3
   auto_size_text: ^3.0.0
+  logging: ^1.1.0
 
 dev_dependencies:
   flutter_test:

@@ -21,7 +21,7 @@ abstract class _ThemeStore with Store {
     if (await SharedPref.setTheme(theme)) {
       activeTheme = theme;
     } else {
-      Debug.print(Vars.context, 'Failed to set theme');
+      Debug.log(Vars.context, 'Failed to set theme');
     }
   }
 }

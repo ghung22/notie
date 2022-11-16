@@ -23,6 +23,7 @@ class RouteController {
   static bool get inSettings => currentRoute == Routes.settings;
 
   static Route? generateRoute(RouteSettings settings) {
+    Debug.log(null, 'Navigating to: ${RouteController.currentRoute}');
     final oldRoute = currentRoute;
     try {
       currentRoute = settings.name!;
@@ -48,7 +49,7 @@ class RouteController {
           throw 'Unknown route: ${settings.name}';
       }
     } catch (e) {
-      Debug.print(null, '$e', minLevel: DiagnosticLevel.error);
+      Debug.error(null, 'Navigation failed:', e);
     }
     currentRoute = oldRoute;
     return null;

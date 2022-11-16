@@ -44,7 +44,7 @@ class _EditorBodyState extends State<HomeBody> {
             Case(
               condition: snapshot.hasError,
               child: Builder(builder: (_) {
-                Debug.print(context, 'Error: ${snapshot.error}');
+                Debug.log(context, 'Error: ${snapshot.error}');
                 if (Debug.isDebug) {
                   return Txt.error(text: snapshot.error.toString());
                 }

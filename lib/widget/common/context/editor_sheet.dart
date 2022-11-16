@@ -675,7 +675,8 @@ class _EditorColorSheetState extends State<EditorColorSheet> {
                             ColorAttribute('#${c.value.toRadixString(16)}'));
                       } else {
                         _store!.setNoteColor(c);
-                        Themes.updateSystemUi(surface: c);
+                        Themes.updateSystemUi(
+                            surface: c, reason: 'Note color changed');
                       }
                     },
                     child: const Nothing(),

@@ -22,11 +22,8 @@ class Vars {
 
   static BuildContext? get context {
     if (_context == null) {
-      Debug.print(
-        null,
-        'Global context is null (did you forget to call Vars.init(context)?)',
-        minLevel: DiagnosticLevel.warning,
-      );
+      Debug.warning(null,
+          'Global context is null (did you forget to call Vars.init(context)?)');
     }
     return _context;
   }
@@ -34,15 +31,16 @@ class Vars {
   static BuildContext? _context;
 
   static void init(BuildContext context) {
+    if (_context != null) return;
     _context = context;
 
-    Themes.updateSystemUi();
+    Themes.updateSystemUi(reason: 'Vars.init');
     WidgetsBinding.instance.window.onPlatformBrightnessChanged = () {
       WidgetsBinding.instance.handlePlatformBrightnessChanged();
-      Future.delayed(Vars.animationSlow, () {
-        // Editor page handles this itself
-        if (!RouteController.inEditor) Themes.updateSystemUi();
-      });
+      if (!RouteController.inEditor) {
+        Future.delayed(Vars.animationSlow,
+            () => Themes.updateSystemUi(reason: 'Brightness changed'));
+      }
     };
   }
 }
