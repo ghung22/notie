@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:notie/data/model/note.dart';
 import 'package:notie/global/debug.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/routes.dart';
+import 'package:notie/global/vars.dart';
 import 'package:notie/store/data/note_store.dart';
 import 'package:notie/store/page/home_store.dart';
 import 'package:notie/widget/common/container.dart';
@@ -11,6 +13,7 @@ import 'package:notie/widget/common/text.dart';
 import 'package:provider/provider.dart';
 
 import 'home_page.dart';
+import 'home_toolbar.dart';
 
 class HomeBody extends StatefulWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -20,8 +23,68 @@ class HomeBody extends StatefulWidget {
 }
 
 class _EditorBodyState extends State<HomeBody> {
+  Widget _list = const Nothing();
+  Widget _tool = const Nothing();
+
   HomeStore? _store;
   NoteStore? _noteStore;
+
+  Notes get _notes => _noteStore?.notes ?? Notes();
+
+  ScrollController get scrollCtrl => _store!.scrollCtrl;
+
+  void _initList() {
+    _list = Observer(builder: (context) {
+      return ListView(
+        controller: _store!.scrollCtrl,
+        children: [
+          const SizedBox(height: Dimens.homeToolbarMaxHeight),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: Pads.all(Dimens.gridSpacing),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisExtent: Dimens.noteGridTileHeight,
+              mainAxisSpacing: Dimens.gridSpacing,
+              crossAxisSpacing: Dimens.gridSpacing,
+            ),
+            itemCount: _notes.length,
+            itemBuilder: (_, index) {
+              final note = _notes[index];
+              return Hero(
+                tag: '${Routes.editor}?id=${note.createdTimestamp}',
+                child: NoteCard(
+                  note: note,
+                  onTap: () {
+                    if (_store!.someSelected) {
+                      return _store!.select(note);
+                    }
+                    HomePage.openEditor(context, _noteStore!, note);
+                    return null;
+                  },
+                  onLongPress: () => _store!.select(note),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    });
+  }
+
+  void _initTool() {
+    _tool = Observer(builder: (context) {
+      return AnimatedSlide(
+        offset: _store!.toolbarVisible
+            ? Offset.zero
+            : const Offset(0, -Dimens.homeToolbarMaxHeight),
+        duration: Vars.animationSlow,
+        curve: Curves.easeIn,
+        child: const HomeToolbar(),
+      );
+    });
+  }
 
   Future<void> getNotes() async {
     await _noteStore!.getNotes();
@@ -32,6 +95,8 @@ class _EditorBodyState extends State<HomeBody> {
   Widget build(BuildContext context) {
     _store ??= context.read<HomeStore>();
     _noteStore ??= context.read<NoteStore>();
+    _initList();
+    _initTool();
     return FutureBuilder(
       future: getNotes(),
       builder: (_, snapshot) {
@@ -52,36 +117,7 @@ class _EditorBodyState extends State<HomeBody> {
               }),
             ),
           ],
-          child: Observer(builder: (context) {
-            final notes = _noteStore!.notes;
-            return GridView.builder(
-              padding: Pads.all(Dimens.gridSpacing),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisExtent: Dimens.noteGridTileHeight,
-                mainAxisSpacing: Dimens.gridSpacing,
-                crossAxisSpacing: Dimens.gridSpacing,
-              ),
-              itemCount: notes.length,
-              itemBuilder: (_, index) {
-                final note = notes[index];
-                return Hero(
-                  tag: '${Routes.editor}?id=${note.createdTimestamp}',
-                  child: NoteCard(
-                    note: note,
-                    onTap: () {
-                      if (_store!.someSelected) {
-                        return _store!.select(note);
-                      }
-                      HomePage.openEditor(context, _noteStore!, note);
-                      return null;
-                    },
-                    onLongPress: () => _store!.select(note),
-                  ),
-                );
-              },
-            );
-          }),
+          child: Stack(children: [_list, _tool]),
         );
       },
     );

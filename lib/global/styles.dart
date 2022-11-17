@@ -25,8 +25,8 @@ class Styles {
     fontSize: 14,
   );
 
-  static TextStyle footer = const TextStyle(
-    color: Colors.black54,
+  static TextStyle footer = TextStyle(
+    color: Theme.of(_context!).colorScheme.onSurface.withOpacity(.5),
     fontSize: 14,
   );
   static const TextStyle spacedText = TextStyle(
@@ -79,12 +79,12 @@ class Styles {
     border: const OutlineInputBorder(borderRadius: Rads.input),
     fillColor: Theme.of(_context!).colorScheme.surface,
     filled: true,
-    contentPadding: Pads.all(Dimens.inputPadding),
+    contentPadding: Pads.all(Dimens.inputPad),
   );
 
   static InputDecoration inputBorderless = InputDecoration(
     border: InputBorder.none,
-    contentPadding: Pads.all(Dimens.inputPadding),
+    contentPadding: Pads.all(Dimens.inputPad),
   );
 
   // Content styles
@@ -216,7 +216,7 @@ class Themes {
     await Future.delayed(const Duration(milliseconds: 1));
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: surface,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: surface,
         systemNavigationBarIconBrightness:
             ColorBuilder.colorBrightnessInvert(surface),
@@ -308,7 +308,7 @@ class Themes {
         color: from.colorScheme.surface,
         elevation: 5,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(Dimens.cardRadius)),
+          borderRadius: BorderRadius.all(Radius.circular(Dimens.cardRad)),
         ),
       ),
     );

@@ -179,8 +179,8 @@ class _EditorContentSheetState extends State<EditorContentSheet> {
         titleColor: _activeColor,
         child: Wrap(
           alignment: WrapAlignment.center,
-          spacing: Dimens.editorToolPadding,
-          runSpacing: Dimens.editorToolPadding,
+          spacing: Dimens.editorToolPad,
+          runSpacing: Dimens.editorToolPad,
           children: [
             IconBtn(
               tooltipText: AppLocalizations.of(context)!.code_inline,
@@ -593,25 +593,25 @@ class _EditorFormatSheetState extends State<EditorFormatSheet> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _font,
-                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                const SizedBox(width: Dimens.editorToolContentPadHorz),
                 _size,
               ],
             ),
-            const SizedBox(height: Dimens.editorToolContentPaddingVert * 2),
+            const SizedBox(height: Dimens.editorToolContentPadVert * 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _style,
-                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                const SizedBox(width: Dimens.editorToolContentPadHorz),
                 _case,
               ],
             ),
-            const SizedBox(height: Dimens.editorToolContentPaddingVert * 2),
+            const SizedBox(height: Dimens.editorToolContentPadVert * 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 _align,
-                const SizedBox(width: Dimens.editorToolContentPaddingHorz),
+                const SizedBox(width: Dimens.editorToolContentPadHorz),
                 _indent,
                 // TODO: Clear formatting
               ],
@@ -661,8 +661,8 @@ class _EditorColorSheetState extends State<EditorColorSheet> {
               final names = options.keys.toList();
               final colors = options.values.toList();
               return Wrap(
-                spacing: Dimens.editorToolContentPaddingHorz,
-                runSpacing: Dimens.editorToolContentPaddingVert,
+                spacing: Dimens.editorToolContentPadHorz,
+                runSpacing: Dimens.editorToolContentPadVert,
                 children: List.generate(names.length, (index) {
                   return IconBtn(
                     tooltipText: Strings.capitalize(names[index]),

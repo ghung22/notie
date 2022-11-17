@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'home_body.dart';
 import 'home_drawer.dart';
 import 'home_fab.dart';
-import 'home_toolbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,6 +35,18 @@ class _HomePageState extends State<HomePage> {
   final HomeStore _store = HomeStore();
 
   @override
+  void initState() {
+    _store.init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _store.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -44,10 +55,6 @@ class _HomePageState extends State<HomePage> {
       ],
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: HomeToolbar(),
-        ),
         body: const SafeArea(child: HomeBody()),
         bottomNavigationBar: HomeAppbar(scaffoldKey: _scaffoldKey),
         drawer: const HomeDrawer(),

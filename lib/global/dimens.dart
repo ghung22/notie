@@ -24,33 +24,39 @@ class Dimens {
   static const btnElevation = 5.0;
   static const btnIconLabelGap = 8.0;
   static const btnIconMinSize = iconSize;
-  static const btnIconPaddingHorz = btnPaddingHorz / 2;
-  static const btnPaddingHorz = btnPaddingVert * 3;
-  static const btnPaddingVert = 8.0;
-  static const btnRadius = 30.0;
+  static const btnIconPadHorz = btnPadHorz / 2;
+  static const btnPadHorz = btnPadVert * 3;
+  static const btnPadVert = 8.0;
+  static const btnRad = 30.0;
   static const btnToggleMinSize = 40.0;
 
   static const cardElevation = 8.0;
-  static const cardRadius = 12.0;
-  static const cardPadding = 8.0;
+  static const cardRad = 12.0;
+  static const cardPad = 8.0;
 
-  static const drawerPadding = 8.0;
-  static const drawerItemPadding = 4.0;
+  static const drawerPad = 8.0;
+  static const drawerItemPad = 4.0;
 
   static const dropdownElevation = 2.0;
   static const dropdownMenuMaxHeight = 320.0;
-  static const dropdownPaddingHorz = 16.0;
+  static const dropdownPadHorz = 16.0;
 
-  static const editorPadding = 8.0;
-  static const editorToolPadding = 8.0;
-  static const editorToolContentPaddingHorz = editorToolContentPaddingVert * 2;
-  static const editorToolContentPaddingVert = editorToolPadding;
+  static const editorPad = 8.0;
+  static const editorToolPad = 8.0;
+  static const editorToolContentPadHorz = editorToolContentPadVert * 2;
+  static const editorToolContentPadVert = editorToolPad;
 
   static const gridSpacing = 12.0;
 
+  static const homeToolbarMaxHeight = kToolbarHeight * 2;
+  static const homeToolbarPadHorz = homeToolbarPadVert * 1.5;
+  static const homeToolbarPadInnerHorz = cardPad * 2;
+  static const homeToolbarPadInnerVert = cardPad / 2;
+  static const homeToolbarPadVert = 16.0;
+
   static const iconSize = 48.0;
 
-  static const inputPadding = cardPadding * 1.5;
+  static const inputPad = cardPad * 1.5;
 
   static const noteGridTileHeight = 240.0;
 
@@ -106,9 +112,9 @@ class Borders {
 
 class Rads {
   static const bottomSheet =
-      BorderRadius.vertical(top: Radius.circular(Dimens.cardRadius));
-  static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRadius));
-  static const card = BorderRadius.all(Radius.circular(Dimens.cardRadius));
+      BorderRadius.vertical(top: Radius.circular(Dimens.cardRad));
+  static const btnRounded = BorderRadius.all(Radius.circular(Dimens.btnRad));
+  static const card = BorderRadius.all(Radius.circular(Dimens.cardRad));
   static const code = card;
-  static const input = BorderRadius.all(Radius.circular(Dimens.cardRadius));
+  static const input = BorderRadius.all(Radius.circular(Dimens.cardRad));
 }

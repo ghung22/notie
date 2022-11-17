@@ -15,7 +15,7 @@ class CardItem extends StatefulWidget {
   const CardItem({
     Key? key,
     required this.child,
-    this.padding = const EdgeInsets.all(Dimens.cardPadding),
+    this.padding = const EdgeInsets.all(Dimens.cardPad),
     this.color,
     this.elevation,
     this.shape,
@@ -97,7 +97,7 @@ class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
     return CardItem(
-      padding: Pads.horz(Dimens.dropdownPaddingHorz),
+      padding: Pads.horz(Dimens.dropdownPadHorz),
       elevation: Dimens.dropdownElevation,
       shape: Borders.btnRounded,
       color: _color,

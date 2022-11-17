@@ -195,7 +195,7 @@ class _EditorContentState extends State<EditorContent> {
       );
     }
     _caption = Padding(
-      padding: Pads.top(Dimens.editorToolContentPaddingVert),
+      padding: Pads.top(Dimens.editorToolContentPadVert),
       child: TextField(
         controller: _captionCtrl,
         keyboardType: TextInputType.text,
@@ -273,7 +273,7 @@ class _EditorContentState extends State<EditorContent> {
       heightFactor: .9,
       child: SafeArea(
         child: Padding(
-          padding: Pads.horz(Dimens.editorToolContentPaddingHorz),
+          padding: Pads.horz(Dimens.editorToolContentPadHorz),
           child: Sheet(
             title: _title,
             child: SizedBox(
@@ -287,14 +287,13 @@ class _EditorContentState extends State<EditorContent> {
                   }),
                   _caption,
                   Padding(
-                    padding: Pads.sym(v: Dimens.editorToolContentPaddingVert),
+                    padding: Pads.sym(v: Dimens.editorToolContentPadVert),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         if (_lang is! Nothing) Expanded(child: _lang),
                         Padding(
-                          padding:
-                              Pads.horz(Dimens.editorToolContentPaddingHorz),
+                          padding: Pads.horz(Dimens.editorToolContentPadHorz),
                           child: _paste,
                         ),
                         _insert,

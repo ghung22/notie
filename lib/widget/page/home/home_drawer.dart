@@ -16,7 +16,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Padding(
-        padding: Pads.all(Dimens.drawerPadding),
+        padding: Pads.all(Dimens.drawerPad),
         child: CardItem(
           child: Observer(builder: (_) {
             return ListView(
@@ -25,7 +25,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   children: [
                     const DrawerHeader(child: Nothing()),
                     Padding(
-                      padding: Pads.vert(Dimens.drawerItemPadding),
+                      padding: Pads.vert(Dimens.drawerItemPad),
                       child: const Nothing(),
                     ),
                   ],

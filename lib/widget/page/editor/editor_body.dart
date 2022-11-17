@@ -70,7 +70,7 @@ class _EditorBodyState extends State<EditorBody> {
             focusNode: _store!.contentFocus,
             scrollController: _store!.scrollCtrl,
             scrollable: true,
-            padding: Pads.all(Dimens.editorPadding),
+            padding: Pads.all(Dimens.editorPad),
             autoFocus: _note.isNotEmpty,
             readOnly: _store!.readOnly,
             expands: true,

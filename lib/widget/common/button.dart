@@ -126,8 +126,8 @@ class TextBtn extends StatelessWidget {
               backgroundColor: bgColor,
               foregroundColor: ColorBuilder.onColor(bgColor),
               padding: Pads.sym(
-                h: Dimens.btnPaddingHorz,
-                v: Dimens.btnPaddingVert,
+                h: Dimens.btnPadHorz,
+                v: Dimens.btnPadVert,
               ),
               shape: Borders.btnRounded,
               textStyle: Styles.iconBtnLabel,
@@ -152,8 +152,8 @@ class TextBtn extends StatelessWidget {
         style: TextButton.styleFrom(
           foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
           padding: Pads.sym(
-            h: Dimens.btnPaddingHorz,
-            v: Dimens.btnPaddingVert,
+            h: Dimens.btnPadHorz,
+            v: Dimens.btnPadVert,
           ),
           shape: Borders.btnRounded,
           textStyle: Styles.iconBtnLabel,
@@ -259,16 +259,16 @@ class _ToggleBtnState extends State<ToggleBtn> {
                 ? BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: i == 0
-                          ? const Radius.circular(Dimens.btnRadius)
+                          ? const Radius.circular(Dimens.btnRad)
                           : Radius.zero,
                       bottomLeft: i == 0
-                          ? const Radius.circular(Dimens.btnRadius)
+                          ? const Radius.circular(Dimens.btnRad)
                           : Radius.zero,
                       topRight: i == _children.length - 1
-                          ? const Radius.circular(Dimens.btnRadius)
+                          ? const Radius.circular(Dimens.btnRad)
                           : Radius.zero,
                       bottomRight: i == _children.length - 1
-                          ? const Radius.circular(Dimens.btnRadius)
+                          ? const Radius.circular(Dimens.btnRad)
                           : Radius.zero,
                     ),
                     color: (selected && _elevated == false) ? active : null,

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:intl/intl.dart';
@@ -53,7 +52,7 @@ class _NoteCardState extends State<NoteCard> {
         duration: _aniSpeed,
         child: Stack(
           children: [
-            Observer(builder: (context) {
+            Builder(builder: (context) {
               final bg = _note.color ?? Theme.of(context).colorScheme.surface;
               final fg = ColorBuilder.onColor(bg);
               return CardItem(

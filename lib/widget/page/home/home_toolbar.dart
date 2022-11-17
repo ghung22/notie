@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notie/global/dimens.dart';
 import 'package:notie/global/vars.dart';
 import 'package:notie/widget/common/button.dart';
+import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/text.dart';
 
 class HomeToolbar extends StatefulWidget {
@@ -13,14 +15,30 @@ class HomeToolbar extends StatefulWidget {
 class _HomeToolbarState extends State<HomeToolbar> {
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Txt.header(text: Vars.appName),
-      actions: [
-        IconBtn(
-          onPressed: () {},
-          child: const Icon(Icons.search),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: Dimens.homeToolbarMaxHeight),
+      child: Padding(
+        padding: Pads.sym(
+            h: Dimens.homeToolbarPadHorz, v: Dimens.homeToolbarPadVert),
+        child: SizedBox(
+          width: double.infinity,
+          child: CardItem(
+            padding: Pads.sym(
+                h: Dimens.homeToolbarPadInnerHorz,
+                v: Dimens.homeToolbarPadInnerVert),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Txt.footer(text: Vars.appName),
+                IconBtn(
+                  onPressed: () {},
+                  child: const Icon(Icons.search),
+                ),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 }

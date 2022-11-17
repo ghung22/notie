@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/model/folder.dart';
 import 'package:notie/data/model/note.dart';
@@ -20,6 +22,12 @@ abstract class _HomeStore with Store {
 
   @observable
   SortOrder sortOrder = SortOrder.descending;
+
+  @observable
+  ScrollController scrollCtrl = ScrollController();
+
+  @observable
+  bool toolbarVisible = true;
 
   @observable
   ObservableMap<int, bool> selectedNotes = ObservableMap();
@@ -76,7 +84,23 @@ abstract class _HomeStore with Store {
 
   // endregion
 
-  // region actions
+  @action
+  void init() {
+    scrollCtrl.addListener(() {
+      if (scrollCtrl.position.userScrollDirection == ScrollDirection.reverse) {
+        hideToolbar();
+      } else {
+        showToolbar();
+      }
+    });
+  }
+
+  @action
+  void dispose() {
+    scrollCtrl.dispose();
+  }
+
+  // region Notes actions
 
   @action
   void setPath(String path) => this.path = path;
@@ -86,6 +110,28 @@ abstract class _HomeStore with Store {
 
   @action
   void sort(SortType sortType) => this.sortType = sortType;
+
+  // endregion
+
+  // region Toolbar actions
+  
+  @action
+  void showToolbar() async {
+    _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
+    final start = _toolbarVisibleTimestamp;
+    await Future.delayed(const Duration(seconds: 3));
+    if (start != _toolbarVisibleTimestamp) return;
+    toolbarVisible = true;
+  }
+  
+  @action
+  void hideToolbar() async {
+    _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
+    final start = _toolbarVisibleTimestamp;
+    await Future.delayed(const Duration(seconds: 3));
+    if (start != _toolbarVisibleTimestamp) return;
+    toolbarVisible = false;
+  }
 
   // endregion
 
@@ -132,5 +178,11 @@ abstract class _HomeStore with Store {
 
   Notes _notes = Notes();
 
-// endregion
+  // endregion
+
+  // region private vars
+
+  int _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
+
+  // endregion
 }
