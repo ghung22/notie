@@ -9,12 +9,13 @@ part of 'home_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeStore on _HomeStore, Store {
-  Computed<List<Note>>? _$notesComputed;
+  Computed<IconData>? _$sortTypeIconComputed;
 
   @override
-  List<Note> get notes => (_$notesComputed ??=
-          Computed<List<Note>>(() => super.notes, name: '_HomeStore.notes'))
-      .value;
+  IconData get sortTypeIcon =>
+      (_$sortTypeIconComputed ??= Computed<IconData>(() => super.sortTypeIcon,
+              name: '_HomeStore.sortTypeIcon'))
+          .value;
   Computed<bool>? _$someSelectedComputed;
 
   @override
@@ -61,6 +62,38 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  late final _$searchCtrlAtom =
+      Atom(name: '_HomeStore.searchCtrl', context: context);
+
+  @override
+  TextEditingController get searchCtrl {
+    _$searchCtrlAtom.reportRead();
+    return super.searchCtrl;
+  }
+
+  @override
+  set searchCtrl(TextEditingController value) {
+    _$searchCtrlAtom.reportWrite(value, super.searchCtrl, () {
+      super.searchCtrl = value;
+    });
+  }
+
+  late final _$searchFocusAtom =
+      Atom(name: '_HomeStore.searchFocus', context: context);
+
+  @override
+  FocusNode get searchFocus {
+    _$searchFocusAtom.reportRead();
+    return super.searchFocus;
+  }
+
+  @override
+  set searchFocus(FocusNode value) {
+    _$searchFocusAtom.reportWrite(value, super.searchFocus, () {
+      super.searchFocus = value;
+    });
+  }
+
   late final _$sortTypeAtom =
       Atom(name: '_HomeStore.sortType', context: context);
 
@@ -93,6 +126,38 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  late final _$scrollCtrlAtom =
+      Atom(name: '_HomeStore.scrollCtrl', context: context);
+
+  @override
+  ScrollController get scrollCtrl {
+    _$scrollCtrlAtom.reportRead();
+    return super.scrollCtrl;
+  }
+
+  @override
+  set scrollCtrl(ScrollController value) {
+    _$scrollCtrlAtom.reportWrite(value, super.scrollCtrl, () {
+      super.scrollCtrl = value;
+    });
+  }
+
+  late final _$toolbarVisibleAtom =
+      Atom(name: '_HomeStore.toolbarVisible', context: context);
+
+  @override
+  bool get toolbarVisible {
+    _$toolbarVisibleAtom.reportRead();
+    return super.toolbarVisible;
+  }
+
+  @override
+  set toolbarVisible(bool value) {
+    _$toolbarVisibleAtom.reportWrite(value, super.toolbarVisible, () {
+      super.toolbarVisible = value;
+    });
+  }
+
   late final _$selectedNotesAtom =
       Atom(name: '_HomeStore.selectedNotes', context: context);
 
@@ -109,8 +174,46 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  late final _$showToolbarAsyncAction =
+      AsyncAction('_HomeStore.showToolbar', context: context);
+
+  @override
+  Future<void> showToolbar() {
+    return _$showToolbarAsyncAction.run(() => super.showToolbar());
+  }
+
+  late final _$hideToolbarAsyncAction =
+      AsyncAction('_HomeStore.hideToolbar', context: context);
+
+  @override
+  Future<void> hideToolbar() {
+    return _$hideToolbarAsyncAction.run(() => super.hideToolbar());
+  }
+
   late final _$_HomeStoreActionController =
       ActionController(name: '_HomeStore', context: context);
+
+  @override
+  void init() {
+    final _$actionInfo =
+        _$_HomeStoreActionController.startAction(name: '_HomeStore.init');
+    try {
+      return super.init();
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void dispose() {
+    final _$actionInfo =
+        _$_HomeStoreActionController.startAction(name: '_HomeStore.dispose');
+    try {
+      return super.dispose();
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setPath(String path) {
@@ -140,6 +243,28 @@ mixin _$HomeStore on _HomeStore, Store {
         _$_HomeStoreActionController.startAction(name: '_HomeStore.sort');
     try {
       return super.sort(sortType);
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void order(SortOrder sortOrder) {
+    final _$actionInfo =
+        _$_HomeStoreActionController.startAction(name: '_HomeStore.order');
+    try {
+      return super.order(sortOrder);
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void reverseOrder() {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.reverseOrder');
+    try {
+      return super.reverseOrder();
     } finally {
       _$_HomeStoreActionController.endAction(_$actionInfo);
     }
@@ -205,10 +330,14 @@ mixin _$HomeStore on _HomeStore, Store {
     return '''
 path: ${path},
 searchQuery: ${searchQuery},
+searchCtrl: ${searchCtrl},
+searchFocus: ${searchFocus},
 sortType: ${sortType},
 sortOrder: ${sortOrder},
+scrollCtrl: ${scrollCtrl},
+toolbarVisible: ${toolbarVisible},
 selectedNotes: ${selectedNotes},
-notes: ${notes},
+sortTypeIcon: ${sortTypeIcon},
 someSelected: ${someSelected},
 allSelected: ${allSelected}
     ''';

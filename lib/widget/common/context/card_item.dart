@@ -31,16 +31,10 @@ class NoteCard extends StatefulWidget {
 }
 
 class _NoteCardState extends State<NoteCard> {
-  late Note _note;
+  Note get _note => widget.note;
 
   final _aniSpeed = Vars.animationFast;
   bool _selected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _note = widget.note;
-  }
 
   @override
   Widget build(BuildContext context) {

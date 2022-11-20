@@ -177,4 +177,8 @@ class Notes {
     }
     return note;
   }
+
+  void clear() => _v.clear();
+
+  void addAll(Notes notes) => _v.addAll(notes.value);
 }

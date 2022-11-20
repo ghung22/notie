@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/model/folder.dart';
 import 'package:notie/data/model/note.dart';
+import 'package:notie/global/debug.dart';
 import 'package:notie/global/vars.dart';
 
 part 'home_store.g.dart';
@@ -11,11 +12,18 @@ class HomeStore = _HomeStore with _$HomeStore;
 
 abstract class _HomeStore with Store {
   // region observable
+
   @observable
   String path = FolderPaths.root;
 
   @observable
   String searchQuery = '';
+
+  @observable
+  TextEditingController searchCtrl = TextEditingController();
+
+  @observable
+  FocusNode searchFocus = FocusNode();
 
   @observable
   SortType sortType = SortType.byDefault;
@@ -38,29 +46,29 @@ abstract class _HomeStore with Store {
 
   @computed
   List<Note> get notes {
-    var notes = <Note>[];
+    var sorted = <Note>[];
     switch (sortType) {
       case SortType.byDefault:
-        notes = _notes.value;
+        sorted = _notes.value;
         break;
       case SortType.byName:
-        notes = _notes.byName;
+        sorted = _notes.byName;
         break;
       case SortType.byColor:
-        notes = _notes.byColor;
+        sorted = _notes.byColor;
         break;
       case SortType.byCreateTime:
-        notes = _notes.byCreateTime;
+        sorted = _notes.byCreateTime;
         break;
       case SortType.byUpdateTime:
-        notes = _notes.byUpdateTime;
+        sorted = _notes.byUpdateTime;
         break;
       case SortType.byDeleteTime:
         if (path != FolderPaths.trash) {
           sort(SortType.byDefault);
-          notes = _notes.value;
+          sorted = _notes.value;
         } else {
-          notes = _notes.byDeleteTime;
+          sorted = _notes.byDeleteTime;
         }
         break;
     }
@@ -68,10 +76,29 @@ abstract class _HomeStore with Store {
       case SortOrder.ascending:
         break;
       case SortOrder.descending:
-        notes = notes.reversed.toList();
+        sorted = sorted.reversed.toList();
         break;
     }
-    return notes;
+    sorted.removeWhere((n) => n.path != path);
+    return sorted;
+  }
+
+  @computed
+  IconData get sortTypeIcon {
+    switch (sortType) {
+      case SortType.byDefault:
+        return Icons.sort_rounded;
+      case SortType.byName:
+        return Icons.sort_by_alpha_rounded;
+      case SortType.byColor:
+        return Icons.color_lens_rounded;
+      case SortType.byCreateTime:
+        return Icons.access_time_rounded;
+      case SortType.byUpdateTime:
+        return Icons.update_rounded;
+      case SortType.byDeleteTime:
+        return Icons.delete_rounded;
+    }
   }
 
   @computed
@@ -86,6 +113,7 @@ abstract class _HomeStore with Store {
 
   @action
   void init() {
+    searchCtrl.addListener(() => search(searchCtrl.text));
     scrollCtrl.addListener(() {
       if (scrollCtrl.position.userScrollDirection == ScrollDirection.reverse) {
         hideToolbar();
@@ -97,35 +125,54 @@ abstract class _HomeStore with Store {
 
   @action
   void dispose() {
+    searchCtrl.dispose();
+    searchFocus.dispose();
     scrollCtrl.dispose();
   }
 
   // region Notes actions
 
   @action
-  void setPath(String path) => this.path = path;
+  void setPath(String path) {
+    this.path = path;
+    Debug.log(null, 'Note folder changed: $path');
+  }
 
   @action
   void search(String query) => searchQuery = query;
 
   @action
-  void sort(SortType sortType) => this.sortType = sortType;
+  void sort(SortType sortType) {
+    this.sortType = sortType;
+    Debug.info(null, "Sort type changed: $sortType");
+  }
+
+  @action
+  void order(SortOrder sortOrder) {
+    this.sortOrder = sortOrder;
+    Debug.info(null, "Sort order changed: $sortOrder");
+  }
+
+  @action
+  void reverseOrder() => order(sortOrder == SortOrder.ascending
+      ? SortOrder.descending
+      : SortOrder.ascending);
 
   // endregion
 
   // region Toolbar actions
-  
+
   @action
-  void showToolbar() async {
+  Future<void> showToolbar() async {
     _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
     final start = _toolbarVisibleTimestamp;
     await Future.delayed(const Duration(seconds: 3));
     if (start != _toolbarVisibleTimestamp) return;
     toolbarVisible = true;
   }
-  
+
   @action
-  void hideToolbar() async {
+  Future<void> hideToolbar() async {
     _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
     final start = _toolbarVisibleTimestamp;
     await Future.delayed(const Duration(seconds: 3));
@@ -144,7 +191,7 @@ abstract class _HomeStore with Store {
   void updateNotes(Notes notes) {
     selectedNotes.clear();
     _notes = notes;
-    for (var note in _notes.value) {
+    for (Note note in _notes.value) {
       selectedNotes[note.createdTimestamp] = false;
     }
   }
@@ -174,13 +221,9 @@ abstract class _HomeStore with Store {
 
   // endregion
 
-  // region Private vars
+  // region private vars
 
   Notes _notes = Notes();
-
-  // endregion
-
-  // region private vars
 
   int _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
 

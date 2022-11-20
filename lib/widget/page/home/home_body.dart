@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:notie/data/model/note.dart';
 import 'package:notie/global/debug.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/routes.dart';
@@ -29,12 +28,11 @@ class _EditorBodyState extends State<HomeBody> {
   HomeStore? _store;
   NoteStore? _noteStore;
 
-  Notes get _notes => _noteStore?.notes ?? Notes();
-
   ScrollController get scrollCtrl => _store!.scrollCtrl;
 
   void _initList() {
     _list = Observer(builder: (context) {
+      final notes = _store!.notes;
       return ListView(
         controller: _store!.scrollCtrl,
         children: [
@@ -49,9 +47,9 @@ class _EditorBodyState extends State<HomeBody> {
               mainAxisSpacing: Dimens.gridSpacing,
               crossAxisSpacing: Dimens.gridSpacing,
             ),
-            itemCount: _notes.length,
+            itemCount: notes.length,
             itemBuilder: (_, index) {
-              final note = _notes[index];
+              final note = notes[index];
               return Hero(
                 tag: '${Routes.editor}?id=${note.createdTimestamp}',
                 child: NoteCard(
