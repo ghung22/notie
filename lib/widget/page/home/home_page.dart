@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
         drawer: const HomeDrawer(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: const HomeFab(),
+        resizeToAvoidBottomInset: false,
       ),
     );
   }

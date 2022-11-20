@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:notie/global/dimens.dart';
 import 'package:notie/global/styles.dart';
+import 'package:notie/global/vars.dart';
 import 'package:notie/store/page/home_store.dart';
 import 'package:notie/widget/common/card.dart';
 import 'package:notie/widget/common/context/button_item.dart';
@@ -33,6 +34,8 @@ class _HomeToolbarState extends State<HomeToolbar> {
           child: FlipCard(
             controller: _store!.toolFlipCtrl,
             direction: FlipDirection.VERTICAL,
+            flipOnTouch: false,
+            speed: Vars.animationFast.inMilliseconds,
             front: CardItem(
               padding: Pads.sym(
                   h: Dimens.homeToolbarPadInnerHorz,

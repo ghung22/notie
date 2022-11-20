@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mobx/mobx.dart';
 import 'package:notie/data/model/folder.dart';
 import 'package:notie/data/model/note.dart';
@@ -50,29 +53,30 @@ abstract class _HomeStore with Store {
 
   @computed
   List<Note> get notes {
-    var sorted = <Note>[];
+    var result = <Note>[];
+    // region sort & path
     switch (sortType) {
       case SortType.byDefault:
-        sorted = _notes.value;
+        result = _notes.value;
         break;
       case SortType.byName:
-        sorted = _notes.byName;
+        result = _notes.byName;
         break;
       case SortType.byColor:
-        sorted = _notes.byColor;
+        result = _notes.byColor;
         break;
       case SortType.byCreateTime:
-        sorted = _notes.byCreateTime;
+        result = _notes.byCreateTime;
         break;
       case SortType.byUpdateTime:
-        sorted = _notes.byUpdateTime;
+        result = _notes.byUpdateTime;
         break;
       case SortType.byDeleteTime:
         if (path != FolderPaths.trash) {
           sort(SortType.byDefault);
-          sorted = _notes.value;
+          result = _notes.value;
         } else {
-          sorted = _notes.byDeleteTime;
+          result = _notes.byDeleteTime;
         }
         break;
     }
@@ -80,11 +84,22 @@ abstract class _HomeStore with Store {
       case SortOrder.ascending:
         break;
       case SortOrder.descending:
-        sorted = sorted.reversed.toList();
+        result = result.reversed.toList();
         break;
     }
-    sorted.removeWhere((n) => n.path != path);
-    return sorted;
+    result.removeWhere((n) => n.path != path);
+    // endregion
+    // region search
+    if (searchQuery.isNotEmpty) {
+      result.removeWhere((n) {
+        var content = Document.fromJson(jsonDecode(n.content)).toPlainText();
+        bool notInTitle = !n.title.toLowerCase().contains(searchQuery);
+        bool notInContent = !content.toLowerCase().contains(searchQuery);
+        return notInTitle && notInContent;
+      });
+    }
+    // endregion
+    return result;
   }
 
   @computed
@@ -149,7 +164,7 @@ abstract class _HomeStore with Store {
   }
 
   @action
-  void search(String query) => searchQuery = query;
+  void search(String query) => searchQuery = query.toLowerCase();
 
   @action
   void sort(SortType sortType) {
