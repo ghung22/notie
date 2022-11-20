@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -9,6 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../button.dart';
 import '../text.dart';
+
+// region Home buttons
 
 class SortTypeBtn extends StatefulWidget {
   const SortTypeBtn({Key? key}) : super(key: key);
@@ -102,3 +105,53 @@ class _SortOrderBtnState extends State<SortOrderBtn> {
     });
   }
 }
+
+class SelectCancelBtn extends StatefulWidget {
+  const SelectCancelBtn({Key? key}) : super(key: key);
+
+  @override
+  State<SelectCancelBtn> createState() => _SelectCancelBtnState();
+}
+
+class _SelectCancelBtnState extends State<SelectCancelBtn> {
+  HomeStore? _store;
+
+  Future<void> _buttonPressed() async => _store!.unselect();
+
+  @override
+  Widget build(BuildContext context) {
+    _store ??= context.read<HomeStore>();
+    return IconBtn(
+      onPressed: () => _buttonPressed(),
+      child: const Icon(Icons.close_rounded),
+    );
+  }
+}
+
+class SelectAllBtn extends StatefulWidget {
+  const SelectAllBtn({Key? key}) : super(key: key);
+
+  @override
+  State<SelectAllBtn> createState() => _SelectAllBtnState();
+}
+
+class _SelectAllBtnState extends State<SelectAllBtn> {
+  HomeStore? _store;
+
+  Future<void> _buttonPressed() async => _store!.selectAll();
+
+  @override
+  Widget build(BuildContext context) {
+    _store ??= context.read<HomeStore>();
+    return Observer(builder: (context) {
+      return IconBtn(
+        onPressed: () => _buttonPressed(),
+        child: Icon(_store!.allSelected
+            ? CupertinoIcons.square_grid_2x2_fill
+            : CupertinoIcons.square_grid_2x2),
+      );
+    });
+  }
+}
+
+// endregion

@@ -9,6 +9,12 @@ part of 'home_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$HomeStore on _HomeStore, Store {
+  Computed<List<Note>>? _$notesComputed;
+
+  @override
+  List<Note> get notes => (_$notesComputed ??=
+          Computed<List<Note>>(() => super.notes, name: '_HomeStore.notes'))
+      .value;
   Computed<IconData>? _$sortTypeIconComputed;
 
   @override
@@ -23,12 +29,26 @@ mixin _$HomeStore on _HomeStore, Store {
       (_$someSelectedComputed ??= Computed<bool>(() => super.someSelected,
               name: '_HomeStore.someSelected'))
           .value;
+  Computed<bool>? _$noneSelectedComputed;
+
+  @override
+  bool get noneSelected =>
+      (_$noneSelectedComputed ??= Computed<bool>(() => super.noneSelected,
+              name: '_HomeStore.noneSelected'))
+          .value;
   Computed<bool>? _$allSelectedComputed;
 
   @override
   bool get allSelected =>
       (_$allSelectedComputed ??= Computed<bool>(() => super.allSelected,
               name: '_HomeStore.allSelected'))
+          .value;
+  Computed<int>? _$selectedCountComputed;
+
+  @override
+  int get selectedCount =>
+      (_$selectedCountComputed ??= Computed<int>(() => super.selectedCount,
+              name: '_HomeStore.selectedCount'))
           .value;
 
   late final _$pathAtom = Atom(name: '_HomeStore.path', context: context);
@@ -174,6 +194,22 @@ mixin _$HomeStore on _HomeStore, Store {
     });
   }
 
+  late final _$toolFlipCtrlAtom =
+      Atom(name: '_HomeStore.toolFlipCtrl', context: context);
+
+  @override
+  FlipCardController get toolFlipCtrl {
+    _$toolFlipCtrlAtom.reportRead();
+    return super.toolFlipCtrl;
+  }
+
+  @override
+  set toolFlipCtrl(FlipCardController value) {
+    _$toolFlipCtrlAtom.reportWrite(value, super.toolFlipCtrl, () {
+      super.toolFlipCtrl = value;
+    });
+  }
+
   late final _$showToolbarAsyncAction =
       AsyncAction('_HomeStore.showToolbar', context: context);
 
@@ -271,22 +307,33 @@ mixin _$HomeStore on _HomeStore, Store {
   }
 
   @override
-  bool isSelected(Note note) {
-    final _$actionInfo =
-        _$_HomeStoreActionController.startAction(name: '_HomeStore.isSelected');
+  void updateNotes(Notes notes) {
+    final _$actionInfo = _$_HomeStoreActionController.startAction(
+        name: '_HomeStore.updateNotes');
     try {
-      return super.isSelected(note);
+      return super.updateNotes(notes);
     } finally {
       _$_HomeStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void updateNotes(Notes notes) {
+  void flipToolbar() {
     final _$actionInfo = _$_HomeStoreActionController.startAction(
-        name: '_HomeStore.updateNotes');
+        name: '_HomeStore.flipToolbar');
     try {
-      return super.updateNotes(notes);
+      return super.flipToolbar();
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool isSelected(Note note) {
+    final _$actionInfo =
+        _$_HomeStoreActionController.startAction(name: '_HomeStore.isSelected');
+    try {
+      return super.isSelected(note);
     } finally {
       _$_HomeStoreActionController.endAction(_$actionInfo);
     }
@@ -326,6 +373,17 @@ mixin _$HomeStore on _HomeStore, Store {
   }
 
   @override
+  void unselect() {
+    final _$actionInfo =
+        _$_HomeStoreActionController.startAction(name: '_HomeStore.unselect');
+    try {
+      return super.unselect();
+    } finally {
+      _$_HomeStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 path: ${path},
@@ -337,9 +395,13 @@ sortOrder: ${sortOrder},
 scrollCtrl: ${scrollCtrl},
 toolbarVisible: ${toolbarVisible},
 selectedNotes: ${selectedNotes},
+toolFlipCtrl: ${toolFlipCtrl},
+notes: ${notes},
 sortTypeIcon: ${sortTypeIcon},
 someSelected: ${someSelected},
-allSelected: ${allSelected}
+noneSelected: ${noneSelected},
+allSelected: ${allSelected},
+selectedCount: ${selectedCount}
     ''';
   }
 }

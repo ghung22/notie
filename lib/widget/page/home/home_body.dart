@@ -52,17 +52,21 @@ class _EditorBodyState extends State<HomeBody> {
               final note = notes[index];
               return Hero(
                 tag: '${Routes.editor}?id=${note.createdTimestamp}',
-                child: NoteCard(
-                  note: note,
-                  onTap: () {
-                    if (_store!.someSelected) {
-                      return _store!.select(note);
-                    }
-                    HomePage.openEditor(context, _noteStore!, note);
-                    return null;
-                  },
-                  onLongPress: () => _store!.select(note),
-                ),
+                child: Observer(builder: (context) {
+                  return NoteCard(
+                    note: note,
+                    selected:
+                        _store!.selectedNotes[note.createdTimestamp] ?? false,
+                    onTap: () {
+                      if (_store!.someSelected) {
+                        return _store!.select(note);
+                      }
+                      HomePage.openEditor(context, _noteStore!, note);
+                      return null;
+                    },
+                    onLongPress: () => _store!.select(note),
+                  );
+                }),
               );
             },
           ),

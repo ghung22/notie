@@ -26,6 +26,15 @@
       }
     }
   },
+  "@select_notes": {
+    "description": "Count number of notes selected",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
   "add_content": "Add content",
   "add_note": "Add note",
   "align_center": "Align center",
@@ -68,11 +77,12 @@
   "route_unknown": "No route found for {route}",
   "search": "Search",
   "search_note": "Search a note…",
-  "sort_default":  "Sort by Default",
+  "select_notes": "{count} notes selected",
+  "sort_default": "Sort by Default",
   "sort_name": "Sort by Name",
-  "sort_color":  "Sort by Color",
+  "sort_color": "Sort by Color",
   "sort_create": "Sort by Create time",
-  "sort_update":  "Sort by Update time",
+  "sort_update": "Sort by Update time",
   "sort_delete": "Sort by Delete time",
   "strikethrough": "Strikethrough",
   "subscript": "Subscript",
@@ -83,7 +93,7 @@
   "title": "Title",
   "underline": "Underline",
   "undo": "Undo",
-  "uppercase":  "Uppercase",
+  "uppercase": "Uppercase",
   "video": "Video",
   "z": "Z"
 }

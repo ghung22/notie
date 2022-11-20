@@ -16,12 +16,14 @@ import '../text.dart';
 
 class NoteCard extends StatefulWidget {
   final Note note;
+  final bool selected;
   final bool? Function()? onTap;
   final bool? Function()? onLongPress;
 
   const NoteCard({
     Key? key,
     required this.note,
+    this.selected = false,
     this.onTap,
     this.onLongPress,
   }) : super(key: key);
@@ -33,8 +35,9 @@ class NoteCard extends StatefulWidget {
 class _NoteCardState extends State<NoteCard> {
   Note get _note => widget.note;
 
+  bool get _selected => widget.selected;
+
   final _aniSpeed = Vars.animationFast;
-  bool _selected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,16 +54,8 @@ class _NoteCardState extends State<NoteCard> {
               final fg = ColorBuilder.onColor(bg);
               return CardItem(
                 color: bg,
-                onPressed: () {
-                  final result = widget.onTap?.call();
-                  if (result == null) return;
-                  setState(() => _selected = result);
-                },
-                onLongPress: () {
-                  final result = widget.onLongPress?.call();
-                  if (result == null) return;
-                  setState(() => _selected = result);
-                },
+                onPressed: () => widget.onTap?.call(),
+                onLongPress: () => widget.onLongPress?.call(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

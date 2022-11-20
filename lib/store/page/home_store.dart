@@ -1,3 +1,4 @@
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mobx/mobx.dart';
@@ -39,6 +40,9 @@ abstract class _HomeStore with Store {
 
   @observable
   ObservableMap<int, bool> selectedNotes = ObservableMap();
+
+  @observable
+  FlipCardController toolFlipCtrl = FlipCardController();
 
   // endregion
 
@@ -105,9 +109,15 @@ abstract class _HomeStore with Store {
   bool get someSelected => selectedNotes.values.contains(true);
 
   @computed
+  bool get noneSelected => !someSelected;
+
+  @computed
   bool get allSelected =>
-      selectedNotes.values.where((e) => e).toList().length !=
+      selectedNotes.values.where((e) => e).toList().length ==
       selectedNotes.length;
+
+  @computed
+  int get selectedCount => selectedNotes.values.where((e) => e).toList().length;
 
   // endregion
 
@@ -158,6 +168,15 @@ abstract class _HomeStore with Store {
       ? SortOrder.descending
       : SortOrder.ascending);
 
+  @action
+  void updateNotes(Notes notes) {
+    selectedNotes.clear();
+    _notes = notes;
+    for (Note note in _notes.value) {
+      selectedNotes[note.createdTimestamp] = false;
+    }
+  }
+
   // endregion
 
   // region Toolbar actions
@@ -180,6 +199,15 @@ abstract class _HomeStore with Store {
     toolbarVisible = false;
   }
 
+  @action
+  void flipToolbar() {
+    if (toolFlipCtrl.state?.isFront ?? false) {
+      if (someSelected) toolFlipCtrl.toggleCard();
+    } else {
+      if (noneSelected) toolFlipCtrl.toggleCard();
+    }
+  }
+
   // endregion
 
   // region Select notes actions
@@ -188,19 +216,11 @@ abstract class _HomeStore with Store {
   bool isSelected(Note note) => selectedNotes[note.createdTimestamp] ?? false;
 
   @action
-  void updateNotes(Notes notes) {
-    selectedNotes.clear();
-    _notes = notes;
-    for (Note note in _notes.value) {
-      selectedNotes[note.createdTimestamp] = false;
-    }
-  }
-
-  @action
   bool? select(Note note) {
     final nid = note.createdTimestamp;
     if (selectedNotes[nid] == null) return null;
     selectedNotes[nid] = !selectedNotes[nid]!;
+    flipToolbar();
     return selectedNotes[nid];
   }
 
@@ -213,10 +233,19 @@ abstract class _HomeStore with Store {
 
   @action
   void selectAll() {
-    final sel = allSelected;
+    final sel = someSelected && !allSelected;
     for (var nid in selectedNotes.keys) {
       selectedNotes[nid] = sel;
     }
+    flipToolbar();
+  }
+
+  @action
+  void unselect() {
+    for (var nid in selectedNotes.keys) {
+      selectedNotes[nid] = false;
+    }
+    flipToolbar();
   }
 
   // endregion
@@ -227,5 +256,5 @@ abstract class _HomeStore with Store {
 
   int _toolbarVisibleTimestamp = DateTime.now().millisecondsSinceEpoch;
 
-  // endregion
+// endregion
 }

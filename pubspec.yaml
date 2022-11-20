@@ -51,6 +51,7 @@ dependencies:
   sqflite: ^2.2.0+3
   auto_size_text: ^3.0.0
   logging: ^1.1.0
+  flip_card: ^0.6.0
 
 dev_dependencies:
   flutter_test:

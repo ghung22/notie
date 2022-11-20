@@ -41,6 +41,7 @@
   "route_unknown": "Không tìm thấy đường dẫn {route}",
   "search": "Tìm kiếm",
   "search_note": "Tìm kiếm ghi chú…",
+  "select_notes": "{count} ghi chú được chọn",
   "sort_default":  "Lọc theo Mặc định",
   "sort_name": "Lọc theo Tên",
   "sort_color":  "Lọc theo Màu ghi chú",
